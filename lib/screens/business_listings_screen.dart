@@ -1,6 +1,8 @@
+// lib/screens/business_listings_screen.dart
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:go_router/go_router.dart';
 import 'package:siwa/utils/theme.dart';
 
 class BusinessListingsScreen extends StatelessWidget {
@@ -16,7 +18,7 @@ class BusinessListingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () {}),
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.go('/business_dashboard')),
         title: const Text('Create Listing'),
         elevation: 0,
       ),
@@ -50,7 +52,7 @@ class BusinessListingsScreen extends StatelessWidget {
                 child: Container(
                   height: 150,
                   decoration: BoxDecoration(
-                    border: Border.all(style: BorderStyle.dashed, color: AppTheme.primaryOrange),
+                    border: Border.all(color: AppTheme.primaryOrange), // Changed to solid border
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Center(child: Icon(Icons.add, size: 40, color: AppTheme.primaryOrange)),
@@ -116,7 +118,10 @@ class BusinessListingsScreen extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
         ],
         onTap: (index) {
-          // Handle
+          if (index == 0) context.go('/tourist_home');
+          if (index == 1) context.go('/tourist_search');
+          if (index == 2) context.go('/tourist_bookings');
+          if (index == 3) context.go('/tourist_profile');
         },
       ),
     );

@@ -1,3 +1,4 @@
+// lib/screens/product_detail_screen.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -25,8 +26,8 @@ class ProductDetailScreen extends StatelessWidget {
                 autoPlay: true,
               ),
               items: [
-                NetworkImage('https://www.kemetexperience.com/wp-content/uploads/2019/09/incredible-white-desert-960x636.jpg'),
-                NetworkImage('https://www.sharm-club.com/assets/images/oasis/tour-white-desert-safari.jpg'),
+                'https://www.kemetexperience.com/wp-content/uploads/2019/09/incredible-white-desert-960x636.jpg',
+                'https://www.sharm-club.com/assets/images/oasis/tour-white-desert-safari.jpg',
               ].map((url) => Image.network(url, fit: BoxFit.cover)).toList(),
             ),
             const Padding(
@@ -101,7 +102,10 @@ class ProductDetailScreen extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
         ],
         onTap: (index) {
-          // Handle navigation
+          if (index == 0) context.go('/tourist_home');
+          if (index == 1) context.go('/tourist_search');
+          if (index == 2) context.go('/tourist_bookings');
+          if (index == 3) context.go('/tourist_profile');
         },
       ),
     );

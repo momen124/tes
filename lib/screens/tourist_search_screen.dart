@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/utils/theme.dart';
+import '../widgets/service_card.dart';
 
 class TouristSearchScreen extends StatefulWidget {
   const TouristSearchScreen({super.key});
@@ -80,21 +81,29 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
               children: [
                 ServiceCard(
                   name: 'Siwa Shali Resort',
+                  price: 120.0, // Added price
+                  rating: 4.5,  // Added rating (required)
                   location: 'Siwa, Egypt',
                   imageUrl: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg?w=900&h=500&s=1',
                 ),
                 ServiceCard(
                   name: 'Adrar Amellal',
+                  price: 150.0, // Added price
+                  rating: 4.7,  // Added rating (required)
                   location: 'Siwa, Egypt',
                   imageUrl: 'https://www.adrereamellal.com/adrere/wp-content/uploads/2019/09/Adrere-amellal-siwa-oasis-eco-lodge-Omar-Hikal.jpg',
                 ),
                 ServiceCard(
                   name: 'Taziry Ecolodge Siwa',
+                  price: 90.0,  // Added price
+                  rating: 4.3,  // Added rating (required)
                   location: 'Siwa, Egypt',
                   imageUrl: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/4107994.jpg?k=5ec22bfde0619d0d2e92e0df7e3bd83be9fb281504879ad451e4c5b3bd532bfe&o=&hp=1',
                 ),
                 ServiceCard(
                   name: 'Siwa Safari Gardens Hotel',
+                  price: 100.0, // Added price
+                  rating: 4.4,  // Added rating (required)
                   location: 'Siwa, Egypt',
                   imageUrl: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/99/b2/30/siwa-safari-gardens-hotel.jpg?w=900&h=500&s=1',
                 ),
