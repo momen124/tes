@@ -28,7 +28,7 @@ class ServiceDetailScreen extends StatelessWidget {
                 autoPlay: true,
               ),
               items: [
-                NetworkImage('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg?w=900&h=500&s=1'),
+                'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg?w=900&h=500&s=1',
               ].map((url) => Image.network(url, fit: BoxFit.cover)).toList(),
             ),
             const Padding(
@@ -134,7 +134,7 @@ class ServiceDetailScreen extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.go('/booking_form'),  // Assume new route
+                  onPressed: () => context.go('/booking_form'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryOrange,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
