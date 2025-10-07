@@ -3,7 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:siwa/utils/theme.dart';
+import 'package:siwa/app/theme.dart';
 import 'package:go_router/go_router.dart';
 
 class ServiceDetailScreen extends StatelessWidget {

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:siwa/utils/theme.dart';
+import 'package:siwa/app/theme.dart';
 
 class TouristProfileScreen extends StatefulWidget {
   const TouristProfileScreen({super.key});

@@ -1,6 +1,7 @@
 // lib/utils/mock_data.dart
-import 'package:siwa/models/accommodation.dart';
 
+
+import 'package:siwa/features/business/models/accommodation.dart';
 
 class MockData {
   static List<Accommodation> accommodations = [

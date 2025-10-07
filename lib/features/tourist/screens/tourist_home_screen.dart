@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:siwa/utils/theme.dart';
+import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/service_card.dart';
 
 class TouristHomeScreen extends StatelessWidget {

@@ -1,7 +1,9 @@
 // lib/services/mock_api_service.dart
-import 'package:siwa/models/user.dart';
-import 'package:siwa/models/business.dart';
-import 'package:siwa/models/accommodation.dart';
+
+
+import 'package:siwa/features/auth/models/user.dart';
+import 'package:siwa/features/business/models/accommodation.dart';
+import 'package:siwa/features/business/models/business.dart';
 
 class MockApiService {
   final List<User> _users = [

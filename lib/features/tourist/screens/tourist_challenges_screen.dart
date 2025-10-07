@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:siwa/utils/theme.dart';
+import 'package:siwa/app/theme.dart';
 import 'package:go_router/go_router.dart';
 
 class TouristChallengesScreen extends StatelessWidget {

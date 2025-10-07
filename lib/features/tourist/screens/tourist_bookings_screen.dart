@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:siwa/utils/theme.dart';
-import 'package:siwa/providers/offline_provider.dart';
+import 'package:siwa/app/theme.dart';
+import 'package:siwa/features/tourist/providers/offline_provider.dart';
 
 class TouristBookingsScreen extends ConsumerStatefulWidget {
   const TouristBookingsScreen({super.key});
