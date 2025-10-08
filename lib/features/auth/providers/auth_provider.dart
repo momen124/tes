@@ -6,12 +6,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class User {
   final String email;
   final String? username;
-  final String role;
 
   User({
     required this.email,
     this.username,
-    required this.role,
   });
 }
 
@@ -47,7 +45,6 @@ class AuthNotifier extends StateNotifier<User?> {
         state = User(
           email: data['email'],
           username: data['username'],
-          role: data['role'],
         );
       } catch (e) {
         await logout();
@@ -69,7 +66,6 @@ class AuthNotifier extends StateNotifier<User?> {
       state = User(
         email: data['email'],
         username: data['username'],
-        role: data['role'],
       );
     } catch (e) {
       throw Exception('Login failed: ${e.toString()}');
@@ -99,7 +95,6 @@ class AuthNotifier extends StateNotifier<User?> {
       state = User(
         email: email,
         username: username,
-        role: role,
       );
     } catch (e) {
       throw Exception('Registration failed: ${e.toString()}');

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:siwa/utils/theme.dart';
+import 'package:siwa/app/theme.dart';
 
 class BusinessDashboardScreen extends StatelessWidget {
   const BusinessDashboardScreen({super.key});

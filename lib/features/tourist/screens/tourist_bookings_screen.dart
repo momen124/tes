@@ -84,7 +84,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: AppTheme.offlineBanner,
+              // color: AppTheme.offlineBanner,
               child: Row(
                 children: [
                   Icon(
