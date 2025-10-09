@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 
 class TouristProfileScreen extends StatefulWidget {
   const TouristProfileScreen({super.key});
@@ -227,22 +228,7 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 3,
-        selectedItemColor: AppTheme.primaryOrange,
-        unselectedItemColor: AppTheme.gray,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.bookmark_border), label: 'Bookings'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
-        onTap: (index) {
-          if (index == 0) context.go('/tourist_home');
-          if (index == 1) context.go('/tourist_search');
-          if (index == 2) context.go('/tourist_bookings');
-        },
-      ),
+      bottomNavigationBar: const TouristBottomNav(currentIndex: 4),
     );
   }
 }

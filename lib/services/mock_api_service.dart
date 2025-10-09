@@ -1,67 +1,83 @@
-// lib/services/mock_api_service.dart
-
-
-import 'package:siwa/features/auth/models/user.dart';
-import 'package:siwa/features/business/models/accommodation.dart';
-import 'package:siwa/features/business/models/business.dart';
+import 'package:dio/dio.dart';
 
 class MockApiService {
-  final List<User> _users = [
-    User(
-      id: 1,
-      email: 'tourist@example.com',
-      username: 'tourist1',
-      passwordHash: 'password1',
-      role: 'tourist',
-      gpsConsent: true,
-      mfaEnabled: false,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-  ];
-
-  // ignore: unused_field
-  final List<Business> _businesses = [
-    Business(
-      id: 1,
-      name: 'Siwa Hotel',
-      type: BusinessType.hotel,
-      contactEmail: 'info@siwahotel.com',
-      phone: '1234567890',
-      locationLat: 29.2,
-      locationLong: 25.5,
-      description: 'Luxury hotel in Siwa',
-      photos: [],
-      verified: true,
-      verificationDocs: [],
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-  ];
-
-  final List<Accommodation> _accommodations = [
-    Accommodation(
-      id: 1,
-      name: 'Siwa Oasis Lodge',
-      type: 'lodge',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      businessId: 1,
-      amenities: {},
-      capacity: 30,
-      price: 80.0,
-      availability: {},
-      specialRequests: '',
-    ),
-  ];
-
-  Future<User> login(String email, String password) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return _users.firstWhere((u) => u.email == email && u.passwordHash == password, orElse: () => throw Exception('Invalid credentials'));
+  final Dio _dio;
+  
+  MockApiService(this._dio) {
+    _setupInterceptors();
   }
 
-  Future<List<dynamic>> searchServices(String query) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return _accommodations.where((a) => a.name.contains(query)).toList();
+  void _setupInterceptors() {
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          // Mock delay
+          Future.delayed(const Duration(milliseconds: 500), () {
+            handler.next(options);
+          });
+        },
+        onResponse: (response, handler) {
+          // Mock successful responses
+          if (options.path.contains('/login')) {
+            return handler.resolve(Response(
+              requestOptions: options,
+              data: {
+                'token': 'mock_token_12345',
+                'user': {
+                  'id': 1,
+                  'email': options.data['email'],
+                  'username': 'mockuser',
+                  'role': 'tourist',
+                  'gps_consent': true,
+                  'mfa_enabled': false,
+                  'created_at': DateTime.now().toIso8601String(),
+                  'updated_at': DateTime.now().toIso8601String(),
+                },
+              },
+            ));
+          }
+          
+          if (options.path.contains('/register')) {
+            return handler.resolve(Response(
+              requestOptions: options,
+              data: {
+                'token': 'mock_token_12345',
+                'user': {
+                  'id': 1,
+                  'email': options.data['email'],
+                  'username': options.data['username'],
+                  'role': options.data['role'],
+                  'gps_consent': options.data['gps_consent'],
+                  'mfa_enabled': options.data['mfa_enabled'],
+                  'created_at': DateTime.now().toIso8601String(),n m, 
+                  'updated_at': DateTime.now().toIso8601String(),
+                },
+              },
+            ));
+          }
+          
+          if (options.path.contains('/user')) {
+            return handler.resolve(Response(
+              requestOptions: options,
+              data: {
+                'id': 1,
+                'email': 'test@example.com',
+                'username': 'mockuser',
+                'role': 'tourist',
+                'gps_consent': true,
+                'mfa_enabled': false,
+                'created_at': DateTime.now().toIso8601String(),
+                'updated_at': DateTime.now().toIso8601String(),
+              },
+            ));
+          }
+          
+          handler.next(response);
+        },
+        onError: (error, handler) {
+          handler.next(error);
+        },
+      ),
+    );
   }
 }
