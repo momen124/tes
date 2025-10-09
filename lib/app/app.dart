@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/features/auth/screens/login_screen.dart';
 import 'package:siwa/features/auth/screens/register_screen.dart';
+import 'package:siwa/features/tourist/screens/splash_screen.dart';
 import 'package:siwa/features/tourist/screens/tourist_home_screen.dart';
 import 'package:siwa/features/tourist/screens/tourist_bookings_screen.dart';
 import 'package:siwa/features/tourist/screens/tourist_challenges_screen.dart';
@@ -12,24 +13,19 @@ import 'package:siwa/features/tourist/screens/booking_form_screen.dart';
 import 'package:siwa/features/tourist/screens/product_detail_screen.dart';
 import 'package:siwa/features/tourist/screens/service_detail_screen.dart';
 import 'package:siwa/features/tourist/screens/siwa_info_screen.dart';
-import 'package:siwa/features/tourist/screens/splash_screen.dart';
 import 'package:siwa/features/business/screens/vehicle_management_screen.dart';
 import 'package:siwa/features/business/screens/business_dashboard_screen.dart';
 import 'package:siwa/features/business/screens/business_listings_screen.dart';
 import 'package:siwa/features/business/screens/business_product_management_screen.dart';
 import 'package:siwa/features/business/screens/business_profile_screen.dart';
 import 'package:siwa/features/business/screens/business_vehicle_management_screen.dart';
-
-// Business Type-Specific Screens
 import 'package:siwa/features/business/types/hotel/screens/hotel_management_screen.dart';
-import 'package:siwa/features/business/types/rental/screens/rental_fleet_screen.dart' hide RouteManagementScreen;
+import 'package:siwa/features/business/types/rental/screens/rental_fleet_screen.dart';
 import 'package:siwa/features/business/types/transportation/screens/route_management_screen.dart';
 import 'package:siwa/features/business/types/trip_booking/screens/trip_itinerary_screen.dart';
 import 'package:siwa/features/business/types/restaurant/screens/menu_management_screen.dart';
 import 'package:siwa/features/business/types/store/screens/store_inventory_screen.dart';
-import 'package:siwa/features/business/types/tour_guide/screens/guide_schedule_screen.dart' hide TripItineraryScreen;
-
-// Admin Screens
+import 'package:siwa/features/business/types/tour_guide/screens/guide_schedule_screen.dart';
 import 'package:siwa/features/admin/screens/admin_dashboard_screen.dart';
 import 'package:siwa/features/admin/screens/admin_logs_screen.dart';
 import 'package:siwa/features/admin/screens/admin_moderation_screen.dart';
@@ -41,7 +37,13 @@ final GoRouter _router = GoRouter(
     // Auth Routes
     GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
-    GoRoute(path: '/register', builder: (context, state) => const RegisterScreen()),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) {
+        final userType = state.uri.queryParameters['type'] ?? 'tourist';
+        return RegisterScreen(userType: userType);
+      },
+    ),
     
     // Tourist Routes
     GoRoute(path: '/tourist_home', builder: (context, state) => const TouristHomeScreen()),
@@ -87,6 +89,7 @@ class SiwaApp extends ConsumerWidget {
       routerConfig: _router,
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
+      title: 'Siwa Oasis',
     );
   }
 }

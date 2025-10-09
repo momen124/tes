@@ -18,6 +18,7 @@ class User {
   final bool mfaEnabled;
   final DateTime createdAt;
   final DateTime updatedAt;
+  
 
   User({
     required this.id,

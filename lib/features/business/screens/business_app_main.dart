@@ -7,7 +7,7 @@ import 'package:siwa/features/business/screens/business_dashboard_screen.dart';
 import 'package:siwa/features/business/screens/business_profile_screen.dart';
 import 'package:siwa/features/business/screens/business_listings_screen.dart';
 import 'package:siwa/features/business/types/hotel/screens/hotel_management_screen.dart';
-import 'package:siwa/features/business/types/rental/screens/rental_fleet_screen.dart' hide RouteManagementScreen;
+import 'package:siwa/features/business/types/rental/screens/rental_fleet_screen.dart';
 import 'package:siwa/features/business/types/restaurant/screens/menu_management_screen.dart';
 import 'package:siwa/features/business/types/store/screens/store_inventory_screen.dart';
 import 'package:siwa/features/business/types/tour_guide/screens/guide_schedule_screen.dart';
@@ -314,8 +314,8 @@ class BusinessDashboardScreen extends ConsumerWidget {
           const SizedBox(height: 16),
 
           // Stats Cards
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
                 Expanded(
@@ -326,7 +326,7 @@ class BusinessDashboardScreen extends ConsumerWidget {
                     icon: Icons.trending_up,
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: _StatCard(
                     title: 'Total Revenue',
@@ -349,33 +349,33 @@ class BusinessDashboardScreen extends ConsumerWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+              child: const Padding(
+                padding: EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Activities & Services',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     _ActivityItem(
                       name: 'Desert Safari Tour',
                       status: 'active',
                       bookings: 45,
                       price: '\$120',
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     _ActivityItem(
                       name: 'Oasis Swimming',
                       status: 'active',
                       bookings: 32,
                       price: '\$50',
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     _ActivityItem(
                       name: 'Traditional Dinner',
                       status: 'pending',

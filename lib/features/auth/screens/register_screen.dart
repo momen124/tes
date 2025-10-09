@@ -1,96 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:styled_widget/styled_widget.dart'; // Ensure this import is correct
+import 'package:styled_widget/styled_widget.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/auth/providers/auth_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Add this import for Riverpod
+import 'package:siwa/utils/validators.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
-  const RegisterScreen({super.key});
+  final String userType;
+  
+  const RegisterScreen({super.key, this.userType = 'tourist'});
 
   @override
   ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends ConsumerState<RegisterScreen> with SingleTickerProviderStateMixin {
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _mfaController = TextEditingController();
-  final bool _gpsConsent = false;
+  bool _gpsConsent = false;
   bool _isLoading = false;
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
-    _animation = Tween<double>(begin: 1.0, end: 0.95).animate(_controller)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) _controller.reverse();
-      });
-  }
 
   @override
   void dispose() {
     _emailController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
+    _phoneController.dispose();
     _mfaController.dispose();
-    _controller.dispose();
     super.dispose();
   }
 
   Future<void> _handleRegister() async {
-    if (_emailController.text.isEmpty || !_isValidEmail(_emailController.text) || _passwordController.text.length < 6) {
-      _showErrorModal('Please enter a valid email and password (6+ characters).');
+    if (!_formKey.currentState!.validate()) {
       return;
     }
 
     setState(() => _isLoading = true);
-    _controller.forward();
 
     try {
       await ref.read(authProvider.notifier).register(
-        _emailController.text,
-        _usernameController.text,
+        _emailController.text.trim(),
+        _usernameController.text.trim(),
         _passwordController.text,
-        'tourist', // Hardcoded role for now; consider a dropdown later
+        _phoneController.text.trim(),
+        widget.userType == 'tourist',
         _gpsConsent,
-        _mfaController.text.isNotEmpty, // Convert to bool for mfaEnabled
       );
+      
       if (mounted) {
         setState(() => _isLoading = false);
-        context.go('/tourist_home');
+        
+        final user = ref.read(authProvider);
+        if (user != null) {
+          switch (widget.userType) {
+            case 'tourist':
+              context.go('/tourist_home');
+              break;
+            case 'business':
+              context.go('/business_dashboard');
+              break;
+            case 'admin':
+              context.go('/admin_dashboard');
+              break;
+            default:
+              context.go('/tourist_home');
+          }
+        }
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        _showErrorModal('Registration failed: ${e.toString()}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Registration failed: ${e.toString()}'),
+            backgroundColor: AppTheme.errorRed,
+          ),
+        );
       }
     }
-  }
-
-  bool _isValidEmail(String email) {
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(email);
-  }
-
-  void _showErrorModal(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Error').textStyle(const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-        content: Text(message).textStyle(AppTheme.bodyMedium),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK').textColor(AppTheme.primaryOrange),
-          ),
-        ],
-      ).borderRadius(all: 16),
-    );
   }
 
   @override
@@ -98,143 +90,153 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> with SingleTick
     return Scaffold(
       body: Container(
         decoration: AppTheme.gradientBackground,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Header Section
-              _buildHeaderSection(),
-              
-              // Form Section
-              _buildFormSection(),
-              
-              // Footer Section
-              _buildFooterSection(),
-            ],
-          ).padding(all: 24),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeaderSection() {
-    return Column(
-      children: [
-        const SizedBox(height: 40),
-        // Logo and App Name
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.park, color: AppTheme.primaryOrange, size: 36),
-            const SizedBox(width: 12),
-            const Text('Siwa Oasis').textStyle(AppTheme.headlineLarge),
-          ],
-        ),
-        
-        const SizedBox(height: 8),
-        
-        // Welcome Text
-        const Text('Welcome Back')
-            .textStyle(AppTheme.bodyLarge.copyWith(color: AppTheme.gray))
-            .padding(bottom: 40),
-      ],
-    );
-  }
-
-  Widget _buildFormSection() {
-    return Container(
-      decoration: AppTheme.cardDecoration,
-      child: Column(
-        children: [
-          // Email Field
-          TextField(
-            controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
-          ).padding(bottom: 16),
-          
-          // Username Field
-          TextField(
-            controller: _usernameController,
-            decoration: const InputDecoration(labelText: 'Username'),
-          ).padding(bottom: 16),
-          
-          // Divider
-          const Divider(height: 32, thickness: 1, color: AppTheme.lightGray),
-          
-          // Password Field
-          TextField(
-            controller: _passwordController,
-            decoration: const InputDecoration(labelText: 'Password'),
-            obscureText: true,
-          ).padding(bottom: 16),
-          
-          // GPS Toggle
-          // Container(
-          //   decoration: BoxDecoration(
-          //     color: AppTheme.lightGray,
-          //     borderRadius: BorderRadius.circular(12),
-          //   ),
-          //   child: SwitchListTile(
-          //     title: const Text('Enable GPS').textStyle(AppTheme.bodyMedium),
-          //     value: _gpsConsent,
-          //     onChanged: (val) => setState(() => _gpsConsent = val),
-          //     activeColor: AppTheme.primaryOrange,
-          //   ),
-          // ).padding(bottom: 16),
-          
-          // MFA Field
-          TextField(
-            controller: _mfaController,
-            decoration: const InputDecoration(labelText: 'MFA Code (Optional)'),
-          ).padding(bottom: 24),
-          
-          // Register Button
-          _buildRegisterButton(),
-        ],
-      ).padding(all: 24),
-    );
-  }
-
-  Widget _buildRegisterButton() {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: _isLoading ? 1.0 : _animation.value,
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _isLoading ? null : _handleRegister,
-              child: _isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(color: AppTheme.white, strokeWidth: 2),
-                    )
-                  : const Text('Register').textStyle(AppTheme.buttonText),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 40),
+                    
+                    // Header
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.park, color: AppTheme.primaryOrange, size: 36),
+                        const SizedBox(width: 12),
+                        Text('Siwa Oasis', style: AppTheme.headlineLarge),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Create Account',
+                      style: AppTheme.bodyLarge.copyWith(color: AppTheme.gray),
+                    ),
+                    const SizedBox(height: 40),
+                    
+                    // Form
+                    Container(
+                      decoration: AppTheme.cardDecoration,
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        children: [
+                          // Email
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                              prefixIcon: Icon(Icons.email_outlined),
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            validator: Validators.validateEmail,
+                          ),
+                          const SizedBox(height: 16),
+                          
+                          // Username
+                          TextFormField(
+                            controller: _usernameController,
+                            decoration: const InputDecoration(
+                              labelText: 'Username',
+                              prefixIcon: Icon(Icons.person_outline),
+                            ),
+                            validator: (v) => Validators.validateRequired(v, 'Username'),
+                          ),
+                          const SizedBox(height: 16),
+                          
+                          // Phone
+                          TextFormField(
+                            controller: _phoneController,
+                            decoration: const InputDecoration(
+                              labelText: 'Phone',
+                              hintText: '+20 123 456 7890',
+                              prefixIcon: Icon(Icons.phone_outlined),
+                            ),
+                            keyboardType: TextInputType.phone,
+                            validator: Validators.validatePhone,
+                          ),
+                          const SizedBox(height: 16),
+                          
+                          // Password
+                          TextFormField(
+                            controller: _passwordController,
+                            decoration: const InputDecoration(
+                              labelText: 'Password',
+                              prefixIcon: Icon(Icons.lock_outline),
+                            ),
+                            obscureText: true,
+                            validator: Validators.validatePassword,
+                          ),
+                          const SizedBox(height: 16),
+                          
+                          // GPS Consent
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppTheme.lightBlueGray,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: SwitchListTile(
+                              title: Text('Enable GPS', style: AppTheme.bodyMedium),
+                              subtitle: Text(
+                                'Required for location features',
+                                style: AppTheme.bodySmall,
+                              ),
+                              value: _gpsConsent,
+                              onChanged: (val) => setState(() => _gpsConsent = val),
+                              activeThumbColor: AppTheme.primaryOrange,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          
+                          // MFA (Optional)
+                          TextFormField(
+                            controller: _mfaController,
+                            decoration: const InputDecoration(
+                              labelText: 'MFA Code (Optional)',
+                              prefixIcon: Icon(Icons.security_outlined),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          
+                          // Register Button
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: _isLoading ? null : _handleRegister,
+                              child: _isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      color: AppTheme.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Text('Register', style: AppTheme.buttonText),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 24),
+                    
+                    // Login Link
+                    TextButton(
+                      onPressed: () => context.go('/login'),
+                      child: Text(
+                        'Already have an account? Sign in',
+                        style: AppTheme.bodyMedium.copyWith(color: AppTheme.gray),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildFooterSection() {
-    return Column(
-      children: [
-        const SizedBox(height: 24),
-        
-        // Sign In Link
-        TextButton(
-          onPressed: () => context.go('/login'),
-          child: const Text('Already have an account? Sign in')
-              .textStyle(AppTheme.bodyMedium.copyWith(color: AppTheme.gray)),
         ),
-        
-        const SizedBox(height: 40),
-        
-        // Decorative Icon
-        const Icon(Icons.landscape, color: AppTheme.gray, size: 48),
-      ],
+      ),
     );
   }
 }

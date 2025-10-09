@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
-import '../widgets/service_card.dart';
+import 'package:siwa/features/tourist/widgets/service_card.dart';
+import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 
 class TouristSearchScreen extends StatefulWidget {
   const TouristSearchScreen({super.key});
@@ -11,10 +12,71 @@ class TouristSearchScreen extends StatefulWidget {
 }
 
 class _TouristSearchScreenState extends State<TouristSearchScreen> {
-  final _searchController = TextEditingController(text: 'Siwa');
-  final String _priceFilter = 'Price';
-  final String _locationFilter = 'Location';
-  bool _ecoTourism = true;
+  final _searchController = TextEditingController();
+  String _searchQuery = '';
+  String _priceFilter = 'all';
+  bool _ecoTourism = false;
+
+  final List<Map<String, dynamic>> _allServices = [
+    {
+      'name': 'Siwa Shali Resort',
+      'price': 120.0,
+      'rating': 4.5,
+      'location': 'Siwa, Egypt',
+      'imageUrl': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg?w=900&h=500&s=1',
+      'eco_friendly': true,
+      'reviews': 125,
+    },
+    {
+      'name': 'Adrar Amellal',
+      'price': 150.0,
+      'rating': 4.7,
+      'location': 'Siwa, Egypt',
+      'imageUrl': 'https://www.adrereamellal.com/adrere/wp-content/uploads/2019/09/Adrere-amellal-siwa-oasis-eco-lodge-Omar-Hikal.jpg',
+      'eco_friendly': true,
+      'reviews': 98,
+    },
+    {
+      'name': 'Taziry Ecolodge Siwa',
+      'price': 90.0,
+      'rating': 4.3,
+      'location': 'Siwa, Egypt',
+      'imageUrl': 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/4107994.jpg',
+      'eco_friendly': true,
+      'reviews': 67,
+    },
+    {
+      'name': 'Siwa Safari Gardens Hotel',
+      'price': 100.0,
+      'rating': 4.4,
+      'location': 'Siwa, Egypt',
+      'imageUrl': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/99/b2/30/siwa-safari-gardens-hotel.jpg',
+      'eco_friendly': false,
+      'reviews': 88,
+    },
+  ];
+
+  List<Map<String, dynamic>> get _filteredServices {
+    return _allServices.where((service) {
+      final matchesSearch = service['name']
+        .toString()
+        .toLowerCase()
+        .contains(_searchQuery.toLowerCase());
+      
+      final matchesPrice = _priceFilter == 'all' ||
+        _getPriceRange(service['price']) == _priceFilter;
+      
+      final matchesEco = !_ecoTourism || (service['eco_friendly'] ?? false);
+      
+      return matchesSearch && matchesPrice && matchesEco;
+    }).toList();
+  }
+
+  String _getPriceRange(double price) {
+    if (price < 100) return 'budget';
+    if (price < 150) return 'mid';
+    return 'luxury';
+  }
 
   @override
   void dispose() {
@@ -27,107 +89,136 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,
       appBar: AppBar(
-        backgroundColor: AppTheme.lightBlueGray,
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.go('/tourist_home')),
+        backgroundColor: AppTheme.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/tourist_home'),
+        ),
         title: const Text('Search'),
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Siwa',
-                  suffixIcon: const Icon(Icons.close),
-                  filled: true,
-                  fillColor: AppTheme.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
+      body: Column(
+        children: [
+          // Search Bar
+          Container(
+            color: AppTheme.white,
+            padding: const EdgeInsets.all(16),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() => _searchQuery = value);
+              },
+              decoration: InputDecoration(
+                hintText: 'Search services...',
+                prefixIcon: const Icon(Icons.search, color: AppTheme.primaryOrange),
+                suffixIcon: _searchQuery.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() => _searchQuery = '');
+                      },
+                    )
+                  : null,
+                filled: true,
+                fillColor: AppTheme.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: AppTheme.secondaryGray.withOpacity(0.3)),
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          ),
+          
+          // Filters
+          Container(
+            color: AppTheme.white,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 DropdownButton<String>(
                   value: _priceFilter,
-                  items: const [DropdownMenuItem(value: 'Price', child: Text('Price'))],
-                  onChanged: (value) {},
                   underline: const SizedBox(),
-                ),
-                DropdownButton<String>(
-                  value: _locationFilter,
-                  items: const [DropdownMenuItem(value: 'Location', child: Text('Location'))],
-                  onChanged: (value) {},
-                  underline: const SizedBox(),
+                  items: const [
+                   DropdownMenuItem(value: 'all', child: Text('All Prices')),
+DropdownMenuItem(value: 'budget', child: Text('Budget (<\$100)')),
+DropdownMenuItem(value: 'mid', child: Text('Mid (\$100-\$150)')),
+DropdownMenuItem(value: 'luxury', child: Text('Luxury (>\$150)')),
+                  ],
+                  onChanged: (value) {
+                    setState(() => _priceFilter = value!);
+                  },
                 ),
                 FilterChip(
                   label: const Text('Eco-tourism'),
                   selected: _ecoTourism,
-                  onSelected: (selected) => setState(() => _ecoTourism = selected),
+                  onSelected: (selected) {
+                    setState(() => _ecoTourism = selected);
+                  },
                   selectedColor: AppTheme.primaryOrange.withOpacity(0.2),
+                  checkmarkColor: AppTheme.primaryOrange,
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: const [
-                ServiceCard(
-                  name: 'Siwa Shali Resort',
-                  price: 120.0, // Added price
-                  rating: 4.5,  // Added rating (required)
-                  location: 'Siwa, Egypt',
-                  imageUrl: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg?w=900&h=500&s=1',
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Results
+          Expanded(
+            child: _filteredServices.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.search_off,
+                        size: 64,
+                        color: AppTheme.gray.withOpacity(0.5),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No services found',
+                        style: AppTheme.titleMedium.copyWith(color: AppTheme.gray),
+                      ),
+                      const SizedBox(height: 8),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _searchQuery = '';
+                            _priceFilter = 'all';
+                            _ecoTourism = false;
+                            _searchController.clear();
+                          });
+                        },
+                        child: const Text('Clear Filters'),
+                      ),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: _filteredServices.length,
+                  itemBuilder: (context, index) {
+                    final service = _filteredServices[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: ServiceCard(
+                        name: service['name'],
+                        price: service['price'],
+                        rating: service['rating'],
+                        location: service['location'],
+                        imageUrl: service['imageUrl'],
+                        reviews: service['reviews'],
+                      ),
+                    );
+                  },
                 ),
-                ServiceCard(
-                  name: 'Adrar Amellal',
-                  price: 150.0, // Added price
-                  rating: 4.7,  // Added rating (required)
-                  location: 'Siwa, Egypt',
-                  imageUrl: 'https://www.adrereamellal.com/adrere/wp-content/uploads/2019/09/Adrere-amellal-siwa-oasis-eco-lodge-Omar-Hikal.jpg',
-                ),
-                ServiceCard(
-                  name: 'Taziry Ecolodge Siwa',
-                  price: 90.0,  // Added price
-                  rating: 4.3,  // Added rating (required)
-                  location: 'Siwa, Egypt',
-                  imageUrl: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/4107994.jpg?k=5ec22bfde0619d0d2e92e0df7e3bd83be9fb281504879ad451e4c5b3bd532bfe&o=&hp=1',
-                ),
-                ServiceCard(
-                  name: 'Siwa Safari Gardens Hotel',
-                  price: 100.0, // Added price
-                  rating: 4.4,  // Added rating (required)
-                  location: 'Siwa, Egypt',
-                  imageUrl: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/99/b2/30/siwa-safari-gardens-hotel.jpg?w=900&h=500&s=1',
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
-        selectedItemColor: AppTheme.primaryOrange,
-        unselectedItemColor: AppTheme.gray,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.bookmark_border), label: 'Bookings'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
+          ),
         ],
-        onTap: (index) {
-          if (index == 0) context.go('/tourist_home');
-          if (index == 2) context.go('/tourist_bookings');
-          if (index == 3) context.go('/tourist_profile');
-        },
       ),
+      bottomNavigationBar: const TouristBottomNav(currentIndex: 1),
     );
   }
 }

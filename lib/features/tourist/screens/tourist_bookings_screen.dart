@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
+import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 
 class TouristBookingsScreen extends ConsumerStatefulWidget {
   const TouristBookingsScreen({super.key});
@@ -230,34 +231,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 2,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              context.go('/tourist_home');
-              break;
-            case 1:
-              context.go('/tourist_search');
-              break;
-            case 2:
-              // Current
-              break;
-            case 3:
-              context.go('/tourist_profile');
-              break;
-          }
-        },
-        selectedItemColor: AppTheme.primaryOrange,
-        unselectedItemColor: AppTheme.gray,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search_outlined), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.bookmark_outline), label: 'Bookings'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
-      ),
+      bottomNavigationBar: const TouristBottomNav(currentIndex: 3),
     );
   }
 }

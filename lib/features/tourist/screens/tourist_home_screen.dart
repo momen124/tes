@@ -1,9 +1,9 @@
 // lib/features/tourist/screens/tourist_home_screen.dart
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/service_card.dart';
+import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 
 class TouristHomeScreen extends StatelessWidget {
   const TouristHomeScreen({super.key});
@@ -265,74 +265,7 @@ class TouristHomeScreen extends StatelessWidget {
         ],
       ),
 
-      // Bottom Navigation Bar
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-          child: BottomNavigationBar(
-            currentIndex: 0,
-            selectedItemColor: AppTheme.primaryOrange,
-            unselectedItemColor: AppTheme.gray,
-            backgroundColor: AppTheme.white,
-            type: BottomNavigationBarType.fixed,
-            elevation: 0,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home_filled),
-                activeIcon: Icon(Icons.home_rounded),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                label: 'Discover',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.camera_alt_outlined),
-                activeIcon: Icon(Icons.camera_alt),
-                label: 'Challenges',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.bookmark_border),
-                activeIcon: Icon(Icons.bookmark),
-                label: 'Bookings',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline),
-                activeIcon: Icon(Icons.person),
-                label: 'Profile',
-              ),
-            ],
-            onTap: (index) {
-              switch (index) {
-                case 1:
-                  context.go('/tourist_search');
-                  break;
-                case 2:
-                  context.go('/tourist_challenges');
-                  break;
-                case 3:
-                  context.go('/tourist_bookings');
-                  break;
-                case 4:
-                  context.go('/tourist_profile');
-                  break;
-              }
-            },
-          ),
-        ),
-      ),
+bottomNavigationBar: const TouristBottomNav(currentIndex: 0),
     );
   }
 
