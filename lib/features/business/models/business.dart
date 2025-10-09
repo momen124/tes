@@ -1,5 +1,6 @@
-// lib/models/business.dart
+// lib/features/business/models/business.dart
 import 'package:json_annotation/json_annotation.dart';
+import 'package:siwa/features/business/models/business_type.dart';
 
 part 'business.g.dart';
 
@@ -7,7 +8,11 @@ part 'business.g.dart';
 class Business {
   final int id;
   final String name;
-  final String type;
+  @JsonKey(
+    fromJson: _businessTypeFromJson,
+    toJson: _businessTypeToJson,
+  )
+  final BusinessType type;
   final String contactEmail;
   final String phone;
   final double locationLat;
@@ -37,4 +42,19 @@ class Business {
 
   factory Business.fromJson(Map<String, dynamic> json) => _$BusinessFromJson(json);
   Map<String, dynamic> toJson() => _$BusinessToJson(this);
+
+  static BusinessType _businessTypeFromJson(dynamic value) {
+    if (value is String) {
+      try {
+        return BusinessType.values.firstWhere((e) => e.value == value);
+      } catch (_) {
+        throw Exception('Invalid business type: $value');
+      }
+    }
+    throw Exception('Invalid business type: $value');
+  }
+
+  static String _businessTypeToJson(BusinessType type) {
+    return type.value;
+  }
 }

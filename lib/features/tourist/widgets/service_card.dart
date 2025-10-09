@@ -91,7 +91,7 @@ class ServiceCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.star, color: AppTheme.primaryOrange, size: 14),
+                      const Icon(Icons.star, color: AppTheme.primaryOrange, size: 14),
                       const SizedBox(width: 4),
                       Text(
                         rating.toStringAsFixed(1),
@@ -148,7 +148,7 @@ class ServiceCard extends StatelessWidget {
                 if (description != null)
                   Text(
                     description!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppTheme.gray,
                       height: 1.4,
@@ -164,11 +164,11 @@ class ServiceCard extends StatelessWidget {
                       if (reviews != null)
                         Row(
                           children: [
-                            Icon(Icons.people_outline, size: 16, color: AppTheme.gray),
+                            const Icon(Icons.people_outline, size: 16, color: AppTheme.gray),
                             const SizedBox(width: 4),
                             Text(
                               '$reviews reviews',
-                              style: TextStyle(fontSize: 12, color: AppTheme.gray),
+                              style: const TextStyle(fontSize: 12, color: AppTheme.gray),
                             ),
                           ],
                         ),
@@ -177,11 +177,11 @@ class ServiceCard extends StatelessWidget {
                         const SizedBox(width: 16),
                         Row(
                           children: [
-                            Icon(Icons.location_on_outlined, size: 16, color: AppTheme.gray),
+                            const Icon(Icons.location_on_outlined, size: 16, color: AppTheme.gray),
                             const SizedBox(width: 4),
                             Text(
                               location!,
-                              style: TextStyle(fontSize: 12, color: AppTheme.gray),
+                              style: const TextStyle(fontSize: 12, color: AppTheme.gray),
                             ),
                           ],
                         ),

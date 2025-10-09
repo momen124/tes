@@ -91,7 +91,7 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
             });
           },
           calendarStyle: CalendarStyle(
-            selectedDecoration: BoxDecoration(
+            selectedDecoration: const BoxDecoration(
               color: AppTheme.primaryOrange,
               shape: BoxShape.circle,
             ),
@@ -99,7 +99,7 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
               color: AppTheme.primaryOrange.withOpacity(0.3),
               shape: BoxShape.circle,
             ),
-            markerDecoration: BoxDecoration(
+            markerDecoration: const BoxDecoration(
               color: AppTheme.oasisTeal,
               shape: BoxShape.circle,
             ),
@@ -180,7 +180,7 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '\${tour['price'].toStringAsFixed(0)}',
+                    "\$${tour['price'].toStringAsFixed(0)}",
                     style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
                   ),
                   Row(
@@ -455,7 +455,7 @@ class _TripItineraryScreenState extends State<TripItineraryScreen> {
                       Container(
                         width: 40,
                         height: 40,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppTheme.primaryOrange,
                           shape: BoxShape.circle,
                         ),

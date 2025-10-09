@@ -14,12 +14,22 @@ class Restaurant extends Business {
     required super.id,
     required super.name,
     required super.description,
+    required super.contactEmail,
+    required super.phone,
+    required super.locationLat,
+    required super.locationLong,
+    required super.photos,
+    required super.verified,
+    required super.verificationDocs,
+    required super.createdAt,
+    required super.updatedAt,
     this.menu = const [],
     this.seatingCapacity = 0,
     this.categories = const [],
   }) : super(type: BusinessType.restaurant);
 
   factory Restaurant.fromJson(Map<String, dynamic> json) => _$RestaurantFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$RestaurantToJson(this);
 }
 

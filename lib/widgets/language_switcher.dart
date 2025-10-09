@@ -35,7 +35,7 @@ class LanguageSwitcher extends ConsumerWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 Icons.language,
                 size: 20,
                 color: AppTheme.primaryOrange,
@@ -44,7 +44,7 @@ class LanguageSwitcher extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Text(
                   isArabic ? 'EN' : 'عربي',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppTheme.primaryOrange,
                     fontWeight: FontWeight.bold,
                   ),

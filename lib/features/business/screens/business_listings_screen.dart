@@ -67,7 +67,7 @@ class BusinessListingsScreen extends StatelessWidget {
                         labelText: 'Category',
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       ),
-                      items: const [DropdownMenuItem(child: Text('Select Category'), value: '')],
+                      items: const [DropdownMenuItem(value: '', child: Text('Select Category'))],
                       onChanged: (value) {},
                     ),
                   ),

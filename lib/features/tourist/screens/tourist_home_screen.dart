@@ -38,7 +38,7 @@ class TouristHomeScreen extends StatelessWidget {
                       color: Colors.white.withOpacity(0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.palm_tree, color: Colors.white, size: 24),
+                    child: const Icon(Icons.beach_access, color: Colors.white, size: 24),
                   ),
                   const SizedBox(width: 12),
                   const Text(
@@ -73,13 +73,13 @@ class TouristHomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: TextField(
+                child: const TextField(
                   decoration: InputDecoration(
                     hintText: 'Where to?',
                     hintStyle: TextStyle(color: AppTheme.gray),
                     prefixIcon: Icon(Icons.search, color: AppTheme.primaryOrange),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                   ),
                 ),
               ),
@@ -120,7 +120,7 @@ class TouristHomeScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                       'See All',
                       style: TextStyle(color: AppTheme.primaryOrange),
                     ),
@@ -147,7 +147,7 @@ class TouristHomeScreen extends StatelessWidget {
                   enlargeCenterPage: true,
                   scrollDirection: Axis.horizontal,
                 ),
-                items: [
+                items: const [
                   ServiceCard(
                     name: 'Desert Safari Adventure',
                     price: 80.0,
@@ -187,7 +187,7 @@ class TouristHomeScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                       'Discover More',
                       style: TextStyle(color: AppTheme.primaryOrange),
                     ),

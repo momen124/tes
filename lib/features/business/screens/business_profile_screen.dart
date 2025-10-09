@@ -51,7 +51,7 @@ class BusinessProfileScreen extends StatelessWidget {
               SizedBox(
                 height: 200,
                 child: FlutterMap(
-                  options: MapOptions(
+                  options: const MapOptions(
                     initialCenter: LatLng(29.1829, 25.5495),
                     initialZoom: 12.0,
                   ),
@@ -59,11 +59,11 @@ class BusinessProfileScreen extends StatelessWidget {
                     TileLayer(
                       urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     ),
-                    MarkerLayer(
+                    const MarkerLayer(
                       markers: [
                         Marker(
                           point: LatLng(29.1829, 25.5495),
-                          child: const Icon(Icons.location_pin, color: AppTheme.primaryOrange),
+                          child: Icon(Icons.location_pin, color: AppTheme.primaryOrange),
                         ),
                       ],
                     ),

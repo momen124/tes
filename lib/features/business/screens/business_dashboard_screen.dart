@@ -21,17 +21,17 @@ class BusinessDashboardScreen extends StatelessWidget {
               padding: EdgeInsets.all(16),
               child: Text('Total Bookings'),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: const Text('23', style: TextStyle(fontSize: 32, color: AppTheme.primaryOrange)),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text('23', style: TextStyle(fontSize: 32, color: AppTheme.primaryOrange)),
             ),
             const Padding(
               padding: EdgeInsets.all(16),
               child: Text('Pending'),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: const Text('5', style: TextStyle(fontSize: 32, color: AppTheme.primaryOrange)),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text('5', style: TextStyle(fontSize: 32, color: AppTheme.primaryOrange)),
             ),
             const SizedBox(height: 24),
             const Padding(
@@ -85,7 +85,7 @@ class BusinessDashboardScreen extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
         title: Text(title),
-        subtitle: Text(status, style: TextStyle(color: AppTheme.primaryOrange)),
+        subtitle: Text(status, style: const TextStyle(color: AppTheme.primaryOrange)),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

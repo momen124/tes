@@ -29,20 +29,20 @@ class CachedImage extends StatelessWidget {
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
           return Container(
-            color: AppTheme.lightBlueGray,
+            color: const Color(0xFFECEFF1),
             child: const Center(
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation(AppTheme.primaryOrange),
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
               ),
             ),
           );
         },
         errorBuilder: (context, error, stackTrace) => Container(
-          color: AppTheme.lightBlueGray,
+          color: const Color(0xFFECEFF1),
           child: const Icon(
             Icons.image_not_supported_outlined,
-            color: AppTheme.gray,
+            color: Colors.grey,
             size: 40,
           ),
         ),

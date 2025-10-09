@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Corrected import
-import 'package:siwa/providers/offline_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/features/tourist/providers/offline_provider.dart'; // Corrected import
 
 class OfflineBanner extends ConsumerWidget { // Changed from ConsumerWidget to ConsumerWidget
   const OfflineBanner({super.key});
@@ -15,7 +15,7 @@ class OfflineBanner extends ConsumerWidget { // Changed from ConsumerWidget to C
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text('Offline - Sync Later', style: TextStyle(color: Colors.white)),
-          ElevatedButton(onPressed: () {}, child: const Text('Sync'), style: ElevatedButton.styleFrom(backgroundColor: Color(0xFFFF7518))),
+          ElevatedButton(onPressed: () {}, style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF7518)), child: const Text('Sync')),
         ],
       ),
     );

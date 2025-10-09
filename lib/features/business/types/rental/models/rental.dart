@@ -14,12 +14,22 @@ class Rental extends Business {
     required super.id,
     required super.name,
     required super.description,
+    required super.contactEmail,
+    required super.phone,
+    required super.locationLat,
+    required super.locationLong,
+    required super.photos,
+    required super.verified,
+    required super.verificationDocs,
+    required super.createdAt,
+    required super.updatedAt,
     this.fleet = const [],
     this.history = const [],
     this.averageRate = 0.0,
   }) : super(type: BusinessType.rental);
 
   factory Rental.fromJson(Map<String, dynamic> json) => _$RentalFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$RentalToJson(this);
 }
 

@@ -84,14 +84,14 @@ class ServiceDetailScreen extends StatelessWidget {
             ListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              children: [
-                const ListTile(
+              children: const [
+                ListTile(
                   leading: CircleAvatar(),
                   title: Text('Amira Hassan'),
                   subtitle: Text('2 weeks ago\nAbsolutely loved my stay at Siwa Shali Lodge! The staff were incredibly welcoming, the rooms were beautifully decorated, and the location was perfect for exploring the oasis. Highly recommend!'),
                   trailing: Icon(Icons.thumb_up_off_alt),
                 ),
-                const ListTile(
+                ListTile(
                   leading: CircleAvatar(),
                   title: Text('Omar Khaled'),
                   subtitle: Text('1 month ago\nSiwa Shali Lodge is a great choice for a comfortable and authentic experience in Siwa. The lodge is well-maintained, and the staff are friendly. The only minor issue was the limited Wi-Fi, but that\'s expected in such a remote location.'),
@@ -109,7 +109,7 @@ class ServiceDetailScreen extends StatelessWidget {
             SizedBox(
               height: 200,
               child: FlutterMap(
-                options: MapOptions(
+                options: const MapOptions(
                   initialCenter: LatLng(29.1829, 25.5495),
                   initialZoom: 12.0,
                 ),
@@ -117,11 +117,11 @@ class ServiceDetailScreen extends StatelessWidget {
                   TileLayer(
                     urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   ),
-                  MarkerLayer(
+                  const MarkerLayer(
                     markers: [
                       Marker(
                         point: LatLng(29.1829, 25.5495),
-                        child: const Icon(Icons.location_pin, color: Colors.red),
+                        child: Icon(Icons.location_pin, color: Colors.red),
                       ),
                     ],
                   ),

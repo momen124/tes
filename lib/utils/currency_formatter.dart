@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -17,7 +18,7 @@ class CurrencyFormatter {
       // English currency format (USD)
       final formatter = NumberFormat.currency(
         locale: 'en_US',
-        symbol: '\,
+        symbol: '',
         decimalDigits: 0,
       );
       return formatter.format(amount);

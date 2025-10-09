@@ -17,7 +17,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> with SingleTick
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _mfaController = TextEditingController();
-  bool _gpsConsent = false;
+  final bool _gpsConsent = false;
   bool _isLoading = false;
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -81,7 +81,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> with SingleTick
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Error').textStyle(TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+        title: const Text('Error').textStyle(const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
         content: Text(message).textStyle(AppTheme.bodyMedium),
         actions: [
           TextButton(
@@ -124,16 +124,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> with SingleTick
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.park, color: AppTheme.primaryOrange, size: 36),
+            const Icon(Icons.park, color: AppTheme.primaryOrange, size: 36),
             const SizedBox(width: 12),
-            Text('Siwa Oasis').textStyle(AppTheme.headlineLarge),
+            const Text('Siwa Oasis').textStyle(AppTheme.headlineLarge),
           ],
         ),
         
         const SizedBox(height: 8),
         
         // Welcome Text
-        Text('Welcome Back')
+        const Text('Welcome Back')
             .textStyle(AppTheme.bodyLarge.copyWith(color: AppTheme.gray))
             .padding(bottom: 40),
       ],

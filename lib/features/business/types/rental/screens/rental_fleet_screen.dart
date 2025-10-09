@@ -255,7 +255,7 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: selectedRateType,
+                initialValue: selectedRateType,
                 decoration: const InputDecoration(labelText: 'Rate Type'),
                 items: ['hour', 'day', 'week'].map((type) {
                   return DropdownMenuItem(value: type, child: Text(type));
@@ -412,7 +412,7 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
                             children: [
                               Text(rental['vehicle'], style: AppTheme.titleMedium),
                               Text(
-                                '\${rental['revenue'].toStringAsFixed(0)}',
+                                '\$${rental["revenue"].toStringAsFixed(0)}',
                                 style: AppTheme.titleMedium.copyWith(color: AppTheme.successGreen),
                               ),
                             ],
@@ -564,7 +564,7 @@ class _RouteManagementScreenState extends State<RouteManagementScreen> {
                   ),
                 ),
                 Text(
-                  '\${route['fare'].toStringAsFixed(0)}',
+                  '\$${route['fare'].toStringAsFixed(0)}',
                   style: AppTheme.titleLarge.copyWith(color: AppTheme.primaryOrange),
                 ),
               ],

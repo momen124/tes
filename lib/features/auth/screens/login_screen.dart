@@ -53,13 +53,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.park, color: AppTheme.primaryOrange, size: 36),
+            const Icon(Icons.park, color: AppTheme.primaryOrange, size: 36),
             const SizedBox(width: 12),
-            Text('Siwa Oasis').textStyle(AppTheme.headlineLarge),
+            const Text('Siwa Oasis').textStyle(AppTheme.headlineLarge),
           ],
         ),
         const SizedBox(height: 8),
-        Text('Welcome Back')
+        const Text('Welcome Back')
             .textStyle(AppTheme.bodyLarge.copyWith(color: AppTheme.gray))
             .padding(bottom: 40),
       ],

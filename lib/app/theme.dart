@@ -290,7 +290,7 @@ class AppTheme {
       );
 
   // New: Offline Banner Decoration and Style
-  static BoxDecoration get offlineBanner => BoxDecoration(
+  static BoxDecoration get offlineBanner => const BoxDecoration(
         color: lightGray,
         border: Border(
           bottom: BorderSide(color: gray, width: 1.0),

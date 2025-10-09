@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:image_picker/image_picker.dart';
 
 class StoreInventoryScreen extends StatefulWidget {
   const StoreInventoryScreen({super.key});
@@ -271,7 +269,7 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '\${product['price'].toStringAsFixed(0)}',
+                        "\$${product['price'].toStringAsFixed(0)}",
                         style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
                       ),
                     ],
@@ -336,7 +334,7 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: selectedCategory,
+                initialValue: selectedCategory,
                 decoration: const InputDecoration(labelText: 'Category'),
                 items: ['Food', 'Crafts'].map((cat) {
                   return DropdownMenuItem(value: cat, child: Text(cat));
@@ -443,8 +441,8 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
               Slider(
                 value: stockAdjustment,
                 min: -product['stock'].toDouble(),
-                max: 100,
-                divisions: 100 + product['stock'],
+                max: 100.0,
+                divisions: 100 + (product['stock'] as int),
                 label: stockAdjustment.toInt().toString(),
                 activeColor: AppTheme.primaryOrange,
                 onChanged: (value) {
@@ -567,7 +565,7 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
             ...order['items'].map<Widget>((item) => Text('• $item', style: AppTheme.bodyMedium)),
             const SizedBox(height: 8),
             Text(
-              'Total: \${order['total'].toStringAsFixed(2)}',
+              "Total: \$${order['total'].toStringAsFixed(2)}",
               style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
             ),
             if (order['status'] == 'pending') ...[
@@ -599,7 +597,7 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
     });
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Order ${newStatus}')),
+      SnackBar(content: Text('Order $newStatus')),
     );
   }
 }

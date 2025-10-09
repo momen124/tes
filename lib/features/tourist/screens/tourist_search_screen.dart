@@ -12,8 +12,8 @@ class TouristSearchScreen extends StatefulWidget {
 
 class _TouristSearchScreenState extends State<TouristSearchScreen> {
   final _searchController = TextEditingController(text: 'Siwa');
-  String _priceFilter = 'Price';
-  String _locationFilter = 'Location';
+  final String _priceFilter = 'Price';
+  final String _locationFilter = 'Location';
   bool _ecoTourism = true;
 
   @override
@@ -56,13 +56,13 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
               children: [
                 DropdownButton<String>(
                   value: _priceFilter,
-                  items: const [DropdownMenuItem(child: Text('Price'), value: 'Price')],
+                  items: const [DropdownMenuItem(value: 'Price', child: Text('Price'))],
                   onChanged: (value) {},
                   underline: const SizedBox(),
                 ),
                 DropdownButton<String>(
                   value: _locationFilter,
-                  items: const [DropdownMenuItem(child: Text('Location'), value: 'Location')],
+                  items: const [DropdownMenuItem(value: 'Location', child: Text('Location'))],
                   onChanged: (value) {},
                   underline: const SizedBox(),
                 ),
@@ -78,7 +78,7 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
             ListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              children: [
+              children: const [
                 ServiceCard(
                   name: 'Siwa Shali Resort',
                   price: 120.0, // Added price

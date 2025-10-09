@@ -85,14 +85,14 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               // color: AppTheme.offlineBanner,
-              child: Row(
+              child: const Row(
                 children: [
                   Icon(
                     Icons.signal_wifi_off,
                     color: AppTheme.primaryOrange,
                     size: 20,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'You are offline. Data might be outdated.',
@@ -119,7 +119,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                           color: AppTheme.secondaryGray.withOpacity(0.5),
                         ),
                         const SizedBox(height: 16),
-                        Text(
+                        const Text(
                           'No bookings yet',
                           style: TextStyle(
                             fontSize: 18,
@@ -128,7 +128,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text(
+                        const Text(
                           'Start exploring Siwa Oasis',
                           style: TextStyle(
                             fontSize: 14,
@@ -182,7 +182,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                                       const SizedBox(height: 6),
                                       Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.calendar_today_outlined,
                                             size: 14,
                                             color: AppTheme.gray,
@@ -190,7 +190,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                                           const SizedBox(width: 4),
                                           Text(
                                             'Booking Date: ${booking['date']}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               color: AppTheme.gray,
                                             ),

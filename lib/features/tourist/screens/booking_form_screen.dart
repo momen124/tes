@@ -12,13 +12,13 @@ class BookingFormScreen extends StatefulWidget {
 }
 
 class _BookingFormScreenState extends State<BookingFormScreen> {
-  int _currentStep = 0;
+  final int _currentStep = 0;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   int _guests = 2;
   final _specialRequestsController = TextEditingController();
-  String _paymentMethod = 'Visa **** 1234';
-  double _totalCost = 250.00;
+  final String _paymentMethod = 'Visa **** 1234';
+  final double _totalCost = 250.00;
 
   @override
   void dispose() {
@@ -51,7 +51,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                 children: [
                   Text(
                     'Step ${_currentStep + 1} of 5',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppTheme.gray,
                     ),
@@ -224,7 +224,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                 maxLines: 4,
                 decoration: InputDecoration(
                   hintText: 'e.g., dietary restrictions, room preferences',
-                  hintStyle: TextStyle(color: AppTheme.secondaryGray),
+                  hintStyle: const TextStyle(color: AppTheme.secondaryGray),
                   filled: true,
                   fillColor: AppTheme.white,
                   border: OutlineInputBorder(

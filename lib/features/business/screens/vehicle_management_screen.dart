@@ -120,7 +120,7 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              Text(
+                              const Text(
                                 'License Plate:',
                                 style: TextStyle(
                                   color: Colors.white,

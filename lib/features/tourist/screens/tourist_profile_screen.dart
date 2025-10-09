@@ -63,15 +63,15 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
               Center(
                 child: Stack(
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 50,
-                      backgroundImage: const NetworkImage('https://www.adrereamellal.com/adrere/wp-content/uploads/2019/09/Adrere-amellal-siwa-oasis-eco-lodge-Omar-Hikal.jpg'),
+                      backgroundImage: NetworkImage('https://www.adrereamellal.com/adrere/wp-content/uploads/2019/09/Adrere-amellal-siwa-oasis-eco-lodge-Omar-Hikal.jpg'),
                     ),
                     Positioned(
                       bottom: 0,
                       right: 0,
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppTheme.primaryOrange,
                           shape: BoxShape.circle,
                         ),
@@ -125,7 +125,7 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _ageRange,
+                initialValue: _ageRange,
                 decoration: InputDecoration(
                   labelText: 'Age Range',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -194,7 +194,7 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
                 subtitle: const Text('Allow location access for personalized recommendations.'),
                 value: _gpsConsent,
                 onChanged: (val) => setState(() => _gpsConsent = val),
-                activeColor: AppTheme.primaryOrange,
+                activeThumbColor: AppTheme.primaryOrange,
               ),
               const SizedBox(height: 32),
               const Text('Badges', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),

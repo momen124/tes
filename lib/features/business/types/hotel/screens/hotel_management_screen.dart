@@ -280,17 +280,17 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
                               },
                             ),
                           ),
-                          leftTitles: AxisTitles(
+                          leftTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
-                          topTitles: AxisTitles(
+                          topTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
-                          rightTitles: AxisTitles(
+                          rightTitles: const AxisTitles(
                             sideTitles: SideTitles(showTitles: false),
                           ),
                         ),
-                        gridData: FlGridData(show: false),
+                        gridData: const FlGridData(show: false),
                         borderData: FlBorderData(show: false),
                       ),
                     ),
@@ -573,7 +573,7 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
                   _showAvailabilityCalendar(room);
                 },
                 calendarStyle: CalendarStyle(
-                  selectedDecoration: BoxDecoration(
+                  selectedDecoration: const BoxDecoration(
                     color: AppTheme.primaryOrange,
                     shape: BoxShape.circle,
                   ),

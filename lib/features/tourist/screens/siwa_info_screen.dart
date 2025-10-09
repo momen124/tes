@@ -37,11 +37,11 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.8),
             borderRadius: BorderRadius.circular(8),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
                 blurRadius: 2,
-                offset: const Offset(0, 1),
+                offset: Offset(0, 1),
               ),
             ],
           ),
@@ -133,9 +133,9 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                   const SizedBox(height: 12),
 
                   // Description
-                  Text(
+                  const Text(
                     'Siwa Oasis, a remote desert paradise in Egypt\'s Western Desert, is renowned for its ancient ruins, natural springs, and unique culture. It\'s a haven for travelers seeking tranquility and adventure.',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       color: AppTheme.gray,
                       height: 1.5,
@@ -173,9 +173,9 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                   // Map Section
                   Container(
                     height: 250,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppTheme.lightBlueGray,
-                      borderRadius: const BorderRadius.all(Radius.circular(16)),
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
                     ),
                     child: Stack(
                       children: [
@@ -275,7 +275,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                                   const SizedBox(height: 4),
                                   Text(
                                     service['subtitle'],
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       color: AppTheme.gray,
                                     ),

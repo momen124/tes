@@ -15,11 +15,11 @@ class AdminModerationScreen extends StatelessWidget {
         ],
         rows: [
           DataRow(cells: [
-            DataCell(Text('1')),
-            DataCell(Text('Business')),
+            const DataCell(Text('1')),
+            const DataCell(Text('Business')),
             DataCell(Row(children: [
-              IconButton(icon: Icon(Icons.check), onPressed: () {}),
-              IconButton(icon: Icon(Icons.close), onPressed: () {}),
+              IconButton(icon: const Icon(Icons.check), onPressed: () {}),
+              IconButton(icon: const Icon(Icons.close), onPressed: () {}),
             ])),
           ]),
           // Add mock rows as needed

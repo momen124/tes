@@ -260,7 +260,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: selectedCategory,
+                initialValue: selectedCategory,
                 decoration: const InputDecoration(labelText: 'Category'),
                 items: _menuByCategory.keys.map((cat) {
                   return DropdownMenuItem(value: cat, child: Text(cat));

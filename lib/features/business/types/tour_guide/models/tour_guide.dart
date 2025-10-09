@@ -6,33 +6,43 @@ part 'tour_guide.g.dart';
 
 @JsonSerializable()
 class TourGuide extends Business {
-  final List<String> expertise; // e.g., 'History', 'Eco-Tours'
   final List<Schedule> schedules;
-  final double averageRating;
 
   TourGuide({
     required super.id,
     required super.name,
     required super.description,
-    this.expertise = const [],
+    required super.contactEmail,
+    required super.phone,
+    required super.locationLat,
+    required super.locationLong,
+    required super.photos,
+    required super.verified,
+    required super.verificationDocs,
+    required super.createdAt,
+    required super.updatedAt,
     this.schedules = const [],
-    this.averageRating = 0.0,
   }) : super(type: BusinessType.tourGuide);
 
   factory TourGuide.fromJson(Map<String, dynamic> json) => _$TourGuideFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$TourGuideToJson(this);
 }
 
 @JsonSerializable()
 class Schedule {
+  final String id;
   final DateTime date;
-  final bool available;
-  final String tourDescription;
+  final String timeSlot;
+  final int maxGuests;
+  final bool booked;
 
   Schedule({
+    required this.id,
     required this.date,
-    this.available = true,
-    required this.tourDescription,
+    required this.timeSlot,
+    required this.maxGuests,
+    this.booked = false,
   });
 
   factory Schedule.fromJson(Map<String, dynamic> json) => _$ScheduleFromJson(json);

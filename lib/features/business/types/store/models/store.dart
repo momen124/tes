@@ -14,12 +14,22 @@ class Store extends Business {
     required super.id,
     required super.name,
     required super.description,
+    required super.contactEmail,
+    required super.phone,
+    required super.locationLat,
+    required super.locationLong,
+    required super.photos,
+    required super.verified,
+    required super.verificationDocs,
+    required super.createdAt,
+    required super.updatedAt,
     this.inventory = const [],
     this.categories = const [],
     this.salesVolume = 0.0,
   }) : super(type: BusinessType.store);
 
   factory Store.fromJson(Map<String, dynamic> json) => _$StoreFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$StoreToJson(this);
 }
 
