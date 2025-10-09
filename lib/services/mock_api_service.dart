@@ -25,7 +25,7 @@ class MockApiService {
     Business(
       id: 1,
       name: 'Siwa Hotel',
-      type: 'hotel',
+      type: BusinessType.hotel,
       contactEmail: 'info@siwahotel.com',
       phone: '1234567890',
       locationLat: 29.2,
