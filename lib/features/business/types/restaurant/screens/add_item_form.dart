@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+
+class AddItemForm extends StatefulWidget {
+  const AddItemForm({super.key});
+
+  @override
+  State<AddItemForm> createState() => _AddItemFormState();
+}
+
+class _AddItemFormState extends State<AddItemForm> {
+  final _formKey = GlobalKey<FormState>();
+  String _name = '';
+  double _price = 100.0;
+  String _description = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Item Name', border: OutlineInputBorder()),
+              onChanged: (val) => _name = val,
+            ),
+            const SizedBox(height: 16),
+            Text('Price: ${_price.toInt()} EGP'),
+            Slider(value: _price, min: 0, max: 500, onChanged: (val) => setState(() => _price = val)),
+            const SizedBox(height: 16),
+            const Text('Photo'),
+            Container(
+              height: 100,
+              decoration: BoxDecoration(border: Border.all(style: BorderStyle.dashed)),
+              child: const Center(child: Text('Click to upload or drag and drop')),
+            ),
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
+              maxLines: 3,
+              onChanged: (val) => _description = val,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                ElevatedButton(onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    Navigator.pop(context);
+                  }
+                }, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange), child: const Text('Add Item')),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

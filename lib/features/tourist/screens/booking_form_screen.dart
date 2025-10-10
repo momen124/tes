@@ -1,401 +1,492 @@
-// lib/screens/booking_form_screen.dart
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:siwa/app/theme.dart';
+import 'package:provider/provider.dart';
+import '../../models/booking.dart';
+import '../../providers/offline_provider.dart';
+import '../../../business/models/business.dart';
+import '../../../utils/constants.dart';
+import '../../../utils/date_formatter.dart';
+import '../../../utils/currency_formatter.dart';
+import '../../widgets/booking_forms/rental_booking_form.dart';
+import '../../widgets/booking_forms/store_booking_form.dart';
+import '../../widgets/booking_forms/restaurant_booking_form.dart';
+import '../../widgets/booking_forms/transportation_booking_form.dart';
+import '../../widgets/booking_forms/trip_booking_form.dart';
+import '../../widgets/tourist_bottom_nav.dart';
 
 class BookingFormScreen extends StatefulWidget {
-  const BookingFormScreen({super.key});
+  final Business business;
+  final String serviceType;
+  final Map<String, dynamic>? serviceData;
+
+  const BookingFormScreen({
+    Key? key,
+    required this.business,
+    required this.serviceType,
+    this.serviceData,
+  }) : super(key: key);
 
   @override
-  State<BookingFormScreen> createState() => _BookingFormScreenState();
+  _BookingFormScreenState createState() => _BookingFormScreenState();
 }
 
 class _BookingFormScreenState extends State<BookingFormScreen> {
-  final int _currentStep = 0;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-  int _guests = 2;
-  final _specialRequestsController = TextEditingController();
-  final String _paymentMethod = 'Visa **** 1234';
-  final double _totalCost = 250.00;
+  final _formKey = GlobalKey<FormState>();
+  late Widget _bookingForm;
 
   @override
-  void dispose() {
-    _specialRequestsController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _bookingForm = _buildBookingForm();
+  }
+
+  Widget _buildBookingForm() {
+    switch (widget.serviceType) {
+      case 'rental':
+        return RentalBookingForm(
+          rental: widget.serviceData ?? {},
+          onFormDataChanged: _updateFormData,
+        );
+      case 'store':
+        return StoreBookingForm(
+          product: widget.serviceData ?? {},
+          onFormDataChanged: _updateFormData,
+        );
+      case 'restaurant':
+        return RestaurantBookingForm(
+          restaurant: widget.serviceData ?? {},
+          onFormDataChanged: _updateFormData,
+        );
+      case 'transportation':
+        return TransportationBookingForm(
+          onFormDataChanged: _updateFormData,
+        );
+      case 'trip':
+        return TripBookingForm(
+          onFormDataChanged: _updateFormData,
+        );
+      default:
+        return _buildDefaultBookingForm();
+    }
+  }
+
+  Widget _buildDefaultBookingForm() {
+    DateTime? _selectedDate;
+    int _adultCount = 2;
+    int _childCount = 0;
+    String _specialRequests = '';
+
+    return Column(
+      children: [
+        // Service Header
+        _buildServiceHeader(),
+        const SizedBox(height: 24),
+        
+        // Date Selection
+        _buildDateSelection(_selectedDate, (date) {
+          setState(() => _selectedDate = date);
+        }),
+        const SizedBox(height: 24),
+        
+        // Guest Selection
+        _buildGuestSelection(_adultCount, _childCount, (adults, children) {
+          setState(() {
+            _adultCount = adults;
+            _childCount = children;
+          });
+        }),
+        const SizedBox(height: 24),
+        
+        // Special Requests
+        _buildSpecialRequests(_specialRequests, (value) {
+          setState(() => _specialRequests = value);
+        }),
+        const SizedBox(height: 32),
+        
+        // Payment Summary
+        _buildPaymentSummary(_adultCount, _childCount),
+      ],
+    );
+  }
+
+  Widget _buildServiceHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.business.name,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: AppColors.primary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          widget.business.description,
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey[600],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDateSelection(DateTime? selectedDate, Function(DateTime) onDateSelected) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Select Dates',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[300]!),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: [
+              // Calendar header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: () {},
+                  ),
+                  const Text(
+                    'October 2024',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // Calendar grid
+              _buildCalendarGrid(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCalendarGrid() {
+    return Table(
+      children: [
+        // Week days header
+        const TableRow(
+          children: [
+            _CalendarCell('S', isHeader: true),
+            _CalendarCell('M', isHeader: true),
+            _CalendarCell('T', isHeader: true),
+            _CalendarCell('W', isHeader: true),
+            _CalendarCell('T', isHeader: true),
+            _CalendarCell('F', isHeader: true),
+            _CalendarCell('S', isHeader: true),
+          ],
+        ),
+        // Calendar rows
+        _buildCalendarRow(['', '', '', '1', '2', '3', '4']),
+        _buildCalendarRow(['5', '6', '7', '8', '9', '10', '11']),
+        _buildCalendarRow(['12', '13', '14', '15', '16', '17', '18']),
+        _buildCalendarRow(['19', '20', '21', '22', '23', '24', '25']),
+        _buildCalendarRow(['26', '27', '28', '29', '30', '31', '']),
+      ],
+    );
+  }
+
+  TableRow _buildCalendarRow(List<String> days) {
+    return TableRow(
+      children: days.map((day) => _CalendarCell(day)).toList(),
+    );
+  }
+
+  Widget _buildGuestSelection(int adultCount, int childCount, Function(int, int) onCountChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Number of Guests',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 16),
+        _buildGuestCounter(
+          'Adults',
+          'Age 13+',
+          adultCount,
+          (value) => onCountChanged(value, childCount),
+        ),
+        const SizedBox(height: 16),
+        _buildGuestCounter(
+          'Children',
+          'Age 2-12',
+          childCount,
+          (value) => onCountChanged(adultCount, value),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGuestCounter(String title, String subtitle, int count, Function(int) onChanged) {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.remove, size: 20),
+              onPressed: count > 0 ? () => onChanged(count - 1) : null,
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.grey[200],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '$count',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              icon: const Icon(Icons.add, size: 20),
+              onPressed: () => onChanged(count + 1),
+              style: IconButton.styleFrom(
+                backgroundColor: AppColors.primary.withOpacity(0.1),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSpecialRequests(String value, Function(String) onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Special Requests',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          maxLines: 3,
+          decoration: const InputDecoration(
+            hintText: 'Any special requests?',
+            border: OutlineInputBorder(),
+          ),
+          onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPaymentSummary(int adultCount, int childCount) {
+    final currencyFormatter = CurrencyFormatter();
+    final servicePrice = 200; // Example price
+    final serviceFee = 10; // Example fee
+    final total = servicePrice + serviceFee;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Payment Summary',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          _buildPaymentRow('Desert Safari (${adultCount} Adults)', currencyFormatter.format(servicePrice)),
+          const SizedBox(height: 8),
+          _buildPaymentRow('Service Fee', currencyFormatter.format(serviceFee)),
+          const SizedBox(height: 12),
+          const Divider(),
+          const SizedBox(height: 8),
+          _buildPaymentRow('Total', currencyFormatter.format(total), isTotal: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPaymentRow(String label, String value, {bool isTotal = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: isTotal ? 16 : 14,
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            color: isTotal ? AppColors.primary : Colors.black,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: isTotal ? 18 : 14,
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            color: isTotal ? AppColors.primary : Colors.black,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _updateFormData(Map<String, dynamic> formData) {
+    // Handle form data updates if needed
+  }
+
+  void _confirmBooking() {
+    if (_formKey.currentState!.validate()) {
+      // Navigate to confirmation screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BookingConfirmationScreen(
+            booking: Booking(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              businessId: widget.business.id,
+              serviceType: widget.serviceType,
+              date: DateTime.now(),
+              adultCount: 2,
+              childCount: 0,
+              specialRequests: '',
+              totalPrice: 210,
+              status: 'pending',
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isOnline = Provider.of<OfflineProvider>(context).isOnline;
+
     return Scaffold(
-      backgroundColor: AppTheme.lightBlueGray,
       appBar: AppBar(
-        backgroundColor: AppTheme.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
         title: const Text('Booking Form'),
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Progress Indicator
-            Container(
-              padding: const EdgeInsets.all(16),
-              color: AppTheme.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Step ${_currentStep + 1} of 5',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: AppTheme.gray,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  LinearProgressIndicator(
-                    value: (_currentStep + 1) / 5,
-                    backgroundColor: AppTheme.lightBlueGray,
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primaryOrange),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Hotel Image
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              height: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                image: const DecorationImage(
-                  image: NetworkImage('https://images.unsplash.com/photo-1566073771259-6a8506099945'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.7),
-                    ],
-                  ),
-                ),
-                alignment: Alignment.bottomLeft,
-                padding: const EdgeInsets.all(16),
-                child: const Text(
-                  'Hotel Oasis',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Select Dates
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'Select Dates',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppTheme.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: TableCalendar(
-                firstDay: DateTime.now(),
-                lastDay: DateTime.now().add(const Duration(days: 365)),
-                focusedDay: _focusedDay,
-                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                calendarFormat: CalendarFormat.month,
-                startingDayOfWeek: StartingDayOfWeek.sunday,
-                headerStyle: const HeaderStyle(
-                  formatButtonVisible: false,
-                  titleCentered: true,
-                  titleTextStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                calendarStyle: CalendarStyle(
-                  selectedDecoration: const BoxDecoration(
-                    color: AppTheme.primaryOrange,
-                    shape: BoxShape.circle,
-                  ),
-                  todayDecoration: BoxDecoration(
-                    color: AppTheme.primaryOrange.withOpacity(0.3),
-                    shape: BoxShape.circle,
-                  ),
-                  weekendTextStyle: const TextStyle(color: AppTheme.gray),
-                ),
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                },
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Guests
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'Guests',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: AppTheme.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.secondaryGray.withOpacity(0.3)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '$_guests',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          if (_guests > 1) {
-                            setState(() => _guests--);
-                          }
-                        },
-                        icon: const Icon(Icons.remove_circle_outline),
-                        color: AppTheme.primaryOrange,
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() => _guests++);
-                        },
-                        icon: const Icon(Icons.add_circle_outline),
-                        color: AppTheme.primaryOrange,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Special Requests
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'Special Requests',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                controller: _specialRequestsController,
-                maxLines: 4,
-                decoration: InputDecoration(
-                  hintText: 'e.g., dietary restrictions, room preferences',
-                  hintStyle: const TextStyle(color: AppTheme.secondaryGray),
-                  filled: true,
-                  fillColor: AppTheme.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: AppTheme.secondaryGray.withOpacity(0.3)),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Payment Method
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'Payment Method',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppTheme.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.secondaryGray.withOpacity(0.3)),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.credit_card, color: AppTheme.gray),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      _paymentMethod,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right, color: AppTheme.gray),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Total Cost
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'Total Cost',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppTheme.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.secondaryGray.withOpacity(0.3)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '\$${_totalCost.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.primaryOrange,
-                    ),
-                  ),
-                  const Icon(Icons.attach_money, color: AppTheme.gray),
-                ],
-              ),
-            ),
-            const SizedBox(height: 32),
-
-            // Confirm Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_selectedDay == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please select a date')),
-                      );
-                      return;
-                    }
-                    
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Booking Confirmed'),
-                        content: const Text('Your booking has been confirmed!'),
-                        actions: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              context.go('/tourist_bookings');
-                            },
-                            child: const Text('View Bookings'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryOrange,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: const Text(
-                    'Confirm Booking',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-          ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              _bookingForm,
+              const SizedBox(height: 24),
+              _buildActionButtons(),
+            ],
+          ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 2,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              context.go('/tourist_home');
-              break;
-            case 1:
-              context.push('/tourist_search');
-              break;
-            case 2:
-              // Bookings
-              break;
-            case 3:
-              context.push('/tourist_profile');
-              break;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home',
+      bottomNavigationBar: const TouristBottomNavBar(),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              side: BorderSide(color: AppColors.primary),
+            ),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.primary),
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search_outlined),
-            activeIcon: Icon(Icons.search),
-            label: 'Search',
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: ElevatedButton(
+            onPressed: _confirmBooking,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+            child: const Text(
+              'Confirm Booking',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_outline),
-            activeIcon: Icon(Icons.bookmark),
-            label: 'Bookings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        selectedItemColor: AppTheme.primaryOrange,
-        unselectedItemColor: AppTheme.gray,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: AppTheme.white,
+        ),
+      ],
+    );
+  }
+}
+
+class _CalendarCell extends StatelessWidget {
+  final String day;
+  final bool isHeader;
+
+  const _CalendarCell(this.day, {this.isHeader = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40,
+      alignment: Alignment.center,
+      child: Text(
+        day,
+        style: TextStyle(
+          fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
+          color: day.isEmpty ? Colors.transparent : 
+                 isHeader ? Colors.grey[600] : Colors.black,
+        ),
       ),
     );
   }
