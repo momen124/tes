@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
-import '../../providers/business_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/features/business/providers/business_provider.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final businessProvider = Provider.of<BusinessProvider>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final business = ref.watch(businessProvider);
+    final businessNotifier = ref.read(businessProvider.notifier);
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         children: [
           SwitchListTile(
             title: const Text('Language (English/Arabic)'),
-            value: businessProvider.language == 'en',
-            onChanged: (val) => businessProvider.setLanguage(val ? 'en' : 'ar'),
+            value: business.language == 'en',
+            onChanged: (val) => businessNotifier.setLanguage(val ? 'en' : 'ar'),
           ),
           SwitchListTile(
             title: const Text('Enable GPS'),
-            value: businessProvider.gpsEnabled,
-            onChanged: (val) => businessProvider.toggleGps(val),
+            value: business.gpsEnabled,
+            onChanged: (val) => businessNotifier.toggleGps(val),
           ),
           ListTile(
             title: const Text('Logout'),
             trailing: const Icon(Icons.logout),
             onTap: () {
-              businessProvider.logout();
-              Navigator.pushReplacementNamed(context, '/login');
+              businessNotifier.logout();
+              context.go('/login');
             },
           ),
         ],

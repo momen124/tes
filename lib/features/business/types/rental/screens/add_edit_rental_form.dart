@@ -1,3 +1,5 @@
+// lib/features/business/types/rental/screens/add_edit_rental_form.dart
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
 class AddEditRentalForm extends StatefulWidget {
@@ -9,11 +11,9 @@ class AddEditRentalForm extends StatefulWidget {
 
 class _AddEditRentalFormState extends State<AddEditRentalForm> {
   final _formKey = GlobalKey<FormState>();
-  String _name = '';
   double _price = 50.0;
   int _capacity = 1;
   bool _available = true;
-  String _description = '';
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,6 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
           children: [
             TextFormField(
               decoration: const InputDecoration(labelText: 'Rental Name', border: OutlineInputBorder()),
-              onChanged: (val) => _name = val,
             ),
             const SizedBox(height: 16),
             Text('Price: \$${ _price.toInt() }'),
@@ -42,16 +41,16 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
             ),
             const SizedBox(height: 16),
             const Text('Photo'),
-            Container(
-              height: 100,
-              decoration: BoxDecoration(border: Border.all(style: BorderStyle.dashed)),
-              child: const Center(child: Text('Click to upload or drag and drop\nSVG, PNG, JPG (MAX. 800x400px)')),
+            const DottedBorder(
+              child: SizedBox(
+                height: 100,
+                child: Center(child: Text('Click to upload or drag and drop\nSVG, PNG, JPG (MAX. 800x400px)')),
+              ),
             ),
             SwitchListTile(title: const Text('Available'), value: _available, onChanged: (val) => setState(() => _available = val)),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
               maxLines: 3,
-              onChanged: (val) => _description = val,
             ),
             const SizedBox(height: 16),
             Row(
@@ -60,7 +59,6 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
                 ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
                 ElevatedButton(onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Save via API
                     Navigator.pop(context);
                   }
                 }, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange), child: const Text('Save')),

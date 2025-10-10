@@ -1,3 +1,5 @@
+// lib/features/business/types/store/screens/add_product_form.dart
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
 class AddProductForm extends StatefulWidget {
@@ -9,9 +11,7 @@ class AddProductForm extends StatefulWidget {
 
 class _AddProductFormState extends State<AddProductForm> {
   final _formKey = GlobalKey<FormState>();
-  String _name = '';
   double _price = 100.0;
-  String _description = '';
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +24,21 @@ class _AddProductFormState extends State<AddProductForm> {
           children: [
             TextFormField(
               decoration: const InputDecoration(labelText: 'Product Name', border: OutlineInputBorder()),
-              onChanged: (val) => _name = val,
             ),
             const SizedBox(height: 16),
             Text('Price: ${_price.toInt()}'),
             Slider(value: _price, min: 0, max: 500, onChanged: (val) => setState(() => _price = val)),
             const SizedBox(height: 16),
             const Text('Photo'),
-            Container(
-              height: 100,
-              decoration: BoxDecoration(border: Border.all(style: BorderStyle.dashed)),
-              child: const Center(child: Text('Upload Photo')),
+            const DottedBorder(
+              child: SizedBox(
+                height: 100,
+                child: Center(child: Text('Upload Photo')),
+              ),
             ),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
               maxLines: 3,
-              onChanged: (val) => _description = val,
             ),
             const SizedBox(height: 16),
             Row(

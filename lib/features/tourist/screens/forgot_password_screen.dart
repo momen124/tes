@@ -1,27 +1,30 @@
+// lib/features/tourist/screens/forgot_password_screen.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // For offline queuing if needed
-import '../../providers/offline_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/features/tourist/providers/offline_provider.dart';
 import '../../../services/mock_api_service.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
+class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailOrPhoneController = TextEditingController();
 
   Future<void> _sendResetLink() async {
     if (_formKey.currentState!.validate()) {
-      final offlineProvider = Provider.of<OfflineProvider>(context, listen: false);
+      final offlineNotifier = ref.read(offlineProvider.notifier);
       try {
         await MockApiService().resetPassword(_emailOrPhoneController.text);
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Reset link sent!')));
       } catch (e) {
-        offlineProvider.queueAction('reset_password', {'email_or_phone': _emailOrPhoneController.text});
+        offlineNotifier.queueAction('reset_password', {'email_or_phone': _emailOrPhoneController.text});
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Request queued offline.')));
       }
     }

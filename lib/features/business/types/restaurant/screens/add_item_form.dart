@@ -1,3 +1,5 @@
+// lib/features/business/types/restaurant/screens/add_item_form.dart
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
 class AddItemForm extends StatefulWidget {
@@ -9,9 +11,7 @@ class AddItemForm extends StatefulWidget {
 
 class _AddItemFormState extends State<AddItemForm> {
   final _formKey = GlobalKey<FormState>();
-  String _name = '';
   double _price = 100.0;
-  String _description = '';
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +24,21 @@ class _AddItemFormState extends State<AddItemForm> {
           children: [
             TextFormField(
               decoration: const InputDecoration(labelText: 'Item Name', border: OutlineInputBorder()),
-              onChanged: (val) => _name = val,
             ),
             const SizedBox(height: 16),
             Text('Price: ${_price.toInt()} EGP'),
             Slider(value: _price, min: 0, max: 500, onChanged: (val) => setState(() => _price = val)),
             const SizedBox(height: 16),
             const Text('Photo'),
-            Container(
-              height: 100,
-              decoration: BoxDecoration(border: Border.all(style: BorderStyle.dashed)),
-              child: const Center(child: Text('Click to upload or drag and drop')),
+            const DottedBorder(
+              child: SizedBox(
+                height: 100,
+                child: Center(child: Text('Click to upload or drag and drop')),
+              ),
             ),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
               maxLines: 3,
-              onChanged: (val) => _description = val,
             ),
             const SizedBox(height: 16),
             Row(

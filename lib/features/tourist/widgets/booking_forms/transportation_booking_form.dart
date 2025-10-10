@@ -4,9 +4,9 @@ class TransportationBookingForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onFormDataChanged;
 
   const TransportationBookingForm({
-    Key? key,
+    super.key,
     required this.onFormDataChanged,
-  }) : super(key: key);
+  });
 
   @override
   _TransportationBookingFormState createState() => _TransportationBookingFormState();
@@ -132,7 +132,7 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          value: _selectedRoute,
+          initialValue: _selectedRoute,
           items: const [
             DropdownMenuItem(value: 'route1', child: Text('Siwa to Cairo')),
             DropdownMenuItem(value: 'route2', child: Text('Siwa to Alexandria')),
@@ -168,14 +168,14 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
           child: Container(
             height: 120,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey[300]!, style: BorderStyle.dashed),
+              border: Border.all(color: Colors.grey[300]!, style: BorderStyle.solid),
               borderRadius: BorderRadius.circular(8),
             ),
             child: _photoIdPath != null
                 ? Image.network(_photoIdPath!, fit: BoxFit.cover)
-                : Column(
+                : const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.cloud_upload, size: 40, color: Colors.grey),
                       SizedBox(height: 8),
                       Text('Click to upload or drag and drop'),

@@ -1,37 +1,62 @@
+// lib/features/tourist/screens/booking_form_screen.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../models/booking.dart';
-import '../../providers/offline_provider.dart';
-import '../../../business/models/business.dart';
-import '../../../utils/constants.dart';
-import '../../../utils/date_formatter.dart';
+import 'package:siwa/features/business/models/business.dart';
+import 'package:siwa/features/tourist/screens/booking_confirmation_screen.dart';
+import 'package:siwa/features/tourist/widgets/booking_forms/rental_booking_form.dart';
+import 'package:siwa/features/tourist/widgets/booking_forms/restaurant_booking_form.dart';
+import 'package:siwa/features/tourist/widgets/booking_forms/store_booking_form.dart';
+import 'package:siwa/features/tourist/widgets/booking_forms/transportation_booking_form.dart';
+import 'package:siwa/features/tourist/widgets/booking_forms/trip_booking_form.dart';
 import '../../../utils/currency_formatter.dart';
-import '../../widgets/booking_forms/rental_booking_form.dart';
-import '../../widgets/booking_forms/store_booking_form.dart';
-import '../../widgets/booking_forms/restaurant_booking_form.dart';
-import '../../widgets/booking_forms/transportation_booking_form.dart';
-import '../../widgets/booking_forms/trip_booking_form.dart';
-import '../../widgets/tourist_bottom_nav.dart';
+
+class Booking {
+  final String id;
+  final String businessId;
+  final String serviceType;
+  final DateTime date;
+  final int adultCount;
+  final int childCount;
+  final String specialRequests;
+  final double totalPrice;
+  final String status;
+
+  Booking({
+    required this.id,
+    required this.businessId,
+    required this.serviceType,
+    required this.date,
+    required this.adultCount,
+    required this.childCount,
+    required this.specialRequests,
+    required this.totalPrice,
+    required this.status,
+  });
+}
 
 class BookingFormScreen extends StatefulWidget {
-  final Business business;
+  final Business? business;
   final String serviceType;
   final Map<String, dynamic>? serviceData;
 
   const BookingFormScreen({
-    Key? key,
-    required this.business,
+    super.key,
+    this.business,
     required this.serviceType,
     this.serviceData,
-  }) : super(key: key);
+  });
 
   @override
-  _BookingFormScreenState createState() => _BookingFormScreenState();
+  State<BookingFormScreen> createState() => _BookingFormScreenState();
 }
 
 class _BookingFormScreenState extends State<BookingFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late Widget _bookingForm;
+  DateTime? selectedDate;
+  int adultCount = 2;
+  int childCount = 0;
+  String specialRequests = '';
+  DateTime displayedMonth = DateTime(2025, 10);
 
   @override
   void initState() {
@@ -70,40 +95,17 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
   }
 
   Widget _buildDefaultBookingForm() {
-    DateTime? _selectedDate;
-    int _adultCount = 2;
-    int _childCount = 0;
-    String _specialRequests = '';
-
     return Column(
       children: [
-        // Service Header
         _buildServiceHeader(),
         const SizedBox(height: 24),
-        
-        // Date Selection
-        _buildDateSelection(_selectedDate, (date) {
-          setState(() => _selectedDate = date);
-        }),
+        _buildDateSelection(),
         const SizedBox(height: 24),
-        
-        // Guest Selection
-        _buildGuestSelection(_adultCount, _childCount, (adults, children) {
-          setState(() {
-            _adultCount = adults;
-            _childCount = children;
-          });
-        }),
+        _buildGuestSelection(),
         const SizedBox(height: 24),
-        
-        // Special Requests
-        _buildSpecialRequests(_specialRequests, (value) {
-          setState(() => _specialRequests = value);
-        }),
+        _buildSpecialRequests(),
         const SizedBox(height: 32),
-        
-        // Payment Summary
-        _buildPaymentSummary(_adultCount, _childCount),
+        _buildPaymentSummary(),
       ],
     );
   }
@@ -113,16 +115,16 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          widget.business.name,
+          widget.business?.name ?? 'Default Business',
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: AppColors.primary,
+            color: Colors.orange,
           ),
         ),
         const SizedBox(height: 8),
         Text(
-          widget.business.description,
+          widget.business?.description ?? 'Default Description',
           style: TextStyle(
             fontSize: 16,
             color: Colors.grey[600],
@@ -132,7 +134,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
     );
   }
 
-  Widget _buildDateSelection(DateTime? selectedDate, Function(DateTime) onDateSelected) {
+  Widget _buildDateSelection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -152,29 +154,35 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           ),
           child: Column(
             children: [
-              // Calendar header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
                     icon: const Icon(Icons.chevron_left),
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        displayedMonth = DateTime(displayedMonth.year, displayedMonth.month - 1);
+                      });
+                    },
                   ),
-                  const Text(
-                    'October 2024',
-                    style: TextStyle(
+                  Text(
+                    '${_monthName(displayedMonth.month)} ${displayedMonth.year}',
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.chevron_right),
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        displayedMonth = DateTime(displayedMonth.year, displayedMonth.month + 1);
+                      });
+                    },
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              // Calendar grid
               _buildCalendarGrid(),
             ],
           ),
@@ -183,10 +191,28 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
     );
   }
 
+  String _monthName(int month) {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[month - 1];
+  }
+
   Widget _buildCalendarGrid() {
+    final firstDayOfMonth = DateTime(displayedMonth.year, displayedMonth.month, 1);
+    final daysInMonth = DateTime(displayedMonth.year, displayedMonth.month + 1, 0).day;
+    final firstWeekday = firstDayOfMonth.weekday % 7; // Sunday = 0
+    final days = List.generate(firstWeekday, (_) => '').followedBy(
+      List.generate(daysInMonth, (i) => '${i + 1}'),
+    ).toList();
+
+    while (days.length % 7 != 0) {
+      days.add('');
+    }
+
     return Table(
       children: [
-        // Week days header
         const TableRow(
           children: [
             _CalendarCell('S', isHeader: true),
@@ -198,23 +224,28 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
             _CalendarCell('S', isHeader: true),
           ],
         ),
-        // Calendar rows
-        _buildCalendarRow(['', '', '', '1', '2', '3', '4']),
-        _buildCalendarRow(['5', '6', '7', '8', '9', '10', '11']),
-        _buildCalendarRow(['12', '13', '14', '15', '16', '17', '18']),
-        _buildCalendarRow(['19', '20', '21', '22', '23', '24', '25']),
-        _buildCalendarRow(['26', '27', '28', '29', '30', '31', '']),
+        for (int i = 0; i < days.length; i += 7)
+          _buildCalendarRow(days.sublist(i, i + 7)),
       ],
     );
   }
 
   TableRow _buildCalendarRow(List<String> days) {
     return TableRow(
-      children: days.map((day) => _CalendarCell(day)).toList(),
+      children: days.map((day) => _CalendarCell(
+        day,
+        onTap: day.isNotEmpty
+            ? () {
+                setState(() {
+                  selectedDate = DateTime(displayedMonth.year, displayedMonth.month, int.parse(day));
+                });
+              }
+            : null,
+      )).toList(),
     );
   }
 
-  Widget _buildGuestSelection(int adultCount, int childCount, Function(int, int) onCountChanged) {
+  Widget _buildGuestSelection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -230,14 +261,14 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           'Adults',
           'Age 13+',
           adultCount,
-          (value) => onCountChanged(value, childCount),
+          (value) => setState(() => adultCount = value.clamp(0, 10)),
         ),
         const SizedBox(height: 16),
         _buildGuestCounter(
           'Children',
           'Age 2-12',
           childCount,
-          (value) => onCountChanged(adultCount, value),
+          (value) => setState(() => childCount = value.clamp(0, 10)),
         ),
       ],
     );
@@ -286,7 +317,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
               icon: const Icon(Icons.add, size: 20),
               onPressed: () => onChanged(count + 1),
               style: IconButton.styleFrom(
-                backgroundColor: AppColors.primary.withOpacity(0.1),
+                backgroundColor: Colors.orange.withValues(alpha: 0.1),
               ),
             ),
           ],
@@ -295,7 +326,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
     );
   }
 
-  Widget _buildSpecialRequests(String value, Function(String) onChanged) {
+  Widget _buildSpecialRequests() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -313,17 +344,16 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
             hintText: 'Any special requests?',
             border: OutlineInputBorder(),
           ),
-          onChanged: onChanged,
+          onChanged: (value) => setState(() => specialRequests = value),
         ),
       ],
     );
   }
 
-  Widget _buildPaymentSummary(int adultCount, int childCount) {
-    final currencyFormatter = CurrencyFormatter();
-    final servicePrice = 200; // Example price
-    final serviceFee = 10; // Example fee
-    final total = servicePrice + serviceFee;
+  Widget _buildPaymentSummary() {
+    const double servicePrice = 200.0; // Should be dynamic based on service
+    const double serviceFee = 10.0; // Should be dynamic
+    final double total = servicePrice * adultCount + serviceFee;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -343,13 +373,16 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          _buildPaymentRow('Desert Safari (${adultCount} Adults)', currencyFormatter.format(servicePrice)),
+          _buildPaymentRow(
+            'Desert Safari ($adultCount Adults)',
+            CurrencyFormatter.format(servicePrice * adultCount, context),
+          ),
           const SizedBox(height: 8),
-          _buildPaymentRow('Service Fee', currencyFormatter.format(serviceFee)),
+          _buildPaymentRow('Service Fee', CurrencyFormatter.format(serviceFee, context)),
           const SizedBox(height: 12),
           const Divider(),
           const SizedBox(height: 8),
-          _buildPaymentRow('Total', currencyFormatter.format(total), isTotal: true),
+          _buildPaymentRow('Total', CurrencyFormatter.format(total, context), isTotal: true),
         ],
       ),
     );
@@ -364,7 +397,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           style: TextStyle(
             fontSize: isTotal ? 16 : 14,
             fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-            color: isTotal ? AppColors.primary : Colors.black,
+            color: isTotal ? Colors.orange : Colors.black,
           ),
         ),
         Text(
@@ -372,7 +405,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           style: TextStyle(
             fontSize: isTotal ? 18 : 14,
             fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-            color: isTotal ? AppColors.primary : Colors.black,
+            color: isTotal ? Colors.orange : Colors.black,
           ),
         ),
       ],
@@ -380,25 +413,35 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
   }
 
   void _updateFormData(Map<String, dynamic> formData) {
-    // Handle form data updates if needed
+    setState(() {
+      adultCount = formData['adultCount'] ?? adultCount;
+      childCount = formData['childCount'] ?? childCount;
+      specialRequests = formData['specialRequests'] ?? specialRequests;
+      selectedDate = formData['date'] ?? selectedDate;
+    });
   }
 
   void _confirmBooking() {
     if (_formKey.currentState!.validate()) {
-      // Navigate to confirmation screen
+      if (selectedDate == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a date')),
+        );
+        return;
+      }
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => BookingConfirmationScreen(
             booking: Booking(
               id: DateTime.now().millisecondsSinceEpoch.toString(),
-              businessId: widget.business.id,
+              businessId: widget.business?.id?.toString() ?? 'default',
               serviceType: widget.serviceType,
-              date: DateTime.now(),
-              adultCount: 2,
-              childCount: 0,
-              specialRequests: '',
-              totalPrice: 210,
+              date: selectedDate!,
+              adultCount: adultCount,
+              childCount: childCount,
+              specialRequests: specialRequests,
+              totalPrice: 200.0 * adultCount + 10.0,
               status: 'pending',
             ),
           ),
@@ -409,12 +452,10 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = Provider.of<OfflineProvider>(context).isOnline;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Booking Form'),
-        backgroundColor: AppColors.primary,
+        backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
       ),
       body: Padding(
@@ -430,7 +471,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: const TouristBottomNavBar(),
+      bottomNavigationBar: const SizedBox(),
     );
   }
 
@@ -442,11 +483,11 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
             onPressed: () => Navigator.of(context).pop(),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              side: BorderSide(color: AppColors.primary),
+              side: const BorderSide(color: Colors.orange),
             ),
-            child: Text(
+            child: const Text(
               'Cancel',
-              style: TextStyle(color: AppColors.primary),
+              style: TextStyle(color: Colors.orange),
             ),
           ),
         ),
@@ -455,7 +496,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           child: ElevatedButton(
             onPressed: _confirmBooking,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: Colors.orange,
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
             child: const Text(
@@ -472,20 +513,31 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
 class _CalendarCell extends StatelessWidget {
   final String day;
   final bool isHeader;
+  final VoidCallback? onTap;
 
-  const _CalendarCell(this.day, {this.isHeader = false});
+  const _CalendarCell(this.day, {this.isHeader = false, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      alignment: Alignment.center,
-      child: Text(
-        day,
-        style: TextStyle(
-          fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-          color: day.isEmpty ? Colors.transparent : 
-                 isHeader ? Colors.grey[600] : Colors.black,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 40,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: onTap != null && day.isNotEmpty ? Colors.grey[100] : null,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          day,
+          style: TextStyle(
+            fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
+            color: day.isEmpty
+                ? Colors.transparent
+                : isHeader
+                    ? Colors.grey[600]
+                    : Colors.black,
+          ),
         ),
       ),
     );
