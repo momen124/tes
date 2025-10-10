@@ -1,6 +1,7 @@
 // lib/features/tourist/screens/booking_confirmation_screen.dart
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:siwa/features/tourist/screens/booking_form_screen.dart'; // Import Booking class
+import 'package:siwa/features/tourist/screens/booking_form_screen.dart';
 
 class BookingConfirmationScreen extends StatelessWidget {
   final Booking booking;
@@ -21,21 +22,27 @@ class BookingConfirmationScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.check_circle, color: Colors.green, size: 80),
                 const SizedBox(height: 16),
-                const Text('Booking Confirmed!', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                Text(
+                  'tourist.booking.booking_confirmed'.tr(),
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 16),
-                const Text('Your booking details have been sent to your email.'),
+                Text('tourist.booking.booking_details_sent'.tr()),
                 const SizedBox(height: 8),
-                Text('Reference ID: #${booking.id}'),
-                Text('Service: ${booking.serviceType}'),
-                Text('Date: ${booking.date.toString().split(' ')[0]}'),
-                Text('Adults: ${booking.adultCount}'),
-                Text('Children: ${booking.childCount}'),
-                Text('Total: \$${booking.totalPrice.toStringAsFixed(2)}'),
+                Text('${'tourist.booking.reference_id'.tr()} #${booking.id}'),
+                Text('${'tourist.booking.service'.tr()}: ${booking.serviceType}'),
+                Text('${'tourist.booking.date'.tr()}: ${booking.date.toString().split(' ')[0]}'),
+                Text('${'tourist.booking.adults'.tr()}: ${booking.adultCount}'),
+                Text('${'tourist.booking.children'.tr()}: ${booking.childCount}'),
+                Text('${'tourist.booking.total_cost'.tr()}: \$${booking.totalPrice.toStringAsFixed(2)}'),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/tourist_home', (route) => false),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-                  child: const Text('Back to Home', style: TextStyle(color: Colors.white)),
+                  child: Text(
+                    'common.back'.tr(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),

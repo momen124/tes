@@ -10,7 +10,7 @@ void main() async {
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ar')],
-      path: 'assets/translations',
+      path: 'lib/assets/translations',  // Fixed: Added 'lib/' prefix
       fallbackLocale: const Locale('en'),
       child: const ProviderScope(child: SiwaApp()),
     ),
