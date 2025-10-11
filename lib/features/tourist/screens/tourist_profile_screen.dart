@@ -66,7 +66,7 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
                   children: [
                     const CircleAvatar(
                       radius: 50,
-                      backgroundImage: NetworkImage('https://www.adrereamellal.com/adrere/wp-content/uploads/2019/09/Adrere-amellal-siwa-oasis-eco-lodge-Omar-Hikal.jpg'),
+                      backgroundImage: NetworkImage('https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop'),
                     ),
                     Positioned(
                       bottom: 0,

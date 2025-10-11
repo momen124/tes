@@ -38,14 +38,33 @@ class CachedImage extends StatelessWidget {
             ),
           );
         },
-        errorBuilder: (context, error, stackTrace) => Container(
-          color: const Color(0xFFECEFF1),
-          child: const Icon(
-            Icons.image_not_supported_outlined,
-            color: Colors.grey,
-            size: 40,
-          ),
-        ),
+        errorBuilder: (context, error, stackTrace) {
+          // Log the error for debugging
+          debugPrint('Image load error: $error');
+          return Container(
+            color: const Color(0xFFECEFF1),
+            child: const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.image_not_supported_outlined,
+                    color: Colors.grey,
+                    size: 40,
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Image unavailable',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -14,16 +14,7 @@ import '../features/tourist/screens/booking_form_screen.dart';
 import '../features/tourist/screens/product_detail_screen.dart';
 import '../features/tourist/screens/service_detail_screen.dart';
 import '../features/tourist/screens/siwa_info_screen.dart';
-import '../features/business/screens/business_dashboard_screen.dart';
-import '../features/business/screens/business_listings_screen.dart';
-import '../features/business/screens/business_profile_screen.dart';
-import '../features/business/types/hotel/screens/hotel_management_screen.dart';
-import '../features/business/types/rental/screens/rental_fleet_screen.dart';
-import '../features/business/types/transportation/screens/route_management_screen.dart';
-import '../features/business/types/trip_booking/screens/trip_itinerary_screen.dart';
-import '../features/business/types/restaurant/screens/menu_management_screen.dart';
-import '../features/business/types/store/screens/store_inventory_screen.dart';
-import '../features/business/types/tour_guide/screens/guide_schedule_screen.dart';
+import '../features/business/screens/business_app_main.dart';
 import '../features/admin/screens/admin_dashboard_screen.dart';
 import '../features/admin/screens/admin_logs_screen.dart';
 import '../features/admin/screens/admin_moderation_screen.dart';
@@ -63,17 +54,109 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/siwa_info', builder: (context, state) => const SiwaInfoScreen()),
     GoRoute(
       path: '/business_dashboard',
-      builder: (context, state) => const BusinessDashboardScreen(businessType: BusinessType.hotel),
+      builder: (context, state) {
+        final businessType = state.uri.queryParameters['type'] ?? 'hotel';
+        final type = BusinessType.values.firstWhere(
+          (e) => e.name == businessType,
+          orElse: () => BusinessType.hotel,
+        );
+        return BusinessAppMain(
+          businessType: type,
+          onBack: () => context.go('/login'),
+        );
+      },
     ),
-    GoRoute(path: '/business_listings', builder: (context, state) => const BusinessListingsScreen()),
-    GoRoute(path: '/business_profile', builder: (context, state) => const BusinessProfileScreen()),
-    GoRoute(path: '/hotel_management', builder: (context, state) => const HotelManagementScreen()),
-    GoRoute(path: '/rental_fleet', builder: (context, state) => const RentalFleetScreen()),
-    GoRoute(path: '/route_management', builder: (context, state) => const RouteManagementScreen()),
-    GoRoute(path: '/trip_itinerary', builder: (context, state) => const TripItineraryScreen()),
-    GoRoute(path: '/menu_management', builder: (context, state) => const MenuManagementScreen()),
-    GoRoute(path: '/store_inventory', builder: (context, state) => const StoreInventoryScreen()),
-    GoRoute(path: '/guide_schedule', builder: (context, state) => const GuideScheduleScreen()),
+    GoRoute(
+      path: '/business_listings',
+      builder: (context, state) {
+        final businessType = state.uri.queryParameters['type'] ?? 'hotel';
+        final type = BusinessType.values.firstWhere(
+          (e) => e.name == businessType,
+          orElse: () => BusinessType.hotel,
+        );
+        return BusinessAppMain(
+          businessType: type,
+          onBack: () => context.go('/login'),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/business_profile',
+      builder: (context, state) {
+        final businessType = state.uri.queryParameters['type'] ?? 'hotel';
+        final type = BusinessType.values.firstWhere(
+          (e) => e.name == businessType,
+          orElse: () => BusinessType.hotel,
+        );
+        return BusinessAppMain(
+          businessType: type,
+          onBack: () => context.go('/login'),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/hotel_management',
+      builder: (context, state) {
+        return BusinessAppMain(
+          businessType: BusinessType.hotel,
+          onBack: () => context.go('/business_dashboard?type=hotel'),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/rental_fleet',
+      builder: (context, state) {
+        return BusinessAppMain(
+          businessType: BusinessType.rental,
+          onBack: () => context.go('/business_dashboard?type=rental'),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/route_management',
+      builder: (context, state) {
+        return BusinessAppMain(
+          businessType: BusinessType.transportation,
+          onBack: () => context.go('/business_dashboard?type=transportation'),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/trip_itinerary',
+      builder: (context, state) {
+        return BusinessAppMain(
+          businessType: BusinessType.tripBooking,
+          onBack: () => context.go('/business_dashboard?type=tripBooking'),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/menu_management',
+      builder: (context, state) {
+        return BusinessAppMain(
+          businessType: BusinessType.restaurant,
+          onBack: () => context.go('/business_dashboard?type=restaurant'),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/store_inventory',
+      builder: (context, state) {
+        return BusinessAppMain(
+          businessType: BusinessType.store,
+          onBack: () => context.go('/business_dashboard?type=store'),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/guide_schedule',
+      builder: (context, state) {
+        return BusinessAppMain(
+          businessType: BusinessType.tourGuide,
+          onBack: () => context.go('/business_dashboard?type=tourGuide'),
+        );
+      },
+    ),
     GoRoute(path: '/admin_dashboard', builder: (context, state) => const AdminDashboardScreen()),
     GoRoute(path: '/admin_logs', builder: (context, state) => const AdminLogsScreen()),
     GoRoute(path: '/admin_moderation', builder: (context, state) => const AdminModerationScreen()),

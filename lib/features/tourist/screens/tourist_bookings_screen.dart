@@ -20,7 +20,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
       'title': 'Siwa Shali Resort',
       'date': '2024-07-20',
       'status': 'Confirmed',
-      'imageUrl': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg?w=900&h=500&s=1',
+      'imageUrl': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
       'amount': '\$150',
     },
     {

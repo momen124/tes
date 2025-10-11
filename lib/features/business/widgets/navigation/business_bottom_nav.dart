@@ -7,11 +7,13 @@ import 'package:siwa/features/business/models/business_type.dart';
 class BusinessBottomNav extends StatelessWidget {
   final int currentIndex;
   final BusinessType businessType;
+  final Function(int)? onTap;
 
   const BusinessBottomNav({
     super.key,
     required this.currentIndex,
     required this.businessType,
+    this.onTap,
   });
 
   @override
@@ -30,7 +32,7 @@ class BusinessBottomNav extends StatelessWidget {
       child: SafeArea(
         child: BottomNavigationBar(
           currentIndex: currentIndex,
-          onTap: (index) => _onTap(context, index),
+          onTap: (index) => onTap != null ? onTap!(index) : _onTap(context, index),
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.transparent,
           elevation: 0,

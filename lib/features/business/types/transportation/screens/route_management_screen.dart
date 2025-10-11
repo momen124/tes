@@ -100,6 +100,23 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
     super.dispose();
   }
 
+  List<Marker> _buildRouteMarkers(Map<String, dynamic> route) {
+    final stops = route['stops'] as List?;
+    if (stops == null || stops.isEmpty) return [];
+    
+    return [
+      Marker(
+        point: stops[0],
+        child: const Icon(Icons.location_on, color: Colors.green, size: 30),
+      ),
+      if (stops.length > 1)
+        Marker(
+          point: stops[stops.length - 1],
+          child: const Icon(Icons.location_on, color: Colors.red, size: 30),
+        ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final isOffline = ref.watch(offlineProvider);
@@ -181,7 +198,9 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                       height: 200,
                       child: FlutterMap(
                         options: MapOptions(
-                          initialCenter: route['stops'][0],
+                          initialCenter: (route['stops'] as List?)?.isNotEmpty == true 
+                              ? route['stops'][0] 
+                              : const LatLng(29.2031, 25.5197),
                           initialZoom: 12.0,
                         ),
                         children: [
@@ -191,23 +210,14 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                           PolylineLayer(
                             polylines: [
                               Polyline(
-                                points: List<LatLng>.from(route['stops']),
+                                points: List<LatLng>.from(route['stops'] as List? ?? []),
                                 color: AppTheme.oasisTeal,
                                 strokeWidth: 4.0,
                               ),
                             ],
                           ),
                           MarkerLayer(
-                            markers: [
-                              Marker(
-                                point: route['stops'][0],
-                                child: const Icon(Icons.location_on, color: Colors.green, size: 30),
-                              ),
-                              Marker(
-                                point: route['stops'][route['stops'].length - 1],
-                                child: const Icon(Icons.location_on, color: Colors.red, size: 30),
-                              ),
-                            ],
+                            markers: _buildRouteMarkers(route),
                           ),
                         ],
                       ),

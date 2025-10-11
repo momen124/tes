@@ -1,6 +1,7 @@
 // lib/widgets/service_card.dart
 import 'package:flutter/material.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:siwa/widgets/safe_network_image.dart';
 
 class ServiceCard extends StatelessWidget {
   final String name;
@@ -48,16 +49,44 @@ class ServiceCard extends StatelessWidget {
               Container(
                 height: isFeatured ? 160 : 140,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   ),
-                  image: DecorationImage(
-                    image: NetworkImage(imageUrl ?? 'https://images.unsplash.com/photo-1589993464410-6c55678afc12'),
-                    fit: BoxFit.cover,
-                  ),
+                  color: AppTheme.lightBlueGray,
                 ),
+                child: imageUrl != null
+                    ? SafeNetworkImage(
+                        imageUrl: imageUrl!,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                        errorWidget: Container(
+                          color: AppTheme.lightBlueGray,
+                          child: const Center(
+                            child: Icon(
+                              Icons.hotel,
+                              size: 48,
+                              color: AppTheme.primaryOrange,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        color: AppTheme.lightBlueGray,
+                        child: const Center(
+                          child: Icon(
+                            Icons.hotel,
+                            size: 48,
+                            color: AppTheme.primaryOrange,
+                          ),
+                        ),
+                      ),
               ),
               // Gradient overlay
               Container(

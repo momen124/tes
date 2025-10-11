@@ -44,12 +44,12 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
 
   int get _totalPoints {
     return _challenges
-      .where((c) => c['completed'])
-      .fold(0, (sum, c) => sum + (c['points'] as int));
+      .where((c) => c['completed'] == true)
+      .fold(0, (sum, c) => sum + (c['points'] as int? ?? 0));
   }
 
   int get _completedCount {
-    return _challenges.where((c) => c['completed']).length;
+    return _challenges.where((c) => c['completed'] == true).length;
   }
 
   Future<void> _uploadPhoto(Map<String, dynamic> challenge) async {

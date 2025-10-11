@@ -195,6 +195,7 @@ class _BusinessAppMainState extends ConsumerState<BusinessAppMain> {
     final isOffline = ref.watch(offlineProvider);
     final businessColor = _getBusinessColor();
     final business = ref.watch(businessProvider);
+    
 
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,
@@ -251,10 +252,14 @@ class _BusinessAppMainState extends ConsumerState<BusinessAppMain> {
         ],
       ),
       body: _buildScreen(),
-      bottomNavigationBar: BusinessBottomNav(
-        currentIndex: _currentIndex,
-        businessType: widget.businessType,
-        onTap: _onTabChange,
+      bottomNavigationBar: Container(
+        height: 80,
+        color: Colors.white,
+        child: BusinessBottomNav(
+          currentIndex: _currentIndex,
+          businessType: widget.businessType,
+          onTap: _onTabChange,
+        ),
       ),
     ).animate().fadeIn(duration: 300.ms);
   }

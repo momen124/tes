@@ -123,7 +123,9 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 final durationParts = durationController.text.split(' ');
-                final hours = int.tryParse(durationParts[0].replaceAll('h', '')) ?? 0;
+                final hours = durationParts.isNotEmpty 
+                    ? int.tryParse(durationParts[0].replaceAll('h', '')) ?? 0
+                    : 0;
                 final minutes = durationParts.length > 1
                     ? int.tryParse(durationParts[1].replaceAll('m', '')) ?? 0
                     : 0;
@@ -247,10 +249,10 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                     itemBuilder: (context, index) {
                       final item = _itinerary[index];
                       return ListTile(
-                        key: Key(item['id'].toString()),
-                        title: Text(item['name']),
+                        key: Key((item['id'] as int?)?.toString() ?? '0'),
+                        title: Text(item['name'] as String? ?? ''),
                         subtitle: Text(
-                          '${item['description']} (Duration: ${item['duration'].inHours}h ${item['duration'].inMinutes.remainder(60)}m, Time: ${item['time']}'),
+                          '${item['description'] as String? ?? ''} (Duration: ${(item['duration'] as Duration?)?.inHours ?? 0}h ${(item['duration'] as Duration?)?.inMinutes.remainder(60) ?? 0}m, Time: ${item['time'] as String? ?? ''}'),
                         leading: const Icon(Icons.location_on),
                         trailing: ReorderableDragStartListener(
                           index: index,

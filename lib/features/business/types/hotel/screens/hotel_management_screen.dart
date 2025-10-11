@@ -32,7 +32,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
       'price': 150.0,
       'amenities': ['WiFi', 'AC', 'TV', 'Mini Bar'],
       'available': true,
-      'photos': ['https://cf.bstatic.com/xdata/images/hotel/max1024x768/36375216.jpg'],
+      'photos': ['https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop'],
     },
     {
       'id': 2,
@@ -40,7 +40,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
       'price': 80.0,
       'amenities': ['WiFi', 'AC', 'TV'],
       'available': true,
-      'photos': ['https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg'],
+      'photos': ['https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop'],
     },
     {
       'id': 3,
@@ -48,7 +48,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
       'price': 200.0,
       'amenities': ['WiFi', 'AC', 'TV', 'Kitchen', 'Balcony'],
       'available': false,
-      'photos': ['https://media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/10/70/9f/ba.jpg'],
+      'photos': ['https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&h=600&fit=crop'],
     },
   ];
 
@@ -155,10 +155,15 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
               SizedBox(
                 height: 200,
                 child: PageView.builder(
-                  itemCount: room['photos'].length,
+                  itemCount: (room['photos'] as List?)?.length ?? 1,
                   itemBuilder: (context, photoIndex) {
+                    final photos = room['photos'] as List?;
+                    final photoUrl = photos != null && photos.isNotEmpty 
+                        ? photos[photoIndex] 
+                        : 'https://images.unsplash.com/photo-1589993464410-6c55678afc12?w=800&h=600&fit=crop';
+                    
                     return Image.network(
-                      room['photos'][photoIndex],
+                      photoUrl,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stack) => Container(
                         color: AppTheme.lightBlueGray,
@@ -202,13 +207,13 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children: room['amenities'].map<Widget>((amenity) {
+                      children: (room['amenities'] as List?)?.map<Widget>((amenity) {
                         return Chip(
                           label: Text(amenity),
                           labelStyle: AppTheme.bodySmall,
                           backgroundColor: AppTheme.lightBlueGray,
                         );
-                      }).toList(),
+                      }).toList() ?? [],
                     ),
                     const SizedBox(height: 12),
                     Row(
@@ -525,7 +530,6 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
                     'price': double.tryParse(priceController.text) ?? 0.0,
                     'amenities': ['WiFi', 'AC'],
                     'available': true,
-                    'photos': ['https://cf.bstatic.com/xdata/images/hotel/max1024x768/36375216.jpg'],
                   });
                 });
                 Navigator.pop(context);

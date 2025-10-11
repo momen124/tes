@@ -29,7 +29,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
       'stock': 45,
       'category': 'Food',
       'lowStockThreshold': 20,
-      'image': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg',
+      'image': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
     },
     {
       'id': 2,
@@ -38,7 +38,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
       'stock': 12,
       'category': 'Crafts',
       'lowStockThreshold': 15,
-      'image': 'https://media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/10/70/9f/ba.jpg',
+      'image': 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=300&fit=crop',
     },
     {
       'id': 3,
@@ -47,7 +47,6 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
       'stock': 8,
       'category': 'Food',
       'lowStockThreshold': 10,
-      'image': 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/36375216.jpg',
     },
     {
       'id': 4,
@@ -56,7 +55,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
       'stock': 25,
       'category': 'Crafts',
       'lowStockThreshold': 15,
-      'image': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg',
+      'image': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
     },
   ];
 
@@ -81,7 +80,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
 
   List<Map<String, dynamic>> get filteredProducts {
     return _products.where((product) {
-      final matchesSearch = product['name'].toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesSearch = (product['name'] as String?)?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false;
       final matchesCategory = _selectedCategory == 'All' || product['category'] == _selectedCategory;
       return matchesSearch && matchesCategory;
     }).toList();
@@ -303,7 +302,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        "\$${product['price'].toStringAsFixed(0)}",
+                        "\$${(product['price'] as double?)?.toStringAsFixed(0) ?? '0'}",
                         style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
                       ),
                     ],
@@ -401,7 +400,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                     'stock': int.tryParse(stockController.text) ?? 0,
                     'category': selectedCategory,
                     'lowStockThreshold': 10,
-                    'image': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg',
+                    'image': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
                   });
                 });
                 Navigator.pop(context);
@@ -421,7 +420,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
   void _showEditProductDialog(Map<String, dynamic> product) {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController(text: product['name']);
-    final priceController = TextEditingController(text: product['price'].toString());
+    final priceController = TextEditingController(text: (product['price'] as double?)?.toString() ?? '0');
 
     showDialog(
       context: context,
@@ -491,9 +490,9 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
               const SizedBox(height: 24),
               Slider(
                 value: stockAdjustment,
-                min: -product['stock'].toDouble(),
+                min: -((product['stock'] as int? ?? 0).toDouble()),
                 max: 100.0,
-                divisions: 100 + (product['stock'] as int),
+                divisions: 100 + (product['stock'] as int? ?? 0),
                 label: stockAdjustment.toInt().toString(),
                 activeColor: AppTheme.primaryOrange,
                 onChanged: (value) {
@@ -609,17 +608,17 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    order['status'].toUpperCase(),
+                    (order['status'] as String?)?.toUpperCase() ?? 'UNKNOWN',
                     style: AppTheme.bodySmall.copyWith(color: AppTheme.white),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            ...order['items'].map<Widget>((item) => Text('• $item', style: AppTheme.bodyMedium)),
+            ...(order['items'] as List?)?.map<Widget>((item) => Text('• $item', style: AppTheme.bodyMedium)) ?? [],
             const SizedBox(height: 8),
             Text(
-              "Total: \$${order['total'].toStringAsFixed(2)}",
+              "Total: \$${(order['total'] as double?)?.toStringAsFixed(2) ?? '0.00'}",
               style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
             ),
             if (order['status'] == 'pending') ...[

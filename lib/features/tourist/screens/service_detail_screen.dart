@@ -28,7 +28,7 @@ class ServiceDetailScreen extends StatelessWidget {
                 autoPlay: true,
               ),
               items: [
-                'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg?w=900&h=500&s=1',
+                'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
               ].map((url) => Image.network(url, fit: BoxFit.cover)).toList(),
             ),
             const Padding(

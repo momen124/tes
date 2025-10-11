@@ -484,7 +484,7 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
     final nameController = TextEditingController(text: item['name']);
     final priceController = TextEditingController(text: item['price'].toString());
     final descController = TextEditingController(text: item['description']);
-    final ingredientsControllers = item['ingredients'].map<TextEditingController>((ing) => TextEditingController(text: ing)).toList().cast<TextEditingController>();
+    final ingredientsControllers = (item['ingredients'] as List?)?.map<TextEditingController>((ing) => TextEditingController(text: ing)).toList().cast<TextEditingController>() ?? [];
 
     showDialog(
       context: context,
