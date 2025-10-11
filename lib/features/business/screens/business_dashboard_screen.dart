@@ -1,98 +1,286 @@
+// lib/features/business/screens/business_dashboard_screen.dart
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:siwa/features/business/models/business_type.dart';
+import 'package:siwa/features/tourist/providers/offline_provider.dart';
 
-class BusinessDashboardScreen extends StatelessWidget {
-  const BusinessDashboardScreen({super.key});
+class BusinessDashboardScreen extends ConsumerWidget {
+  final BusinessType businessType;
+
+  const BusinessDashboardScreen({
+    super.key,
+    required this.businessType,
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.go('/tourist_home')),
-        title: const Text('Dashboard'),
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text('Total Bookings'),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isOffline = ref.watch(offlineProvider);
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (isOffline)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              color: AppTheme.lightGray,
+              child: Row(
+                children: [
+                  const Icon(Icons.wifi_off, color: AppTheme.errorRed, size: 20),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      'Offline. Data syncs when connected.',
+                      style: TextStyle(color: AppTheme.darkGray, fontSize: 14, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.refresh, size: 20),
+                    onPressed: isOffline
+                        ? null
+                        : () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Syncing data...')),
+                            );
+                          },
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ],
+              ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Text('23', style: TextStyle(fontSize: 32, color: AppTheme.primaryOrange)),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text('Pending'),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Text('5', style: TextStyle(fontSize: 32, color: AppTheme.primaryOrange)),
-            ),
-            const SizedBox(height: 24),
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text('Your Listings', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            ),
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+          Container(
+            color: AppTheme.white,
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildListingCard(
-                  title: 'Siwa Shali Resort',
-                  status: 'Published',
-                  imageUrl: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg?w=900&h=500&s=1',
-                ),
-                _buildListingCard(
-                  title: 'Desert Oasis Camp',
-                  status: 'Draft',
-                  imageUrl: 'https://media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/10/70/9f/ba.jpg',
-                ),
-                _buildListingCard(
-                  title: 'Mountain View...',
-                  status: 'Published',
-                  imageUrl: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/36375216.jpg?k=7c4c3d7a3f023c70057a34f4191dbedca15bdf660e58c8c774efc912e87b893f&o=&hp=1',
+                const Text(
+                  'Dashboard',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ).animate().fadeIn(),
+                ElevatedButton.icon(
+                  onPressed: isOffline ? null : () {},
+                  icon: const Icon(Icons.add, size: 18),
+                  label: const Text('Add'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primaryOrange,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  ),
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 3,
-        selectedItemColor: AppTheme.primaryOrange,
-        unselectedItemColor: AppTheme.gray,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Discover'),
-          BottomNavigationBarItem(icon: Icon(Icons.bookmark_border), label: 'Bookings'),
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          ),
+          const SizedBox(height: 16),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _StatCard(
+                    title: 'Total Bookings',
+                    value: '173',
+                    change: '+12%',
+                    icon: Icons.trending_up,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: _StatCard(
+                    title: 'Total Revenue',
+                    value: '\$95,000',
+                    change: '+18%',
+                    icon: Icons.attach_money,
+                  ),
+                ),
+              ],
+            ),
+          ).animate().fadeIn(),
+          const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              child: const Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Activities & Services',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 16),
+                    _ActivityItem(
+                      name: 'Desert Safari Tour',
+                      status: 'active',
+                      bookings: 45,
+                      price: '\$120',
+                    ),
+                    SizedBox(height: 12),
+                    _ActivityItem(
+                      name: 'Oasis Swimming',
+                      status: 'active',
+                      bookings: 32,
+                      price: '\$50',
+                    ),
+                    SizedBox(height: 12),
+                    _ActivityItem(
+                      name: 'Traditional Dinner',
+                      status: 'pending',
+                      bookings: 28,
+                      price: '\$80',
+                    ),
+                  ],
+                ),
+              ),
+            ).animate().fadeIn(),
+          ),
+          const SizedBox(height: 80),
         ],
-        onTap: (index) {
-          // Handle navigation
-        },
       ),
     );
   }
+}
 
-  Widget _buildListingCard({required String title, required String status, required String imageUrl}) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: ListTile(
-        leading: CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
-        title: Text(title),
-        subtitle: Text(status, style: const TextStyle(color: AppTheme.primaryOrange)),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(icon: const Icon(Icons.edit, color: AppTheme.primaryOrange), onPressed: () {}),
-            IconButton(icon: const Icon(Icons.delete_outline, color: AppTheme.primaryOrange), onPressed: () {}),
-          ],
+class _StatCard extends StatelessWidget {
+  final String title;
+  final String value;
+  final String change;
+  final IconData icon;
+
+  const _StatCard({
+    required this.title,
+    required this.value,
+    required this.change,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFFF9500), Color(0xFFFF6B00)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primaryOrange.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '$change from last month',
+            style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActivityItem extends StatelessWidget {
+  final String name;
+  final String status;
+  final int bookings;
+  final String price;
+
+  const _ActivityItem({
+    required this.name,
+    required this.status,
+    required this.bookings,
+    required this.price,
+  });
+
+  Color _getStatusColor() {
+    switch (status) {
+      case 'active':
+        return AppTheme.successGreen;
+      case 'pending':
+        return AppTheme.warningYellow;
+      default:
+        return AppTheme.gray;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.lightBlueGray.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: _getStatusColor(),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        status,
+                        style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      '$bookings bookings',
+                      style: const TextStyle(color: AppTheme.gray, fontSize: 14),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Text(
+            price,
+            style: const TextStyle(color: AppTheme.primaryOrange, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }

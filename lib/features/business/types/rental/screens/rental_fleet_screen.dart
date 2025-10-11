@@ -1,15 +1,23 @@
+// lib/features/business/types/rental/screens/rental_fleet_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:siwa/features/business/models/business_type.dart';
+import 'package:siwa/features/business/widgets/navigation/business_bottom_nav.dart';
+import 'package:siwa/features/tourist/providers/offline_provider.dart';
+import 'package:confetti/confetti.dart';
 
-class RentalFleetScreen extends StatefulWidget {
+class RentalFleetScreen extends ConsumerStatefulWidget {
   const RentalFleetScreen({super.key});
 
   @override
-  State<RentalFleetScreen> createState() => _RentalFleetScreenState();
+  ConsumerState<RentalFleetScreen> createState() => _RentalFleetScreenState();
 }
 
-class _RentalFleetScreenState extends State<RentalFleetScreen> {
+class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
+  late ConfettiController _confettiController;
   final List<Map<String, dynamic>> _fleet = [
     {
       'id': 1,
@@ -73,47 +81,77 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final isOffline = ref.watch(offlineProvider);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/business_dashboard'),
+          onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
         title: const Text('Rental Fleet'),
         actions: [
           IconButton(
             icon: const Icon(Icons.history),
-            onPressed: _showRentalHistory,
+            onPressed: isOffline ? null : _showRentalHistory,
             tooltip: 'Rental History',
           ),
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: _showAddVehicleDialog,
+            onPressed: isOffline ? null : _showAddVehicleDialog,
             tooltip: 'Add Vehicle',
           ),
         ],
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
-          childAspectRatio: 0.75,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-        ),
-        itemCount: _fleet.length,
-        itemBuilder: (context, index) {
-          final vehicle = _fleet[index];
-          return _buildVehicleCard(vehicle);
-        },
+      body: isOffline
+          ? Center(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: AppTheme.offlineBanner,
+                child: const Text(
+                  'Offline',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+          : GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
+              itemCount: _fleet.length,
+              itemBuilder: (context, index) {
+                final vehicle = _fleet[index];
+                return _buildVehicleCard(vehicle).animate().fadeIn();
+              },
+            ),
+      bottomNavigationBar: const BusinessBottomNav(
+        currentIndex: 2,
+        businessType: BusinessType.rental,
       ),
     );
   }
 
   Widget _buildVehicleCard(Map<String, dynamic> vehicle) {
     final isAvailable = vehicle['available'];
-    
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -187,7 +225,7 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
                       IconButton(
                         icon: const Icon(Icons.edit, size: 20),
                         color: AppTheme.primaryOrange,
-                        onPressed: () => _showEditVehicleDialog(vehicle),
+                        onPressed: ref.watch(offlineProvider) ? null : () => _showEditVehicleDialog(vehicle),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                       ),
@@ -197,18 +235,19 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
                           size: 20,
                         ),
                         color: AppTheme.primaryOrange,
-                        onPressed: () {
-                          setState(() {
-                            vehicle['available'] = !vehicle['available'];
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                isAvailable ? 'Vehicle marked as unavailable' : 'Vehicle marked as available',
-                              ),
-                            ),
-                          );
-                        },
+                        onPressed: ref.watch(offlineProvider)
+                            ? null
+                            : () {
+                                setState(() => vehicle['available'] = !vehicle['available']);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      isAvailable ? 'Vehicle marked as unavailable' : 'Vehicle marked as available',
+                                    ),
+                                  ),
+                                );
+                                _confettiController.play();
+                              },
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                       ),
@@ -224,6 +263,7 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
   }
 
   void _showAddVehicleDialog() {
+    final formKey = GlobalKey<FormState>();
     final typeController = TextEditingController();
     final modelController = TextEditingController();
     final rateController = TextEditingController();
@@ -233,35 +273,41 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add Vehicle'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: typeController,
-                decoration: const InputDecoration(labelText: 'Vehicle Type'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: modelController,
-                decoration: const InputDecoration(labelText: 'Model'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: rateController,
-                decoration: const InputDecoration(labelText: 'Rate'),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                initialValue: selectedRateType,
-                decoration: const InputDecoration(labelText: 'Rate Type'),
-                items: ['hour', 'day', 'week'].map((type) {
-                  return DropdownMenuItem(value: type, child: Text(type));
-                }).toList(),
-                onChanged: (value) => selectedRateType = value!,
-              ),
-            ],
+        content: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: typeController,
+                  decoration: const InputDecoration(labelText: 'Vehicle Type'),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter vehicle type' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: modelController,
+                  decoration: const InputDecoration(labelText: 'Model'),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter model' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: rateController,
+                  decoration: const InputDecoration(labelText: 'Rate'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter rate' : null,
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  initialValue: selectedRateType,
+                  decoration: const InputDecoration(labelText: 'Rate Type'),
+                  items: ['hour', 'day', 'week'].map((type) {
+                    return DropdownMenuItem(value: type, child: Text(type));
+                  }).toList(),
+                  onChanged: (value) => setState(() => selectedRateType = value!),
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
@@ -271,7 +317,7 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (typeController.text.isNotEmpty) {
+              if (formKey.currentState!.validate()) {
                 setState(() {
                   _fleet.add({
                     'id': _fleet.length + 1,
@@ -281,13 +327,14 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
                     'rateType': selectedRateType,
                     'available': true,
                     'condition': 'Good',
-                    'image': Icons.directions_car,
+                    'image': _getVehicleIcon(typeController.text),
                   });
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Vehicle added successfully')),
                 );
+                _confettiController.play();
               }
             },
             child: const Text('Add'),
@@ -298,6 +345,7 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
   }
 
   void _showEditVehicleDialog(Map<String, dynamic> vehicle) {
+    final formKey = GlobalKey<FormState>();
     final typeController = TextEditingController(text: vehicle['type']);
     final modelController = TextEditingController(text: vehicle['model']);
     final rateController = TextEditingController(text: vehicle['rate'].toString());
@@ -306,50 +354,59 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Edit Vehicle'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: typeController,
-              decoration: const InputDecoration(labelText: 'Vehicle Type'),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: modelController,
-              decoration: const InputDecoration(labelText: 'Model'),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: rateController,
-              decoration: const InputDecoration(labelText: 'Rate'),
-              keyboardType: TextInputType.number,
-            ),
-          ],
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: typeController,
+                decoration: const InputDecoration(labelText: 'Vehicle Type'),
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter vehicle type' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: modelController,
+                decoration: const InputDecoration(labelText: 'Model'),
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter model' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: rateController,
+                decoration: const InputDecoration(labelText: 'Rate'),
+                keyboardType: TextInputType.number,
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter rate' : null,
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () {
-              setState(() {
-                _fleet.remove(vehicle);
-              });
+              setState(() => _fleet.remove(vehicle));
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Vehicle deleted')),
               );
+              _confettiController.play();
             },
             child: const Text('Delete', style: TextStyle(color: AppTheme.errorRed)),
           ),
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                vehicle['type'] = typeController.text;
-                vehicle['model'] = modelController.text;
-                vehicle['rate'] = double.tryParse(rateController.text) ?? vehicle['rate'];
-              });
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Vehicle updated')),
-              );
+              if (formKey.currentState!.validate()) {
+                setState(() {
+                  vehicle['type'] = typeController.text;
+                  vehicle['model'] = modelController.text;
+                  vehicle['rate'] = double.tryParse(rateController.text) ?? vehicle['rate'];
+                  vehicle['image'] = _getVehicleIcon(typeController.text);
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Vehicle updated')),
+                );
+                _confettiController.play();
+              }
             },
             child: const Text('Save'),
           ),
@@ -411,7 +468,7 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
                             children: [
                               Text(rental['vehicle'], style: AppTheme.titleMedium),
                               Text(
-                                '\$${rental["revenue"].toStringAsFixed(0)}',
+                                '\$${rental['revenue'].toStringAsFixed(0)}',
                                 style: AppTheme.titleMedium.copyWith(color: AppTheme.successGreen),
                               ),
                             ],
@@ -426,7 +483,7 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
                         ],
                       ),
                     ),
-                  );
+                  ).animate().fadeIn();
                 },
               ),
             ),
@@ -434,6 +491,21 @@ class _RentalFleetScreenState extends State<RentalFleetScreen> {
         ),
       ),
     );
+  }
+
+  IconData _getVehicleIcon(String type) {
+    switch (type.toLowerCase()) {
+      case 'mountain bike':
+        return Icons.pedal_bike;
+      case 'suv':
+        return Icons.directions_car;
+      case 'electric scooter':
+        return Icons.electric_scooter;
+      case 'atv':
+        return Icons.terrain;
+      default:
+        return Icons.directions_car;
+    }
   }
 
   String _formatDate(DateTime date) {

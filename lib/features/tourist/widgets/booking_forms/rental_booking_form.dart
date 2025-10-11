@@ -5,10 +5,10 @@ class RentalBookingForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onFormDataChanged;
 
   const RentalBookingForm({
-    Key? key,
+    super.key,
     required this.rental,
     required this.onFormDataChanged,
-  }) : super(key: key);
+  });
 
   @override
   _RentalBookingFormState createState() => _RentalBookingFormState();

@@ -1,23 +1,30 @@
 // lib/features/business/types/hotel/screens/hotel_management_screen.dart
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:siwa/app/theme.dart';
+import 'package:siwa/features/business/models/business_type.dart';
+import 'package:siwa/features/business/widgets/navigation/business_bottom_nav.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:siwa/app/theme.dart';
+import 'package:siwa/features/tourist/providers/offline_provider.dart';
+import 'package:confetti/confetti.dart';
 
-class HotelManagementScreen extends StatefulWidget {
+class HotelManagementScreen extends ConsumerStatefulWidget {
   const HotelManagementScreen({super.key});
 
   @override
-  State<HotelManagementScreen> createState() => _HotelManagementScreenState();
+  ConsumerState<HotelManagementScreen> createState() => _HotelManagementScreenState();
 }
 
-class _HotelManagementScreenState extends State<HotelManagementScreen> with SingleTickerProviderStateMixin {
+class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   final Set<DateTime> _blockedDates = {};
-  
+  late ConfettiController _confettiController;
+
   final List<Map<String, dynamic>> _rooms = [
     {
       'id': 1,
@@ -68,27 +75,31 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _confettiController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isOffline = ref.watch(offlineProvider);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/business_dashboard'),
+          onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
         title: const Text('Hotel Management'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: _showAddRoomDialog,
+            onPressed: isOffline ? null : _showAddRoomDialog,
             tooltip: 'Add Room',
           ),
         ],
@@ -104,13 +115,28 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildRoomsTab(),
-          _buildReportsTab(),
-          _buildReservationsTab(),
-        ],
+      body: isOffline
+          ? Center(
+              child: Container(
+                decoration: AppTheme.offlineBanner,
+                padding: const EdgeInsets.all(12),
+                child: Text(
+                  'Offline',
+                  style: AppTheme.bodyMedium.copyWith(color: AppTheme.white),
+                ),
+              ),
+            )
+          : TabBarView(
+              controller: _tabController,
+              children: [
+                _buildRoomsTab(),
+                _buildReportsTab(),
+                _buildReservationsTab(),
+              ],
+            ).animate().fadeIn(),
+      bottomNavigationBar: const BusinessBottomNav(
+        currentIndex: 2,
+        businessType: BusinessType.hotel,
       ),
     );
   }
@@ -126,7 +152,6 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Room Image Carousel
               SizedBox(
                 height: 200,
                 child: PageView.builder(
@@ -139,11 +164,10 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
                         color: AppTheme.lightBlueGray,
                         child: const Icon(Icons.hotel, size: 60, color: AppTheme.gray),
                       ),
-                    );
+                    ).animate().fadeIn();
                   },
                 ),
               ),
-              
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -192,22 +216,23 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
                       children: [
                         IconButton(
                           icon: const Icon(Icons.edit, color: AppTheme.primaryOrange),
-                          onPressed: () => _showEditRoomDialog(room),
+                          onPressed: ref.watch(offlineProvider) ? null : () => _showEditRoomDialog(room),
                         ),
                         IconButton(
                           icon: Icon(
                             room['available'] ? Icons.block : Icons.check_circle,
                             color: AppTheme.primaryOrange,
                           ),
-                          onPressed: () {
-                            setState(() {
-                              room['available'] = !room['available'];
-                            });
-                          },
+                          onPressed: ref.watch( offlineProvider)
+                              ? null
+                              : () {
+                                  setState(() => room['available'] = !room['available']);
+                                  _confettiController.play();
+                                },
                         ),
                         IconButton(
                           icon: const Icon(Icons.calendar_today, color: AppTheme.primaryOrange),
-                          onPressed: () => _showAvailabilityCalendar(room),
+                          onPressed: ref.watch(offlineProvider) ? null : () => _showAvailabilityCalendar(room),
                         ),
                       ],
                     ),
@@ -216,21 +241,20 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
               ),
             ],
           ),
-        );
+        ).animate().fadeIn();
       },
     );
   }
 
   Widget _buildReportsTab() {
+    final isOffline = ref.watch(offlineProvider);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Occupancy Overview', style: AppTheme.titleLarge),
+          Text('Occupancy Overview', style: AppTheme.titleLarge).animate().fadeIn(),
           const SizedBox(height: 16),
-          
-          // Occupancy Stats Cards
           Row(
             children: [
               Expanded(
@@ -241,17 +265,15 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
                 child: _buildStatCard('Avg. Occupancy', '72%', AppTheme.oasisTeal),
               ),
             ],
-          ),
+          ).animate().fadeIn(),
           const SizedBox(height: 24),
-          
-          // Occupancy Chart
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Monthly Occupancy Rate', style: AppTheme.titleMedium),
+                  Text('Monthly Occupancy Rate', style: AppTheme.titleMedium).animate().fadeIn(),
                   const SizedBox(height: 16),
                   SizedBox(
                     height: 200,
@@ -280,30 +302,43 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
                               },
                             ),
                           ),
-                          leftTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: (value, meta) => Text(
+                                '${value.toInt()}%',
+                                style: AppTheme.bodySmall,
+                              ),
+                              reservedSize: 28,
+                            ),
                           ),
-                          topTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                          rightTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
+                          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        ),
+                        gridData: const FlGridData(show: true, drawVerticalLine: false),
+                        borderData: FlBorderData(show: false),
+                        barTouchData: BarTouchData(
+                          enabled: !isOffline,
+                          touchTooltipData: BarTouchTooltipData(
+                            getTooltipColor: (_) => AppTheme.lightBlueGray,
+                            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                              return BarTooltipItem(
+                                '${rod.toY.toStringAsFixed(0)}%',
+                                AppTheme.bodyMedium.copyWith(color: AppTheme.white),
+                              );
+                            },
                           ),
                         ),
-                        gridData: const FlGridData(show: false),
-                        borderData: FlBorderData(show: false),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-          
+          ).animate().fadeIn(),
           const SizedBox(height: 24),
-          Text('Revenue Overview', style: AppTheme.titleLarge),
+          Text('Revenue Overview', style: AppTheme.titleLarge).animate().fadeIn(),
           const SizedBox(height: 16),
-          
           Row(
             children: [
               Expanded(
@@ -314,20 +349,20 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
                 child: _buildStatCard('Last Month', '\$11,200', AppTheme.gray),
               ),
             ],
-          ),
+          ).animate().fadeIn(),
         ],
       ),
     );
   }
 
   Widget _buildReservationsTab() {
+    final isOffline = ref.watch(offlineProvider);
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: _reservations.length,
       itemBuilder: (context, index) {
         final reservation = _reservations[index];
         final isPending = reservation['status'] == 'pending';
-        
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
           child: Padding(
@@ -388,12 +423,16 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
-                        onPressed: () => _handleReservationAction(reservation, false),
+                        onPressed: isOffline
+                            ? null
+                            : () => _handleReservationAction(reservation, false),
                         child: const Text('Reject'),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
-                        onPressed: () => _handleReservationAction(reservation, true),
+                        onPressed: isOffline
+                            ? null
+                            : () => _handleReservationAction(reservation, true),
                         child: const Text('Approve'),
                       ),
                     ],
@@ -402,7 +441,7 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
               ],
             ),
           ),
-        );
+        ).animate().fadeIn();
       },
     );
   }
@@ -441,28 +480,34 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
   }
 
   void _showAddRoomDialog() {
+    final formKey = GlobalKey<FormState>();
     final typeController = TextEditingController();
     final priceController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add New Room'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: typeController,
-                decoration: const InputDecoration(labelText: 'Room Type'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: priceController,
-                decoration: const InputDecoration(labelText: 'Price per Night'),
-                keyboardType: TextInputType.number,
-              ),
-            ],
+        content: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: typeController,
+                  decoration: const InputDecoration(labelText: 'Room Type'),
+                  validator: (value) => value?.isEmpty ?? true ? 'Enter room type' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: priceController,
+                  decoration: const InputDecoration(labelText: 'Price per Night'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => value?.isEmpty ?? true ? 'Enter price' : null,
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
@@ -472,7 +517,7 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
           ),
           ElevatedButton(
             onPressed: () {
-              if (typeController.text.isNotEmpty && priceController.text.isNotEmpty) {
+              if (formKey.currentState!.validate()) {
                 setState(() {
                   _rooms.add({
                     'id': _rooms.length + 1,
@@ -487,6 +532,7 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Room added successfully')),
                 );
+                _confettiController.play();
               }
             },
             child: const Text('Add'),
@@ -497,28 +543,34 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
   }
 
   void _showEditRoomDialog(Map<String, dynamic> room) {
+    final formKey = GlobalKey<FormState>();
     final typeController = TextEditingController(text: room['type']);
     final priceController = TextEditingController(text: room['price'].toString());
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Edit Room'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: typeController,
-                decoration: const InputDecoration(labelText: 'Room Type'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: priceController,
-                decoration: const InputDecoration(labelText: 'Price per Night'),
-                keyboardType: TextInputType.number,
-              ),
-            ],
+        content: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: typeController,
+                  decoration: const InputDecoration(labelText: 'Room Type'),
+                  validator: (value) => value?.isEmpty ?? true ? 'Enter room type' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: priceController,
+                  decoration: const InputDecoration(labelText: 'Price per Night'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => value?.isEmpty ?? true ? 'Enter price' : null,
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
@@ -528,14 +580,17 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
           ),
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                room['type'] = typeController.text;
-                room['price'] = double.tryParse(priceController.text) ?? room['price'];
-              });
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Room updated successfully')),
-              );
+              if (formKey.currentState!.validate()) {
+                setState(() {
+                  room['type'] = typeController.text;
+                  room['price'] = double.tryParse(priceController.text) ?? room['price'];
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Room updated successfully')),
+                );
+                _confettiController.play();
+              }
             },
             child: const Text('Save'),
           ),
@@ -570,7 +625,6 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
                     }
                   });
                   Navigator.pop(context);
-                  _showAvailabilityCalendar(room);
                 },
                 calendarStyle: CalendarStyle(
                   selectedDecoration: const BoxDecoration(
@@ -599,13 +653,13 @@ class _HotelManagementScreenState extends State<HotelManagementScreen> with Sing
     setState(() {
       reservation['status'] = approve ? 'confirmed' : 'rejected';
     });
-    
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(approve ? 'Reservation approved!' : 'Reservation rejected'),
         backgroundColor: approve ? AppTheme.successGreen : AppTheme.errorRed,
       ),
     );
+    if (approve) _confettiController.play();
   }
 
   String _formatDate(DateTime date) {

@@ -1,23 +1,28 @@
 // lib/features/business/types/tour_guide/screens/guide_schedule_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:siwa/features/business/models/business_type.dart';
+import 'package:siwa/features/business/widgets/navigation/business_bottom_nav.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:siwa/features/tourist/providers/offline_provider.dart';
+import 'package:confetti/confetti.dart';
 
-class GuideScheduleScreen extends StatefulWidget {
+class GuideScheduleScreen extends ConsumerStatefulWidget {
   const GuideScheduleScreen({super.key});
 
   @override
-  State<GuideScheduleScreen> createState() => _GuideScheduleScreenState();
+  ConsumerState<GuideScheduleScreen> createState() => _GuideScheduleScreenState();
 }
 
-class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
+class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
+  late ConfettiController _confettiController;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   final Set<DateTime> _blockedDates = {};
-  
   final Map<DateTime, List<Map<String, dynamic>>> _tours = {};
-  
   final List<String> _expertiseTags = [
     'History',
     'Eco-Tourism',
@@ -29,6 +34,7 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
   @override
   void initState() {
     super.initState();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
     // Add sample tours
     final today = DateTime.now();
     _tours[DateTime(today.year, today.month, today.day + 2)] = [
@@ -43,33 +49,53 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
   }
 
   @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final isOffline = ref.watch(offlineProvider);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/business_dashboard'),
+          onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
         title: const Text('Guide Schedule'),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
-            onPressed: _showExpertiseDialog,
+            onPressed: isOffline ? null : _showExpertiseDialog,
             tooltip: 'Update Expertise',
           ),
         ],
       ),
-      body: Column(
-        children: [
-          _buildCalendar(),
-          _buildToursList(),
-        ],
-      ),
+      body: isOffline
+          ? Center(
+              child: Container(
+                decoration: AppTheme.offlineBanner,
+                padding: const EdgeInsets.all(12),
+                child: const Text('You are offline'),
+              ),
+            )
+          : Column(
+              children: [
+                _buildCalendar().animate().fadeIn(),
+                _buildToursList().animate().fadeIn(),
+              ],
+            ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _selectedDay != null ? () => _showAddTourDialog(_selectedDay!) : null,
+        onPressed: isOffline || _selectedDay == null ? null : () => _showAddTourDialog(_selectedDay!),
         icon: const Icon(Icons.add),
         label: const Text('Add Tour'),
-        backgroundColor: _selectedDay != null ? AppTheme.primaryOrange : AppTheme.gray,
+        backgroundColor: _selectedDay != null && !isOffline ? AppTheme.primaryOrange : AppTheme.gray,
+      ),
+      bottomNavigationBar: const BusinessBottomNav(
+        currentIndex: 2,
+        businessType: BusinessType.tourGuide,
       ),
     );
   }
@@ -188,7 +214,9 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.edit, size: 20),
-                        onPressed: () => _showEditTourDialog(tour, normalizedDay),
+                        onPressed: ref.watch(offlineProvider)
+                            ? null
+                            : () => _showEditTourDialog(tour, normalizedDay),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                       ),
@@ -197,13 +225,14 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
                 ],
               ),
             ),
-          );
+          ).animate().fadeIn();
         },
       ),
     );
   }
 
   void _showAddTourDialog(DateTime day) {
+    final formKey = GlobalKey<FormState>();
     final titleController = TextEditingController();
     final durationController = TextEditingController();
     final guestsController = TextEditingController();
@@ -213,32 +242,39 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Add Tour - ${_formatDate(day)}'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: 'Tour Title'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: durationController,
-                decoration: const InputDecoration(labelText: 'Duration (e.g., 3 hours)'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: guestsController,
-                decoration: const InputDecoration(labelText: 'Number of Guests'),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: priceController,
-                decoration: const InputDecoration(labelText: 'Price'),
-                keyboardType: TextInputType.number,
-              ),
-            ],
+        content: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: titleController,
+                  decoration: const InputDecoration(labelText: 'Tour Title'),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter tour title' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: durationController,
+                  decoration: const InputDecoration(labelText: 'Duration (e.g., 3 hours)'),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter duration' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: guestsController,
+                  decoration: const InputDecoration(labelText: 'Number of Guests'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter number of guests' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: priceController,
+                  decoration: const InputDecoration(labelText: 'Price'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
@@ -248,7 +284,7 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (titleController.text.isNotEmpty) {
+              if (formKey.currentState!.validate()) {
                 final normalizedDay = DateTime(day.year, day.month, day.day);
                 setState(() {
                   if (_tours[normalizedDay] == null) {
@@ -266,6 +302,7 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Tour added successfully')),
                 );
+                _confettiController.play();
               }
             },
             child: const Text('Add'),
@@ -276,6 +313,7 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
   }
 
   void _showEditTourDialog(Map<String, dynamic> tour, DateTime day) {
+    final formKey = GlobalKey<FormState>();
     final titleController = TextEditingController(text: tour['title']);
     final durationController = TextEditingController(text: tour['duration']);
     final guestsController = TextEditingController(text: tour['guests'].toString());
@@ -285,59 +323,72 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Edit Tour'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: 'Tour Title'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: durationController,
-                decoration: const InputDecoration(labelText: 'Duration'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: guestsController,
-                decoration: const InputDecoration(labelText: 'Number of Guests'),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: priceController,
-                decoration: const InputDecoration(labelText: 'Price'),
-                keyboardType: TextInputType.number,
-              ),
-            ],
+        content: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: titleController,
+                  decoration: const InputDecoration(labelText: 'Tour Title'),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter tour title' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: durationController,
+                  decoration: const InputDecoration(labelText: 'Duration'),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter duration' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: guestsController,
+                  decoration: const InputDecoration(labelText: 'Number of Guests'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter number of guests' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: priceController,
+                  decoration: const InputDecoration(labelText: 'Price'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () {
-              setState(() {
-                _tours[day]?.remove(tour);
-              });
+              setState(() => _tours[day]?.remove(tour));
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Tour deleted')),
               );
+              _confettiController.play();
             },
             child: const Text('Delete', style: TextStyle(color: AppTheme.errorRed)),
           ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                tour['title'] = titleController.text;
-                tour['duration'] = durationController.text;
-                tour['guests'] = int.tryParse(guestsController.text) ?? tour['guests'];
-                tour['price'] = double.tryParse(priceController.text) ?? tour['price'];
-              });
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Tour updated')),
-              );
+              if (formKey.currentState!.validate()) {
+                setState(() {
+                  tour['title'] = titleController.text;
+                  tour['duration'] = durationController.text;
+                  tour['guests'] = int.tryParse(guestsController.text) ?? tour['guests'];
+                  tour['price'] = double.tryParse(priceController.text) ?? tour['price'];
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Tour updated')),
+                );
+                _confettiController.play();
+              }
             },
             child: const Text('Save'),
           ),
@@ -347,27 +398,55 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
   }
 
   void _showExpertiseDialog() {
+    final editableTags = List<String>.from(_expertiseTags);
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Your Expertise'),
-        content: Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: _expertiseTags.map((tag) {
-            return Chip(
-              label: Text(tag),
-              backgroundColor: AppTheme.oasisTeal,
-              labelStyle: AppTheme.bodySmall.copyWith(color: AppTheme.white),
-            );
-          }).toList(),
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: const Text('Your Expertise'),
+            content: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: editableTags.map((tag) {
+                return Chip(
+                  label: Text(tag),
+                  backgroundColor: AppTheme.oasisTeal,
+                  labelStyle: AppTheme.bodySmall.copyWith(color: AppTheme.white),
+                  onDeleted: () {
+                    setState(() => editableTags.remove(tag));
+                  },
+                );
+              }).toList(),
+            ),
+            actions: [
+              TextField(
+                decoration: const InputDecoration(
+                  hintText: 'Add new expertise',
+                  border: OutlineInputBorder(),
+                ),
+                onSubmitted: (value) {
+                  if (value.isNotEmpty && !editableTags.contains(value)) {
+                    setState(() => editableTags.add(value));
+                  }
+                },
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() => _expertiseTags.clear());
+                  setState(() => _expertiseTags.addAll(editableTags));
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Expertise updated')),
+                  );
+                  _confettiController.play();
+                },
+                child: const Text('Save'),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -376,4 +455,3 @@ class _GuideScheduleScreenState extends State<GuideScheduleScreen> {
     return '${date.day}/${date.month}/${date.year}';
   }
 }
-

@@ -1,19 +1,26 @@
 // lib/features/business/types/store/screens/store_inventory_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:siwa/features/business/models/business_type.dart';
+import 'package:siwa/features/business/widgets/navigation/business_bottom_nav.dart';
+import 'package:siwa/features/tourist/providers/offline_provider.dart';
+import 'package:confetti/confetti.dart';
 
-class StoreInventoryScreen extends StatefulWidget {
+class StoreInventoryScreen extends ConsumerStatefulWidget {
   const StoreInventoryScreen({super.key});
 
   @override
-  State<StoreInventoryScreen> createState() => _StoreInventoryScreenState();
+  ConsumerState<StoreInventoryScreen> createState() => _StoreInventoryScreenState();
 }
 
-class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
+class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
+  late ConfettiController _confettiController;
   String _searchQuery = '';
   String _selectedCategory = 'All';
-  
+
   final List<Map<String, dynamic>> _products = [
     {
       'id': 1,
@@ -81,49 +88,75 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final isOffline = ref.watch(offlineProvider);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/business_dashboard'),
+          onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
         title: const Text('Store Inventory'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: _showAddProductDialog,
+            onPressed: isOffline ? null : _showAddProductDialog,
             tooltip: 'Add Product',
           ),
         ],
       ),
-      body: Column(
-        children: [
-          _buildSearchAndFilter(),
-          _buildLowStockAlert(),
-          Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
-                childAspectRatio: 0.7,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
+      body: isOffline
+          ? Center(
+              child: Container(
+                decoration: AppTheme.offlineBanner,
+                padding: const EdgeInsets.all(16),
+                child: Text('You are offline', style: AppTheme.bodyMedium),
               ),
-              itemCount: filteredProducts.length,
-              itemBuilder: (context, index) {
-                final product = filteredProducts[index];
-                return _buildProductCard(product);
-              },
+            )
+          : Column(
+              children: [
+                _buildSearchAndFilter().animate().fadeIn(),
+                _buildLowStockAlert().animate().fadeIn(),
+                Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+                      childAspectRatio: 0.7,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemCount: filteredProducts.length,
+                    itemBuilder: (context, index) {
+                      final product = filteredProducts[index];
+                      return _buildProductCard(product).animate().fadeIn();
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _showOrdersBottomSheet,
+        onPressed: isOffline ? null : _showOrdersBottomSheet,
         icon: const Icon(Icons.receipt_long),
         label: Text('Orders (${_orders.length})'),
-        backgroundColor: AppTheme.primaryOrange,
+        backgroundColor: isOffline ? AppTheme.gray : AppTheme.primaryOrange,
+      ),
+      bottomNavigationBar: const BusinessBottomNav(
+        currentIndex: 2,
+        businessType: BusinessType.store,
       ),
     );
   }
@@ -185,9 +218,9 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
 
   Widget _buildLowStockAlert() {
     final lowStockProducts = _products.where((p) => p['stock'] < p['lowStockThreshold']).toList();
-    
+
     if (lowStockProducts.isEmpty) return const SizedBox.shrink();
-    
+
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
@@ -213,7 +246,8 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
 
   Widget _buildProductCard(Map<String, dynamic> product) {
     final isLowStock = product['stock'] < product['lowStockThreshold'];
-    
+    final isOffline = ref.watch(offlineProvider);
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -280,14 +314,14 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
                       IconButton(
                         icon: const Icon(Icons.edit, size: 20),
                         color: AppTheme.primaryOrange,
-                        onPressed: () => _showEditProductDialog(product),
+                        onPressed: isOffline ? null : () => _showEditProductDialog(product),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                       ),
                       IconButton(
                         icon: const Icon(Icons.inventory_2, size: 20),
                         color: AppTheme.primaryOrange,
-                        onPressed: () => _showStockAdjustmentDialog(product),
+                        onPressed: isOffline ? null : () => _showStockAdjustmentDialog(product),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                       ),
@@ -303,45 +337,52 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
   }
 
   void _showAddProductDialog() {
+    final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController();
     final priceController = TextEditingController();
     final stockController = TextEditingController();
     String selectedCategory = 'Food';
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add New Product'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: 'Product Name'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: priceController,
-                decoration: const InputDecoration(labelText: 'Price'),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: stockController,
-                decoration: const InputDecoration(labelText: 'Initial Stock'),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                initialValue: selectedCategory,
-                decoration: const InputDecoration(labelText: 'Category'),
-                items: ['Food', 'Crafts'].map((cat) {
-                  return DropdownMenuItem(value: cat, child: Text(cat));
-                }).toList(),
-                onChanged: (value) => selectedCategory = value!,
-              ),
-            ],
+        content: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: 'Product Name'),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter product name' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: priceController,
+                  decoration: const InputDecoration(labelText: 'Price'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: stockController,
+                  decoration: const InputDecoration(labelText: 'Initial Stock'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter stock' : null,
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  initialValue: selectedCategory,
+                  decoration: const InputDecoration(labelText: 'Category'),
+                  items: ['Food', 'Crafts'].map((cat) {
+                    return DropdownMenuItem(value: cat, child: Text(cat));
+                  }).toList(),
+                  onChanged: (value) => selectedCategory = value!,
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
@@ -351,7 +392,7 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (nameController.text.isNotEmpty) {
+              if (formKey.currentState!.validate()) {
                 setState(() {
                   _products.add({
                     'id': _products.length + 1,
@@ -367,6 +408,7 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Product added successfully')),
                 );
+                _confettiController.play();
               }
             },
             child: const Text('Add'),
@@ -377,27 +419,33 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
   }
 
   void _showEditProductDialog(Map<String, dynamic> product) {
+    final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController(text: product['name']);
     final priceController = TextEditingController(text: product['price'].toString());
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Edit Product'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'Product Name'),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: priceController,
-              decoration: const InputDecoration(labelText: 'Price'),
-              keyboardType: TextInputType.number,
-            ),
-          ],
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Product Name'),
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter product name' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: priceController,
+                decoration: const InputDecoration(labelText: 'Price'),
+                keyboardType: TextInputType.number,
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
@@ -406,14 +454,17 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                product['name'] = nameController.text;
-                product['price'] = double.tryParse(priceController.text) ?? product['price'];
-              });
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Product updated successfully')),
-              );
+              if (formKey.currentState!.validate()) {
+                setState(() {
+                  product['name'] = nameController.text;
+                  product['price'] = double.tryParse(priceController.text) ?? product['price'];
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Product updated successfully')),
+                );
+                _confettiController.play();
+              }
             },
             child: const Text('Save'),
           ),
@@ -424,7 +475,7 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
 
   void _showStockAdjustmentDialog(Map<String, dynamic> product) {
     double stockAdjustment = 0;
-    
+
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -474,6 +525,7 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Stock updated successfully')),
                 );
+                _confettiController.play();
               },
               child: const Text('Update'),
             ),
@@ -524,7 +576,7 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
                 itemCount: _orders.length,
                 itemBuilder: (context, index) {
                   final order = _orders[index];
-                  return _buildOrderCard(order);
+                  return _buildOrderCard(order).animate().fadeIn();
                 },
               ),
             ),
@@ -535,6 +587,8 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
   }
 
   Widget _buildOrderCard(Map<String, dynamic> order) {
+    final isOffline = ref.watch(offlineProvider);
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
@@ -549,8 +603,8 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: order['status'] == 'pending' 
-                        ? AppTheme.warningYellow 
+                    color: order['status'] == 'pending'
+                        ? AppTheme.warningYellow
                         : AppTheme.primaryOrange,
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -574,12 +628,12 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () => _handleOrder(order, 'cancelled'),
+                    onPressed: isOffline ? null : () => _handleOrder(order, 'cancelled'),
                     child: const Text('Cancel'),
                   ),
                   const SizedBox(width: 8),
                   ElevatedButton(
-                    onPressed: () => _handleOrder(order, 'processing'),
+                    onPressed: isOffline ? null : () => _handleOrder(order, 'processing'),
                     child: const Text('Process'),
                   ),
                 ],
@@ -599,5 +653,6 @@ class _StoreInventoryScreenState extends State<StoreInventoryScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Order $newStatus')),
     );
+    _confettiController.play();
   }
 }

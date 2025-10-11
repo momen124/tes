@@ -1,16 +1,23 @@
 // lib/features/business/types/restaurant/screens/menu_management_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:siwa/features/business/models/business_type.dart';
+import 'package:siwa/features/business/widgets/navigation/business_bottom_nav.dart';
+import 'package:siwa/features/tourist/providers/offline_provider.dart';
+import 'package:confetti/confetti.dart';
 
-class MenuManagementScreen extends StatefulWidget {
+class MenuManagementScreen extends ConsumerStatefulWidget {
   const MenuManagementScreen({super.key});
 
   @override
-  State<MenuManagementScreen> createState() => _MenuManagementScreenState();
+  ConsumerState<MenuManagementScreen> createState() => _MenuManagementScreenState();
 }
 
-class _MenuManagementScreenState extends State<MenuManagementScreen> {
+class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
+  late ConfettiController _confettiController;
   final Map<String, List<Map<String, dynamic>>> _menuByCategory = {
     'Breakfast': [
       {
@@ -75,67 +82,91 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
   int get totalItems => _menuByCategory.values.fold(0, (sum, list) => sum + list.length);
 
   @override
+  void initState() {
+    super.initState();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final isOffline = ref.watch(offlineProvider);
+
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/business_dashboard'),
+          onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
         title: const Text('Menu'),
         backgroundColor: AppTheme.lightBlueGray,
         elevation: 0,
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: _menuByCategory.length,
-        itemBuilder: (context, index) {
-          final category = _menuByCategory.keys.elementAt(index);
-          final items = _menuByCategory[category]!;
-          
-          return Container(
-            margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-              color: AppTheme.white,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Theme(
-              data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-              child: ExpansionTile(
-                initiallyExpanded: false,
-                tilePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                childrenPadding: const EdgeInsets.only(bottom: 8),
-                title: Text(
-                  category,
-                  style: AppTheme.titleLarge.copyWith(fontSize: 20),
-                ),
-                subtitle: Text(
-                  '${items.length} items',
-                  style: AppTheme.bodyMedium.copyWith(color: AppTheme.gray),
-                ),
-                children: items.map((item) => _buildMenuItem(item, category)).toList(),
+      body: isOffline
+          ? Center(
+              child: Container(
+                decoration: AppTheme.offlineBanner,
+                padding: const EdgeInsets.all(12),
               ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: _menuByCategory.length,
+              itemBuilder: (context, index) {
+                final category = _menuByCategory.keys.elementAt(index);
+                final items = _menuByCategory[category]!;
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: AppTheme.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Theme(
+                    data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                    child: ExpansionTile(
+                      initiallyExpanded: false,
+                      tilePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      childrenPadding: const EdgeInsets.only(bottom: 8),
+                      title: Text(
+                        category,
+                        style: AppTheme.titleLarge.copyWith(fontSize: 20),
+                      ),
+                      subtitle: Text(
+                        '${items.length} items',
+                        style: AppTheme.bodyMedium.copyWith(color: AppTheme.gray),
+                      ),
+                      children: items.map((item) => _buildMenuItem(item, category)).toList(),
+                    ),
+                  ),
+                ).animate().fadeIn();
+              },
             ),
-          );
-        },
-      ),
       floatingActionButton: Container(
         width: double.infinity,
         margin: const EdgeInsets.symmetric(horizontal: 16),
         child: FloatingActionButton.extended(
-          onPressed: _showAddMenuItem,
+          onPressed: isOffline ? null : _showAddMenuItem,
           backgroundColor: AppTheme.primaryOrange,
           icon: const Icon(Icons.add),
           label: const Text('Add Item', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      bottomNavigationBar: _buildBottomNav(),
+      bottomNavigationBar: const BusinessBottomNav(
+        currentIndex: 2,
+        businessType: BusinessType.restaurant,
+      ),
     );
   }
 
   Widget _buildMenuItem(Map<String, dynamic> item, String category) {
+    final isOffline = ref.watch(offlineProvider);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       padding: const EdgeInsets.all(16),
@@ -145,7 +176,6 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       ),
       child: Row(
         children: [
-          // Item Image
           Container(
             width: 60,
             height: 60,
@@ -160,8 +190,6 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
             ),
           ),
           const SizedBox(width: 16),
-          
-          // Item Details
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,8 +232,6 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
             ),
           ),
           const SizedBox(width: 12),
-          
-          // Edit Button
           Container(
             decoration: BoxDecoration(
               color: AppTheme.primaryOrange.withOpacity(0.1),
@@ -214,281 +240,337 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
             child: IconButton(
               icon: const Icon(Icons.edit_outlined, size: 20),
               color: AppTheme.primaryOrange,
-              onPressed: () => _showEditMenuItem(item, category),
+              onPressed: isOffline ? null : () => _showEditMenuItem(item, category),
               padding: const EdgeInsets.all(8),
               constraints: const BoxConstraints(),
             ),
           ),
         ],
       ),
-    );
+    ).animate().fadeIn();
   }
 
   void _showAddMenuItem() {
+    final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController();
     final priceController = TextEditingController();
     final descController = TextEditingController();
     String selectedCategory = _menuByCategory.keys.first;
     final ingredientsControllers = <TextEditingController>[TextEditingController(), TextEditingController()];
-    
+    bool isSpecial = false;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.85,
-        decoration: const BoxDecoration(
-          color: AppTheme.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            // Handle bar
-            Container(
-              margin: const EdgeInsets.only(top: 12),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppTheme.gray.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(2),
-              ),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setSheetState) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.85,
+            decoration: const BoxDecoration(
+              color: AppTheme.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
-            
-            // Header
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Form(
+              key: formKey,
+              child: Column(
                 children: [
-                  const Text(
-                    'Add New Menu Item',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Container(
+                    margin: const EdgeInsets.only(top: 12),
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppTheme.gray.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Add New Menu Item',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-            
-            const Divider(height: 1),
-            
-            // Form
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Item Name',
-                        hintText: 'e.g., Grilled Lamb Chops',
+                  const Divider(height: 1),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextFormField(
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              labelText: 'Item Name',
+                              hintText: 'e.g., Grilled Lamb Chops',
+                            ),
+                            validator: (value) => (value?.isEmpty ?? true) ? 'Enter item name' : null,
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: descController,
+                            decoration: const InputDecoration(
+                              labelText: 'Description',
+                              hintText: 'Brief description of the dish',
+                            ),
+                            maxLines: 2,
+                            validator: (value) => (value?.isEmpty ?? true) ? 'Enter description' : null,
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: priceController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Price',
+                                    prefixText: '\$ ',
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: DropdownButtonFormField<String>(
+                                  initialValue: selectedCategory,
+                                  decoration: const InputDecoration(labelText: 'Category'),
+                                  items: _menuByCategory.keys.map((cat) {
+                                    return DropdownMenuItem(value: cat, child: Text(cat));
+                                  }).toList(),
+                                  onChanged: (value) => setState(() => selectedCategory = value!),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          const Text(
+                            'Ingredients',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 12),
+                          ...List.generate(ingredientsControllers.length, (index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: ingredientsControllers[index],
+                                      decoration: InputDecoration(
+                                        hintText: 'Ingredient ${index + 1}',
+                                        suffixIcon: index > 0
+                                            ? IconButton(
+                                                icon: const Icon(Icons.close, color: AppTheme.errorRed),
+                                                onPressed: () {
+                                                  setSheetState(() => ingredientsControllers.removeAt(index));
+                                                },
+                                              )
+                                            : null,
+                                      ),
+                                      validator: (value) => (value?.isEmpty ?? true) ? 'Enter ingredient' : null,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                          OutlinedButton.icon(
+                            onPressed: () {
+                              setSheetState(() => ingredientsControllers.add(TextEditingController()));
+                            },
+                            icon: const Icon(Icons.add),
+                            label: const Text('Add'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppTheme.primaryOrange,
+                              side: const BorderSide(color: AppTheme.primaryOrange, style: BorderStyle.none),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text('Special Item'),
+                            subtitle: const Text('Mark as today\'s special'),
+                            value: isSpecial,
+                            onChanged: (value) => setSheetState(() => isSpecial = value),
+                            activeThumbColor: AppTheme.primaryOrange,
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: descController,
-                      decoration: const InputDecoration(
-                        labelText: 'Description',
-                        hintText: 'Brief description of the dish',
-                      ),
-                      maxLines: 2,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppTheme.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, -2),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 16),
-                    Row(
+                    child: Row(
                       children: [
                         Expanded(
-                          child: TextField(
-                            controller: priceController,
-                            decoration: const InputDecoration(
-                              labelText: 'Price',
-                              prefixText: '\$ ',
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              side: BorderSide(color: AppTheme.gray.withOpacity(0.3)),
                             ),
-                            keyboardType: TextInputType.number,
+                            child: const Text('Cancel'),
                           ),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
-                          child: DropdownButtonFormField<String>(
-                            initialValue: selectedCategory,
-                            decoration: const InputDecoration(labelText: 'Category'),
-                            items: _menuByCategory.keys.map((cat) {
-                              return DropdownMenuItem(value: cat, child: Text(cat));
-                            }).toList(),
-                            onChanged: (value) => selectedCategory = value!,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                setState(() {
+                                  _menuByCategory[selectedCategory]?.add({
+                                    'id': DateTime.now().millisecondsSinceEpoch,
+                                    'name': nameController.text,
+                                    'price': double.tryParse(priceController.text) ?? 0.0,
+                                    'description': descController.text,
+                                    'ingredients': ingredientsControllers
+                                        .map((c) => c.text)
+                                        .where((t) => t.isNotEmpty)
+                                        .toList(),
+                                    'isSpecial': isSpecial,
+                                  });
+                                });
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Menu item added successfully'),
+                                    backgroundColor: AppTheme.successGreen,
+                                  ),
+                                );
+                                _confettiController.play();
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              backgroundColor: AppTheme.primaryOrange,
+                            ),
+                            child: const Text('Add Item'),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Ingredients',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 12),
-                    ...List.generate(ingredientsControllers.length, (index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: ingredientsControllers[index],
-                                decoration: InputDecoration(
-                                  hintText: 'Ingredient ${index + 1}',
-                                  suffixIcon: index > 0
-                                      ? IconButton(
-                                          icon: const Icon(Icons.close, color: AppTheme.errorRed),
-                                          onPressed: () {
-                                            // Remove ingredient
-                                          },
-                                        )
-                                      : null,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-                    OutlinedButton.icon(
-                      onPressed: () {
-                        // Add ingredient field
-                      },
-                      icon: const Icon(Icons.add),
-                      label: const Text('Add'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppTheme.primaryOrange,
-                        side: const BorderSide(color: AppTheme.primaryOrange, style: BorderStyle.none),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Special Item'),
-                      subtitle: const Text('Mark as today\'s special'),
-                      value: false,
-                      onChanged: (value) {},
-                      activeThumbColor: AppTheme.primaryOrange,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            
-            // Action Buttons
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AppTheme.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, -2),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        side: BorderSide(color: AppTheme.gray.withOpacity(0.3)),
-                      ),
-                      child: const Text('Cancel'),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (nameController.text.isNotEmpty) {
-                          setState(() {
-                            _menuByCategory[selectedCategory]?.add({
-                              'id': DateTime.now().millisecondsSinceEpoch,
-                              'name': nameController.text,
-                              'price': double.tryParse(priceController.text) ?? 0.0,
-                              'description': descController.text,
-                              'ingredients': ingredientsControllers
-                                  .map((c) => c.text)
-                                  .where((t) => t.isNotEmpty)
-                                  .toList(),
-                              'isSpecial': false,
-                            });
-                          });
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Menu item added successfully'),
-                              backgroundColor: AppTheme.successGreen,
-                            ),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: AppTheme.primaryOrange,
-                      ),
-                      child: const Text('Add Item'),
-                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
   void _showEditMenuItem(Map<String, dynamic> item, String category) {
+    final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController(text: item['name']);
     final priceController = TextEditingController(text: item['price'].toString());
     final descController = TextEditingController(text: item['description']);
-    
+    final ingredientsControllers = item['ingredients'].map<TextEditingController>((ing) => TextEditingController(text: ing)).toList().cast<TextEditingController>();
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Edit Menu Item'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: 'Item Name'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: descController,
-                decoration: const InputDecoration(labelText: 'Description'),
-                maxLines: 2,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: priceController,
-                decoration: const InputDecoration(labelText: 'Price', prefixText: '\$ '),
-                keyboardType: TextInputType.number,
-              ),
-            ],
+        content: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: 'Item Name'),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter item name' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: descController,
+                  decoration: const InputDecoration(labelText: 'Description'),
+                  maxLines: 2,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter description' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: priceController,
+                  decoration: const InputDecoration(labelText: 'Price', prefixText: '\$ '),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  'Ingredients',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 12),
+                ...List.generate(ingredientsControllers.length, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: ingredientsControllers[index],
+                            decoration: InputDecoration(
+                              hintText: 'Ingredient ${index + 1}',
+                              suffixIcon: index > 0
+                                  ? IconButton(
+                                      icon: const Icon(Icons.close, color: AppTheme.errorRed),
+                                      onPressed: () {
+                                        setState(() => ingredientsControllers.removeAt(index));
+                                      },
+                                    )
+                                  : null,
+                            ),
+                            validator: (value) => (value?.isEmpty ?? true) ? 'Enter ingredient' : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    setState(() => ingredientsControllers.add(TextEditingController()));
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppTheme.primaryOrange,
+                    side: const BorderSide(color: AppTheme.primaryOrange, style: BorderStyle.none),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () {
-              setState(() {
-                _menuByCategory[category]?.remove(item);
-              });
+              setState(() => _menuByCategory[category]?.remove(item));
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Item deleted')),
               );
+              _confettiController.play();
             },
             child: const Text('Delete', style: TextStyle(color: AppTheme.errorRed)),
           ),
@@ -498,15 +580,19 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                item['name'] = nameController.text;
-                item['price'] = double.tryParse(priceController.text) ?? item['price'];
-                item['description'] = descController.text;
-              });
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Menu item updated')),
-              );
+              if (formKey.currentState!.validate()) {
+                setState(() {
+                  item['name'] = nameController.text;
+                  item['price'] = double.tryParse(priceController.text) ?? item['price'];
+                  item['description'] = descController.text;
+                  item['ingredients'] = ingredientsControllers.map((c) => c.text).where((t) => t.isNotEmpty).toList();
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Menu item updated')),
+                );
+                _confettiController.play();
+              }
             },
             child: const Text('Save'),
           ),
@@ -516,49 +602,9 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
   }
 
   Widget _buildBottomNav() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: BottomNavigationBar(
-        currentIndex: 1,
-        selectedItemColor: AppTheme.primaryOrange,
-        unselectedItemColor: AppTheme.gray,
-        type: BottomNavigationBarType.fixed,
-        elevation: 0,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_outlined),
-            activeIcon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.restaurant_menu),
-            activeIcon: Icon(Icons.restaurant_menu),
-            label: 'Menu',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            activeIcon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        onTap: (index) {
-          if (index == 0) context.go('/business_dashboard');
-        },
-      ),
+    return const BusinessBottomNav(
+      currentIndex: 2,
+      businessType: BusinessType.restaurant,
     );
   }
 }

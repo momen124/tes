@@ -4,9 +4,9 @@ class TripBookingForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onFormDataChanged;
 
   const TripBookingForm({
-    Key? key,
+    super.key,
     required this.onFormDataChanged,
-  }) : super(key: key);
+  });
 
   @override
   _TripBookingFormState createState() => _TripBookingFormState();
@@ -173,7 +173,7 @@ class _TripBookingFormState extends State<TripBookingForm> {
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
-          value: _mealPreference,
+          initialValue: _mealPreference,
           items: const [
             DropdownMenuItem(value: 'vegetarian', child: Text('Vegetarian')),
             DropdownMenuItem(value: 'non-vegetarian', child: Text('Non-Vegetarian')),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/service_card.dart';
-import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:siwa/widgets/unified_bottom_nav.dart';
 
 class TouristHomeScreen extends StatelessWidget {
   const TouristHomeScreen({super.key});
@@ -265,7 +265,10 @@ class TouristHomeScreen extends StatelessWidget {
         ],
       ),
 
-bottomNavigationBar: const TouristBottomNav(currentIndex: 0),
+  bottomNavigationBar: const UnifiedBottomNav(
+        currentIndex: 0,
+        type: NavBarType.tourist,
+      ),
     );
   }
 

@@ -5,10 +5,10 @@ class RestaurantBookingForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onFormDataChanged;
 
   const RestaurantBookingForm({
-    Key? key,
+    super.key,
     required this.restaurant,
     required this.onFormDataChanged,
-  }) : super(key: key);
+  });
 
   @override
   _RestaurantBookingFormState createState() => _RestaurantBookingFormState();
@@ -50,26 +50,26 @@ class _RestaurantBookingFormState extends State<RestaurantBookingForm> {
   }
 
   Widget _buildRestaurantInfo() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Aghurmi Restaurant',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 4),
-        const Text(
+        SizedBox(height: 4),
+        Text(
           'Authentic Siwan Cuisine',
           style: TextStyle(
             fontSize: 16,
             color: Colors.grey,
           ),
         ),
-        const SizedBox(height: 4),
-        const Text(
+        SizedBox(height: 4),
+        Text(
           'Siwa Oasis',
           style: TextStyle(
             fontSize: 14,

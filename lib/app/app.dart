@@ -1,4 +1,3 @@
-// lib/app/app.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,6 +28,7 @@ import '../features/admin/screens/admin_dashboard_screen.dart';
 import '../features/admin/screens/admin_logs_screen.dart';
 import '../features/admin/screens/admin_moderation_screen.dart';
 import 'theme.dart';
+import '../features/business/models/business_type.dart'; // Added to use BusinessType
 
 final GoRouter _router = GoRouter(
   initialLocation: '/',
@@ -49,15 +49,22 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/tourist_search', builder: (context, state) => const TouristSearchScreen()),
     GoRoute(
       path: '/booking_form',
-      builder: (context, state) => BookingFormScreen(
-        business: state.extra is Map<String, dynamic> ? (state.extra as Map<String, dynamic>)['business'] : null, // Adjust based on how you pass extra
-        serviceType: state.uri.queryParameters['type'] ?? 'default',
-      ),
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        return BookingFormScreen(
+          business: extra?['business'],
+          serviceType: state.uri.queryParameters['type'] ?? 'default',
+          serviceData: extra?['serviceData'],
+        );
+      },
     ),
     GoRoute(path: '/product_detail', builder: (context, state) => const ProductDetailScreen()),
     GoRoute(path: '/service_detail', builder: (context, state) => const ServiceDetailScreen()),
     GoRoute(path: '/siwa_info', builder: (context, state) => const SiwaInfoScreen()),
-    GoRoute(path: '/business_dashboard', builder: (context, state) => const BusinessDashboardScreen()),
+    GoRoute(
+      path: '/business_dashboard',
+      builder: (context, state) => const BusinessDashboardScreen(businessType: BusinessType.hotel),
+    ),
     GoRoute(path: '/business_listings', builder: (context, state) => const BusinessListingsScreen()),
     GoRoute(path: '/business_profile', builder: (context, state) => const BusinessProfileScreen()),
     GoRoute(path: '/hotel_management', builder: (context, state) => const HotelManagementScreen()),

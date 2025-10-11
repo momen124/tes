@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:styled_widget/styled_widget.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/auth/providers/auth_provider.dart';
 import 'package:siwa/utils/validators.dart';

@@ -435,7 +435,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           builder: (context) => BookingConfirmationScreen(
             booking: Booking(
               id: DateTime.now().millisecondsSinceEpoch.toString(),
-              businessId: widget.business?.id?.toString() ?? 'default',
+              businessId: widget.business?.id.toString() ?? 'default',
               serviceType: widget.serviceType,
               date: selectedDate!,
               adultCount: adultCount,

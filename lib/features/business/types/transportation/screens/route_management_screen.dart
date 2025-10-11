@@ -1,10 +1,15 @@
+// lib/features/business/types/transport/screens/route_management_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:siwa/features/business/models/business_type.dart';
+import 'package:siwa/features/business/widgets/navigation/business_bottom_nav.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:confetti/confetti.dart';
 
 class RouteManagementScreen extends ConsumerStatefulWidget {
   const RouteManagementScreen({super.key});
@@ -14,6 +19,7 @@ class RouteManagementScreen extends ConsumerStatefulWidget {
 }
 
 class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> with SingleTickerProviderStateMixin {
+  late ConfettiController _confettiController;
   late TabController _tabController;
 
   final List<Map<String, dynamic>> _routes = [
@@ -83,11 +89,13 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
   @override
   void initState() {
     super.initState();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
     _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
   void dispose() {
+    _confettiController.dispose();
     _tabController.dispose();
     super.dispose();
   }
@@ -95,12 +103,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
   @override
   Widget build(BuildContext context) {
     final isOffline = ref.watch(offlineProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/business_dashboard'),
+          onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
         title: const Text('Route Management'),
         actions: [
@@ -122,13 +130,29 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildRoutesTab(isOffline),
-          _buildVehiclesTab(isOffline),
-          _buildTripsTab(isOffline),
-        ],
+      body: isOffline
+          ? Center(
+              child: Container(
+                decoration: AppTheme.offlineBanner,
+                padding: const EdgeInsets.all(16),
+                child: const Text(
+                  'You are currently offline',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            )
+          : TabBarView(
+              controller: _tabController,
+              children: [
+                _buildRoutesTab(isOffline).animate().fadeIn(),
+                _buildVehiclesTab(isOffline).animate().fadeIn(),
+                _buildTripsTab(isOffline).animate().fadeIn(),
+              ],
+            ),
+      bottomNavigationBar: const BusinessBottomNav(
+        currentIndex: 2,
+        businessType: BusinessType.transportation,
       ),
     );
   }
@@ -211,7 +235,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
               ),
             ],
           ),
-        );
+        ).animate().fadeIn();
       },
     );
   }
@@ -248,7 +272,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
             ),
             onTap: isOffline ? null : () => _showEditVehicleDialog(vehicle),
           ),
-        );
+        ).animate().fadeIn();
       },
     );
   }
@@ -260,7 +284,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
       itemBuilder: (context, index) {
         final trip = _trips[index];
         final isPending = trip['status'] == 'pending';
-        
+
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           child: ListTile(
@@ -300,12 +324,13 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                     ),
                   ),
           ),
-        );
+        ).animate().fadeIn();
       },
     );
   }
 
   void _showAddRouteDialog() {
+    final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController();
     final distanceController = TextEditingController();
     final durationController = TextEditingController();
@@ -316,36 +341,44 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add New Route'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: 'Route Name'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: distanceController,
-                decoration: const InputDecoration(labelText: 'Distance (e.g., 25 km)'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: durationController,
-                decoration: const InputDecoration(labelText: 'Duration (e.g., 1.5 hours)'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: scheduleController,
-                decoration: const InputDecoration(labelText: 'Schedule (e.g., Daily 8AM-8PM)'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: rateController,
-                decoration: const InputDecoration(labelText: 'Rate per km'),
-                keyboardType: TextInputType.number,
-              ),
-            ],
+        content: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: 'Route Name'),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter route name' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: distanceController,
+                  decoration: const InputDecoration(labelText: 'Distance (e.g., 25 km)'),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter distance' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: durationController,
+                  decoration: const InputDecoration(labelText: 'Duration (e.g., 1.5 hours)'),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter duration' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: scheduleController,
+                  decoration: const InputDecoration(labelText: 'Schedule (e.g., Daily 8AM-8PM)'),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter schedule' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: rateController,
+                  decoration: const InputDecoration(labelText: 'Rate per km'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter rate' : null,
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
@@ -355,7 +388,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
           ),
           ElevatedButton(
             onPressed: () {
-              if (nameController.text.isNotEmpty) {
+              if (formKey.currentState!.validate()) {
                 setState(() {
                   _routes.add({
                     'id': _routes.length + 1,
@@ -371,6 +404,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Route added successfully')),
                 );
+                _confettiController.play();
               }
             },
             child: const Text('Add'),
@@ -381,6 +415,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
   }
 
   void _showEditRouteDialog(Map<String, dynamic> route) {
+    final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController(text: route['name']);
     final scheduleController = TextEditingController(text: route['schedule']);
     final rateController = TextEditingController(text: route['ratePerKm'].toString());
@@ -389,25 +424,31 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Edit Route'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'Route Name'),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: scheduleController,
-              decoration: const InputDecoration(labelText: 'Schedule'),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: rateController,
-              decoration: const InputDecoration(labelText: 'Rate per km'),
-              keyboardType: TextInputType.number,
-            ),
-          ],
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Route Name'),
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter route name' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: scheduleController,
+                decoration: const InputDecoration(labelText: 'Schedule'),
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter schedule' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: rateController,
+                decoration: const InputDecoration(labelText: 'Rate per km'),
+                keyboardType: TextInputType.number,
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter rate' : null,
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
@@ -416,15 +457,18 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
           ),
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                route['name'] = nameController.text;
-                route['schedule'] = scheduleController.text;
-                route['ratePerKm'] = double.tryParse(rateController.text) ?? route['ratePerKm'];
-              });
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Route updated')),
-              );
+              if (formKey.currentState!.validate()) {
+                setState(() {
+                  route['name'] = nameController.text;
+                  route['schedule'] = scheduleController.text;
+                  route['ratePerKm'] = double.tryParse(rateController.text) ?? route['ratePerKm'];
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Route updated')),
+                );
+                _confettiController.play();
+              }
             },
             child: const Text('Save'),
           ),
@@ -434,9 +478,65 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
   }
 
   void _showEditVehicleDialog(Map<String, dynamic> vehicle) {
-    // Similar implementation to route editing
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Vehicle editing dialog')),
+    final formKey = GlobalKey<FormState>();
+    final typeController = TextEditingController(text: vehicle['type']);
+    final plateController = TextEditingController(text: vehicle['plate']);
+    final capacityController = TextEditingController(text: vehicle['capacity'].toString());
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Vehicle'),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: typeController,
+                decoration: const InputDecoration(labelText: 'Vehicle Type'),
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter vehicle type' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: plateController,
+                decoration: const InputDecoration(labelText: 'Plate Number'),
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter plate number' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: capacityController,
+                decoration: const InputDecoration(labelText: 'Capacity'),
+                keyboardType: TextInputType.number,
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter capacity' : null,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                setState(() {
+                  vehicle['type'] = typeController.text;
+                  vehicle['plate'] = plateController.text;
+                  vehicle['capacity'] = int.tryParse(capacityController.text) ?? vehicle['capacity'];
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Vehicle updated')),
+                );
+                _confettiController.play();
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -460,6 +560,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Route deleted')),
               );
+              _confettiController.play();
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppTheme.errorRed),
             child: const Text('Delete'),
@@ -479,5 +580,6 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
         backgroundColor: AppTheme.successGreen,
       ),
     );
+    _confettiController.play();
   }
 }

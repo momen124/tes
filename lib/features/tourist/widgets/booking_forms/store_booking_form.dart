@@ -5,10 +5,10 @@ class StoreBookingForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onFormDataChanged;
 
   const StoreBookingForm({
-    Key? key,
+    super.key,
     required this.product,
     required this.onFormDataChanged,
-  }) : super(key: key);
+  });
 
   @override
   _StoreBookingFormState createState() => _StoreBookingFormState();
