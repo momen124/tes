@@ -93,10 +93,7 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
         label: const Text('Add Tour'),
         backgroundColor: _selectedDay != null && !isOffline ? AppTheme.primaryOrange : AppTheme.gray,
       ),
-      bottomNavigationBar: const BusinessBottomNav(
-        currentIndex: 2,
-        businessType: BusinessType.tourGuide,
-      ),
+
     );
   }
 

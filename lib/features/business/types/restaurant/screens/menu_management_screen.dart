@@ -158,10 +158,7 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      bottomNavigationBar: const BusinessBottomNav(
-        currentIndex: 2,
-        businessType: BusinessType.restaurant,
-      ),
+
     );
   }
 
@@ -601,10 +598,5 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
     );
   }
 
-  Widget _buildBottomNav() {
-    return const BusinessBottomNav(
-      currentIndex: 2,
-      businessType: BusinessType.restaurant,
-    );
-  }
+ 
 }

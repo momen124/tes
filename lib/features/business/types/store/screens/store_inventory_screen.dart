@@ -153,10 +153,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
         label: Text('Orders (${_orders.length})'),
         backgroundColor: isOffline ? AppTheme.gray : AppTheme.primaryOrange,
       ),
-      bottomNavigationBar: const BusinessBottomNav(
-        currentIndex: 2,
-        businessType: BusinessType.store,
-      ),
+
     );
   }
 

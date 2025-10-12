@@ -134,10 +134,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
                 _buildReservationsTab(),
               ],
             ).animate().fadeIn(),
-      bottomNavigationBar: const BusinessBottomNav(
-        currentIndex: 2,
-        businessType: BusinessType.hotel,
-      ),
+
     );
   }
 

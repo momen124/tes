@@ -142,10 +142,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                 return _buildVehicleCard(vehicle).animate().fadeIn();
               },
             ),
-      bottomNavigationBar: const BusinessBottomNav(
-        currentIndex: 2,
-        businessType: BusinessType.rental,
-      ),
+
     );
   }
 
