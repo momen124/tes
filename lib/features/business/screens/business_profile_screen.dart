@@ -8,6 +8,7 @@ import 'package:siwa/features/business/models/business_type.dart';
 import 'package:siwa/features/business/widgets/navigation/business_bottom_nav.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
 import 'package:go_router/go_router.dart';
+
 class BusinessProfileScreen extends ConsumerStatefulWidget {
   const BusinessProfileScreen({super.key});
 
@@ -17,10 +18,18 @@ class BusinessProfileScreen extends ConsumerStatefulWidget {
 
 class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _businessName = '';
-  String _email = '';
-  String _phone = '';
+  final _businessNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   LatLng _location = const LatLng(29.1829, 25.5495);
+
+  @override
+  void dispose() {
+    _businessNameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,36 +56,54 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                   alignment: Alignment.center,
                   child: const Text('You are offline', style: TextStyle(color: Colors.white)),
                 ),
-              TextField(
+              TextFormField(
+                controller: _businessNameController,
                 decoration: InputDecoration(
                   labelText: 'Business Name',
                   hintText: 'Siwa Gems & Crafts',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  errorText: _businessName.isEmpty && _formKey.currentState?.validate() == false ? 'Please enter a name' : null,
                 ),
-                onChanged: (value) => setState(() => _businessName = value),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a name';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
-              TextField(
+              TextFormField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Contact Email',
                   hintText: 'contact@siwagems.com',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  errorText: _email.isEmpty && _formKey.currentState?.validate() == false ? 'Please enter an email' : null,
                 ),
                 keyboardType: TextInputType.emailAddress,
-                onChanged: (value) => setState(() => _email = value),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter an email';
+                  }
+                  if (!value.contains('@')) {
+                    return 'Please enter a valid email';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
-              TextField(
+              TextFormField(
+                controller: _phoneController,
                 decoration: InputDecoration(
                   labelText: 'Contact Phone',
                   hintText: '+20 123 456 7890',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  errorText: _phone.isEmpty && _formKey.currentState?.validate() == false ? 'Please enter a phone number' : null,
                 ),
                 keyboardType: TextInputType.phone,
-                onChanged: (value) => setState(() => _phone = value),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a phone number';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 24),
               const Text('Location'),
@@ -108,7 +135,7 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: isOffline || !_formKey.currentState!.validate()
+                  onPressed: isOffline
                       ? null
                       : () {
                           if (_formKey.currentState!.validate()) {

@@ -21,12 +21,20 @@ class BusinessListingsScreen extends ConsumerStatefulWidget {
 class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _picker = ImagePicker();
-  String _title = '';
-  String _description = '';
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _priceController = TextEditingController();
   XFile? _photo;
   String _category = '';
-  String _price = '';
   DateTime? _selectedDate;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _priceController.dispose();
+    super.dispose();
+  }
 
   Future<void> _uploadPhoto() async {
     final image = await _picker.pickImage(source: ImageSource.gallery);
@@ -62,25 +70,35 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                     ],
                   ),
                 ),
-              TextField(
+              TextFormField(
+                controller: _titleController,
                 decoration: InputDecoration(
                   labelText: 'Listing Title',
                   hintText: 'e.g., Desert Camp Experience',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  errorText: _title.isEmpty && _formKey.currentState?.validate() == false ? 'Please enter a title' : null,
                 ),
-                onChanged: (value) => setState(() => _title = value),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a title';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
-              TextField(
+              TextFormField(
+                controller: _descriptionController,
                 decoration: InputDecoration(
                   labelText: 'Description',
                   hintText: 'Describe your offering in detail',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  errorText: _description.isEmpty && _formKey.currentState?.validate() == false ? 'Please enter a description' : null,
                 ),
                 maxLines: 4,
-                onChanged: (value) => setState(() => _description = value),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a description';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               const Text('Listing Photos'),
@@ -108,7 +126,6 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                       decoration: InputDecoration(
                         labelText: 'Category',
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                        errorText: _category.isEmpty && _formKey.currentState?.validate() == false ? 'Please select a category' : null,
                       ),
                       items: const [
                         DropdownMenuItem(value: 'hotel', child: Text('Hotel')),
@@ -116,20 +133,34 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                         DropdownMenuItem(value: 'restaurant', child: Text('Restaurant')),
                       ],
                       value: _category.isNotEmpty ? _category : null,
-                      onChanged: (value) => setState(() => _category = value!),
+                      onChanged: (value) => setState(() => _category = value ?? ''),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select a category';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: TextField(
+                    child: TextFormField(
+                      controller: _priceController,
                       decoration: InputDecoration(
                         labelText: 'Price per person',
                         hintText: '\$ 50',
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                        errorText: _price.isEmpty && _formKey.currentState?.validate() == false ? 'Please enter a price' : null,
                       ),
                       keyboardType: TextInputType.number,
-                      onChanged: (value) => setState(() => _price = value),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a price';
+                        }
+                        if (double.tryParse(value) == null) {
+                          return 'Please enter a valid number';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                 ],
@@ -147,7 +178,7 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: isOffline || !_formKey.currentState!.validate()
+                  onPressed: isOffline
                       ? null
                       : () {
                           if (_formKey.currentState!.validate()) {
