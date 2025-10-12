@@ -264,10 +264,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                 ],
               ),
             ),
-      bottomNavigationBar: const BusinessBottomNav(
-        currentIndex: 2,
-        businessType: BusinessType.tourGuide,
-      ),
+
     );
   }
 }

@@ -199,10 +199,7 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
           ),
         ),
       ),
-      bottomNavigationBar: const BusinessBottomNav(
-        currentIndex: 1,
-        businessType: BusinessType.hotel, // Dynamic from provider in real app
-      ),
+  
     );
   }
 }

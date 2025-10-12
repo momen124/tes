@@ -1,6 +1,6 @@
-// lib/features/tourist/screens/tourist_home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/service_card.dart';
 import 'package:siwa/widgets/unified_bottom_nav.dart';
@@ -94,11 +94,11 @@ class TouristHomeScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  _buildCategoryChip('Accommodations', Icons.hotel, true),
-                  _buildCategoryChip('Transportation', Icons.directions_car, false),
-                  _buildCategoryChip('Attractions', Icons.attractions, false),
-                  _buildCategoryChip('Tours', Icons.tour, false),
-                  _buildCategoryChip('Food', Icons.restaurant, false),
+                  _buildCategoryChip(context, 'Accommodations', Icons.hotel, true, '/tourist_search'),
+                  _buildCategoryChip(context, 'Transportation', Icons.directions_car, false, '/transportation'),
+                  _buildCategoryChip(context, 'Attractions', Icons.attractions, false, '/attractions'),
+                  _buildCategoryChip(context, 'Tours', Icons.tour, false, '/tour_guides'),
+                  _buildCategoryChip(context, 'Food', Icons.restaurant, false, '/restaurants'),
                 ],
               ),
             ),
@@ -265,14 +265,14 @@ class TouristHomeScreen extends StatelessWidget {
         ],
       ),
 
-  bottomNavigationBar: const UnifiedBottomNav(
+      bottomNavigationBar: const UnifiedBottomNav(
         currentIndex: 0,
         type: NavBarType.tourist,
       ),
     );
   }
 
-  Widget _buildCategoryChip(String title, IconData icon, bool isSelected) {
+  Widget _buildCategoryChip(BuildContext context, String title, IconData icon, bool isSelected, String route) {
     return Container(
       margin: const EdgeInsets.only(right: 12),
       child: Material(
@@ -281,7 +281,7 @@ class TouristHomeScreen extends StatelessWidget {
         elevation: 2,
         child: InkWell(
           borderRadius: BorderRadius.circular(25),
-          onTap: () {},
+          onTap: () => context.go(route),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Row(

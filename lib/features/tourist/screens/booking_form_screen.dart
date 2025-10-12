@@ -1,4 +1,3 @@
-// lib/features/tourist/screens/booking_form_screen.dart
 import 'package:flutter/material.dart';
 import 'package:siwa/features/business/models/business.dart';
 import 'package:siwa/features/tourist/screens/booking_confirmation_screen.dart';
@@ -7,6 +6,8 @@ import 'package:siwa/features/tourist/widgets/booking_forms/restaurant_booking_f
 import 'package:siwa/features/tourist/widgets/booking_forms/store_booking_form.dart';
 import 'package:siwa/features/tourist/widgets/booking_forms/transportation_booking_form.dart';
 import 'package:siwa/features/tourist/widgets/booking_forms/trip_booking_form.dart';
+// import 'package:siwa/features/tourist/widgets/booking_forms/attraction_booking_form.dart';
+// import 'package:siwa/features/tourist/widgets/booking_forms/tourguide_booking_form.dart';
 import '../../../utils/currency_formatter.dart';
 
 class Booking {
@@ -89,6 +90,16 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
         return TripBookingForm(
           onFormDataChanged: _updateFormData,
         );
+      // case 'attraction':
+      //   return AttractionBookingForm(
+      //     attraction: widget.serviceData ?? {},
+      //     onFormDataChanged: _updateFormData,
+      //   );
+      // case 'tourguide':
+      //   return TourguideBookingForm(
+      //     tourguide: widget.serviceData ?? {},
+      //     onFormDataChanged: _updateFormData,
+      //   );
       default:
         return _buildDefaultBookingForm();
     }
@@ -374,7 +385,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           ),
           const SizedBox(height: 12),
           _buildPaymentRow(
-            'Desert Safari ($adultCount Adults)',
+            'Service ($adultCount Adults)',
             CurrencyFormatter.format(servicePrice * adultCount, context),
           ),
           const SizedBox(height: 8),

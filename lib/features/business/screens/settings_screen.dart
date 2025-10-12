@@ -52,10 +52,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ],
       ),
-      bottomNavigationBar: const BusinessBottomNav(
-        currentIndex: 4,
-        businessType: BusinessType.hotel, // Dynamic from provider in real app
-      ),
+ 
     );
   }
 }

@@ -14,12 +14,17 @@ import '../features/tourist/screens/booking_form_screen.dart';
 import '../features/tourist/screens/product_detail_screen.dart';
 import '../features/tourist/screens/service_detail_screen.dart';
 import '../features/tourist/screens/siwa_info_screen.dart';
+import '../features/tourist/screens/transportation_list_screen.dart';
+import '../features/tourist/screens/attractions_list_screen.dart';
+import '../features/tourist/screens/restaurants_list_screen.dart';
+import '../features/tourist/screens/tour_guides_list_screen.dart';
 import '../features/business/screens/business_app_main.dart';
 import '../features/admin/screens/admin_dashboard_screen.dart';
 import '../features/admin/screens/admin_logs_screen.dart';
 import '../features/admin/screens/admin_moderation_screen.dart';
 import 'theme.dart';
-import '../features/business/models/business_type.dart'; // Added to use BusinessType
+import '../features/business/models/business_type.dart';
+import '../features/common/screens/debug_navigator_screen.dart';
 
 final GoRouter _router = GoRouter(
   initialLocation: '/',
@@ -49,9 +54,31 @@ final GoRouter _router = GoRouter(
         );
       },
     ),
+
+  GoRoute(
+  path: '/debug_navigator',
+  builder: (context, state) => const DebugNavigatorScreen(),
+),
+
     GoRoute(path: '/product_detail', builder: (context, state) => const ProductDetailScreen()),
     GoRoute(path: '/service_detail', builder: (context, state) => const ServiceDetailScreen()),
     GoRoute(path: '/siwa_info', builder: (context, state) => const SiwaInfoScreen()),
+    GoRoute(
+      path: '/transportation',
+      builder: (context, state) => const TransportationListScreen(),
+    ),
+    GoRoute(
+      path: '/attractions',
+      builder: (context, state) => const AttractionsListScreen(),
+    ),
+    GoRoute(
+      path: '/restaurants',
+      builder: (context, state) => const RestaurantsListScreen(),
+    ),
+    GoRoute(
+      path: '/tour_guides',
+      builder: (context, state) => const TourGuidesListScreen(),
+    ),
     GoRoute(
       path: '/business_dashboard',
       builder: (context, state) {

@@ -167,10 +167,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                 _buildTripsTab(isOffline).animate().fadeIn(),
               ],
             ),
-      bottomNavigationBar: const BusinessBottomNav(
-        currentIndex: 2,
-        businessType: BusinessType.transportation,
-      ),
+
     );
   }
 
