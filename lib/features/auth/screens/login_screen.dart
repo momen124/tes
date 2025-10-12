@@ -170,6 +170,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.go('/debug_navigator'),
+        backgroundColor: AppTheme.primaryOrange,
+        child: const Icon(Icons.developer_mode),
+      ),
     );
   }
 }

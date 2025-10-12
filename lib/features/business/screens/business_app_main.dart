@@ -1,4 +1,3 @@
-// lib/features/business/screens/business_app_main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -9,7 +8,6 @@ import 'package:siwa/features/business/providers/business_provider.dart';
 import 'package:siwa/features/business/screens/business_dashboard_screen.dart';
 import 'package:siwa/features/business/screens/business_listings_screen.dart';
 import 'package:siwa/features/business/screens/business_profile_screen.dart';
-import 'package:siwa/features/business/screens/settings_screen.dart';
 import 'package:siwa/features/business/types/hotel/screens/hotel_management_screen.dart';
 import 'package:siwa/features/business/types/rental/screens/rental_fleet_screen.dart';
 import 'package:siwa/features/business/types/restaurant/screens/menu_management_screen.dart';
@@ -136,8 +134,6 @@ class _BusinessAppMainState extends ConsumerState<BusinessAppMain> {
         return _getManagementScreen();
       case 3:
         return const BusinessProfileScreen();
-      case 4:
-        return const SettingsScreen();
       default:
         return BusinessDashboardScreen(businessType: widget.businessType);
     }
@@ -145,49 +141,6 @@ class _BusinessAppMainState extends ConsumerState<BusinessAppMain> {
 
   void _onTabChange(int index) {
     setState(() => _currentIndex = index);
-    switch (index) {
-      case 0:
-        context.go('/business_dashboard');
-        break;
-      case 1:
-        context.go('/business_listings');
-        break;
-      case 2:
-        _navigateToBusinessSpecificScreen();
-        break;
-      case 3:
-        context.go('/business_profile');
-        break;
-      case 4:
-        context.go('/settings');
-        break;
-    }
-  }
-
-  void _navigateToBusinessSpecificScreen() {
-    switch (widget.businessType) {
-      case BusinessType.hotel:
-        context.go('/hotel_management');
-        break;
-      case BusinessType.rental:
-        context.go('/rental_fleet');
-        break;
-      case BusinessType.restaurant:
-        context.go('/menu_management');
-        break;
-      case BusinessType.store:
-        context.go('/store_inventory');
-        break;
-      case BusinessType.tourGuide:
-        context.go('/guide_schedule');
-        break;
-      case BusinessType.transportation:
-        context.go('/route_management');
-        break;
-      case BusinessType.tripBooking:
-        context.go('/trip_itinerary');
-        break;
-    }
   }
 
   @override
@@ -195,7 +148,6 @@ class _BusinessAppMainState extends ConsumerState<BusinessAppMain> {
     final isOffline = ref.watch(offlineProvider);
     final businessColor = _getBusinessColor();
     final business = ref.watch(businessProvider);
-    
 
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,
