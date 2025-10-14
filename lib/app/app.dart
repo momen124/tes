@@ -47,19 +47,19 @@ final GoRouter _router = GoRouter(
       path: '/booking_form',
       builder: (context, state) {
         final extra = state.extra as Map<String, dynamic>?;
+        final serviceData = extra?['serviceData'] as Map<String, dynamic>? ?? {};
         return BookingFormScreen(
-          business: extra?['business'],
+          serviceName: serviceData['name']?.toString() ?? 'Unknown Service',
           serviceType: state.uri.queryParameters['type'] ?? 'default',
-          serviceData: extra?['serviceData'],
+          basePrice: (serviceData['price'] as num?)?.toDouble() ?? 0.0,
+          imageUrl: serviceData['imageUrl']?.toString(),
         );
       },
     ),
-
-  GoRoute(
-  path: '/debug_navigator',
-  builder: (context, state) => const DebugNavigatorScreen(),
-),
-
+    GoRoute(
+      path: '/debug_navigator',
+      builder: (context, state) => const DebugNavigatorScreen(),
+    ),
     GoRoute(path: '/product_detail', builder: (context, state) => const ProductDetailScreen()),
     GoRoute(path: '/service_detail', builder: (context, state) => const ServiceDetailScreen()),
     GoRoute(path: '/siwa_info', builder: (context, state) => const SiwaInfoScreen()),

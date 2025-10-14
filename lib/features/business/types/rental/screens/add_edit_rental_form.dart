@@ -1,6 +1,26 @@
 // lib/features/business/types/rental/screens/add_edit_rental_form.dart
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:siwa/widgets/dashed_border_container.dart';
+
+// Vehicle Type Categories
+enum VehicleCategory {
+  cars,
+  motorcycles,
+  bicycles,
+  others,
+}
+
+class VehicleType {
+  final String name;
+  final VehicleCategory category;
+  final IconData icon;
+
+  const VehicleType({
+    required this.name,
+    required this.category,
+    required this.icon,
+  });
+}
 
 class AddEditRentalForm extends StatefulWidget {
   const AddEditRentalForm({super.key});
@@ -14,6 +34,44 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
   double _price = 50.0;
   int _capacity = 1;
   bool _available = true;
+  VehicleType? _selectedVehicleType;
+
+  // Vehicle types organized by category
+  static const List<VehicleType> _vehicleTypes = [
+    // Cars
+    VehicleType(name: 'Sedan', category: VehicleCategory.cars, icon: Icons.directions_car),
+    VehicleType(name: 'SUV', category: VehicleCategory.cars, icon: Icons.airport_shuttle),
+    VehicleType(name: 'Hatchback', category: VehicleCategory.cars, icon: Icons.directions_car),
+    VehicleType(name: 'Luxury', category: VehicleCategory.cars, icon: Icons.car_rental),
+    
+    // Motorcycles
+    VehicleType(name: 'Scooter', category: VehicleCategory.motorcycles, icon: Icons.two_wheeler),
+    VehicleType(name: 'Sport', category: VehicleCategory.motorcycles, icon: Icons.sports_motorsports),
+    VehicleType(name: 'Cruiser', category: VehicleCategory.motorcycles, icon: Icons.motorcycle),
+    
+    // Bicycles
+    VehicleType(name: 'Mountain', category: VehicleCategory.bicycles, icon: Icons.pedal_bike),
+    VehicleType(name: 'Road', category: VehicleCategory.bicycles, icon: Icons.directions_bike),
+    VehicleType(name: 'Electric', category: VehicleCategory.bicycles, icon: Icons.electric_bike),
+    
+    // Others
+    VehicleType(name: 'ATV', category: VehicleCategory.others, icon: Icons.terrain),
+    VehicleType(name: 'Buggy', category: VehicleCategory.others, icon: Icons.agriculture),
+    VehicleType(name: 'Golf Cart', category: VehicleCategory.others, icon: Icons.golf_course),
+  ];
+
+  String _getCategoryName(VehicleCategory category) {
+    switch (category) {
+      case VehicleCategory.cars:
+        return 'Cars';
+      case VehicleCategory.motorcycles:
+        return 'Motorcycles';
+      case VehicleCategory.bicycles:
+        return 'Bicycles';
+      case VehicleCategory.others:
+        return 'Others';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,52 +79,258 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
       padding: const EdgeInsets.all(16.0),
       child: Form(
         key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Rental Name', border: OutlineInputBorder()),
-            ),
-            const SizedBox(height: 16),
-            Text('Price: \$${ _price.toInt() }'),
-            Slider(value: _price, min: 0, max: 200, onChanged: (val) => setState(() => _price = val)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Capacity'),
-                IconButton(onPressed: () => setState(() => _capacity--), icon: const Icon(Icons.remove)),
-                Text('$_capacity'),
-                IconButton(onPressed: () => setState(() => _capacity++), icon: const Icon(Icons.add)),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Text('Photo'),
-            const DottedBorder(
-              child: SizedBox(
-                height: 100,
-                child: Center(child: Text('Click to upload or drag and drop\nSVG, PNG, JPG (MAX. 800x400px)')),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Rental Name with Vehicle Icon
+              Row(
+                children: [
+                  if (_selectedVehicleType != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Icon(
+                        _selectedVehicleType!.icon,
+                        color: Colors.orange,
+                        size: 28,
+                      ),
+                    ),
+                  Expanded(
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Rental Name',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a rental name';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SwitchListTile(title: const Text('Available'), value: _available, onChanged: (val) => setState(() => _available = val)),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
-              maxLines: 3,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-                ElevatedButton(onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.pop(context);
+              const SizedBox(height: 16),
+              
+              // Vehicle Type Dropdown
+              DropdownButtonFormField<VehicleType>(
+                decoration: const InputDecoration(
+                  labelText: 'Vehicle Type',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.category),
+                ),
+                initialValue: _selectedVehicleType,
+                hint: const Text('Select vehicle type'),
+                isExpanded: true,
+                validator: (value) {
+                  if (value == null) {
+                    return 'Please select a vehicle type';
                   }
-                }, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange), child: const Text('Save')),
-              ],
-            ),
-          ],
+                  return null;
+                },
+                items: _buildDropdownItems(),
+                onChanged: (VehicleType? newValue) {
+                  setState(() {
+                    _selectedVehicleType = newValue;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              
+              // Price Slider
+              Text('Price: \$${_price.toInt()}'),
+              Slider(
+                value: _price,
+                min: 0,
+                max: 200,
+                divisions: 40,
+                label: '\$${_price.toInt()}',
+                onChanged: (val) => setState(() => _price = val),
+              ),
+              
+              // Capacity Control
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Capacity', style: TextStyle(fontSize: 16)),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: _capacity > 1
+                            ? () => setState(() => _capacity--)
+                            : null,
+                        icon: const Icon(Icons.remove_circle_outline),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          '$_capacity',
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => setState(() => _capacity++),
+                        icon: const Icon(Icons.add_circle_outline),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              
+              // Photo Upload
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Photo', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              ),
+              const SizedBox(height: 8),
+            const DashedBorderContainer(
+  color: Colors.grey,
+  strokeWidth: 2,
+  dashWidth: 8,
+  dashSpace: 4,
+  borderRadius: 8,
+  child: SizedBox(
+    height: 120,
+    width: double.infinity,
+    child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.cloud_upload_outlined, size: 40, color: Colors.grey),
+          SizedBox(height: 8),
+          Text(
+            'Click to upload or drag and drop',
+            style: TextStyle(color: Colors.grey),
+          ),
+          Text(
+            'SVG, PNG, JPG (MAX. 800x400px)',
+            style: TextStyle(color: Colors.grey, fontSize: 12),
+          ),
+        ],
+      ),
+    ),
+  ),
+),
+              const SizedBox(height: 16),
+              
+              // Availability Switch
+              SwitchListTile(
+                title: const Text('Available'),
+                subtitle: Text(_available ? 'Currently available for rent' : 'Not available'),
+                value: _available,
+                activeThumbColor: Colors.orange,
+                onChanged: (val) => setState(() => _available = val),
+              ),
+              const SizedBox(height: 16),
+              
+              // Description
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Description',
+                  border: OutlineInputBorder(),
+                  alignLabelWithHint: true,
+                ),
+                maxLines: 3,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a description';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 24),
+              
+              // Action Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      child: const Text('Cancel'),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          // Save logic here
+                          Navigator.pop(context);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      child: const Text(
+                        'Save',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  List<DropdownMenuItem<VehicleType>> _buildDropdownItems() {
+    final items = <DropdownMenuItem<VehicleType>>[];
+    VehicleCategory? currentCategory;
+
+    for (var vehicleType in _vehicleTypes) {
+      // Add category header when category changes
+      if (currentCategory != vehicleType.category) {
+        currentCategory = vehicleType.category;
+        items.add(
+          DropdownMenuItem<VehicleType>(
+            enabled: false,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                _getCategoryName(vehicleType.category),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+
+      // Add vehicle type item
+      items.add(
+        DropdownMenuItem<VehicleType>(
+          value: vehicleType,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 24.0),
+            child: Row(
+              children: [
+                Icon(vehicleType.icon, size: 20, color: Colors.orange),
+                const SizedBox(width: 12),
+                Text(vehicleType.name),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return items;
   }
 }

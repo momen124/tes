@@ -3,16 +3,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/business/models/business_type.dart';
-import 'package:siwa/features/business/widgets/navigation/business_bottom_nav.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class BusinessListingsScreen extends ConsumerStatefulWidget {
-  const BusinessListingsScreen({super.key});
+  final BusinessType businessType;
+  
+  const BusinessListingsScreen({
+    super.key,
+    required this.businessType,
+  });
 
   @override
   ConsumerState<BusinessListingsScreen> createState() => _BusinessListingsScreenState();
@@ -41,14 +44,52 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
     if (image != null) setState(() => _photo = image);
   }
 
+  String _getListingTitle() {
+    switch (widget.businessType) {
+      case BusinessType.hotel:
+        return 'Create Room Listing';
+      case BusinessType.rental:
+        return 'Create Rental Listing';
+      case BusinessType.restaurant:
+        return 'Create Menu Item';
+      case BusinessType.store:
+        return 'Create Product Listing';
+      case BusinessType.tourGuide:
+        return 'Create Tour Listing';
+      case BusinessType.transportation:
+        return 'Create Route Listing';
+      case BusinessType.tripBooking:
+        return 'Create Trip Package';
+    }
+  }
+
+  String _getTitleHint() {
+    switch (widget.businessType) {
+      case BusinessType.hotel:
+        return 'e.g., Deluxe Suite';
+      case BusinessType.rental:
+        return 'e.g., Mountain Bike';
+      case BusinessType.restaurant:
+        return 'e.g., Traditional Siwan Dish';
+      case BusinessType.store:
+        return 'e.g., Handmade Pottery';
+      case BusinessType.tourGuide:
+        return 'e.g., Desert Safari Tour';
+      case BusinessType.transportation:
+        return 'e.g., Airport Transfer';
+      case BusinessType.tripBooking:
+        return 'e.g., 3-Day Siwa Adventure';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isOffline = ref.watch(offlineProvider);
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.go('/business_dashboard')),
-        title: const Text('Create Listing'),
+        automaticallyImplyLeading: false,
+        title: Text(_getListingTitle()),
         elevation: 0,
       ),
       body: Form(
@@ -74,7 +115,7 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                 controller: _titleController,
                 decoration: InputDecoration(
                   labelText: 'Listing Title',
-                  hintText: 'e.g., Desert Camp Experience',
+                  hintText: _getTitleHint(),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 validator: (value) {
@@ -128,11 +169,11 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       items: const [
-                        DropdownMenuItem(value: 'hotel', child: Text('Hotel')),
-                        DropdownMenuItem(value: 'rental', child: Text('Rental')),
-                        DropdownMenuItem(value: 'restaurant', child: Text('Restaurant')),
+                        DropdownMenuItem(value: 'standard', child: Text('Standard')),
+                        DropdownMenuItem(value: 'premium', child: Text('Premium')),
+                        DropdownMenuItem(value: 'luxury', child: Text('Luxury')),
                       ],
-                      value: _category.isNotEmpty ? _category : null,
+                      initialValue: _category.isNotEmpty ? _category : null,
                       onChanged: (value) => setState(() => _category = value ?? ''),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -147,7 +188,7 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                     child: TextFormField(
                       controller: _priceController,
                       decoration: InputDecoration(
-                        labelText: 'Price per person',
+                        labelText: 'Price',
                         hintText: '\$ 50',
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       ),
@@ -183,23 +224,22 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                       : () {
                           if (_formKey.currentState!.validate()) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Listing created!')),
+                              SnackBar(content: Text('${widget.businessType.displayName} listing created!')),
                             );
-                            context.go('/business_dashboard');
+                            Navigator.pop(context);
                           }
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryOrange,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Preview'),
+                  child: const Text('Create Listing'),
                 ),
               ),
             ],
           ),
         ),
       ),
-  
     );
   }
 }

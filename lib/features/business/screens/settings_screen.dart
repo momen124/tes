@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
-import 'package:siwa/features/business/models/business_type.dart';
 import 'package:siwa/features/business/providers/business_provider.dart';
-import 'package:siwa/features/business/widgets/navigation/business_bottom_nav.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {

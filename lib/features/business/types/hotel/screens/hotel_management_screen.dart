@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:siwa/features/business/models/business_type.dart';
-import 'package:siwa/features/business/widgets/navigation/business_bottom_nav.dart';
+import 'package:siwa/features/business/types/hotel/screens/add_room_form.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:siwa/app/theme.dart';
@@ -482,66 +481,32 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
   }
 
   void _showAddRoomDialog() {
-    final formKey = GlobalKey<FormState>();
-    final typeController = TextEditingController();
-    final priceController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add New Room'),
-        content: Form(
-          key: formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: typeController,
-                  decoration: const InputDecoration(labelText: 'Room Type'),
-                  validator: (value) => value?.isEmpty ?? true ? 'Enter room type' : null,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: priceController,
-                  decoration: const InputDecoration(labelText: 'Price per Night'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) => value?.isEmpty ?? true ? 'Enter price' : null,
-                ),
-              ],
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) => DraggableScrollableSheet(
+      initialChildSize: 0.9,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      builder: (_, controller) => AddRoomForm(
+        onRoomAdded: (roomData) {
+          setState(() {
+            _rooms.add(roomData);
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${roomData['name']} added successfully!'),
+              backgroundColor: AppTheme.successGreen,
+              behavior: SnackBarBehavior.floating,
             ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                setState(() {
-                  _rooms.add({
-                    'id': _rooms.length + 1,
-                    'type': typeController.text,
-                    'price': double.tryParse(priceController.text) ?? 0.0,
-                    'amenities': ['WiFi', 'AC'],
-                    'available': true,
-                  });
-                });
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Room added successfully')),
-                );
-                _confettiController.play();
-              }
-            },
-            child: const Text('Add'),
-          ),
-        ],
+          );
+          _confettiController.play();
+        },
       ),
-    );
-  }
+    ),
+  );
+}
 
   void _showEditRoomDialog(Map<String, dynamic> room) {
     final formKey = GlobalKey<FormState>();

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/business/models/business_type.dart';
 import 'package:siwa/features/business/providers/business_provider.dart';
@@ -86,25 +85,6 @@ class _BusinessAppMainState extends ConsumerState<BusinessAppMain> {
     }
   }
 
-  String _getManagementLabel() {
-    switch (widget.businessType) {
-      case BusinessType.hotel:
-        return 'Rooms';
-      case BusinessType.rental:
-        return 'Fleet';
-      case BusinessType.restaurant:
-        return 'Menu';
-      case BusinessType.store:
-        return 'Inventory';
-      case BusinessType.tourGuide:
-        return 'Schedule';
-      case BusinessType.transportation:
-        return 'Routes';
-      case BusinessType.tripBooking:
-        return 'Trips';
-    }
-  }
-
   Widget _getManagementScreen() {
     switch (widget.businessType) {
       case BusinessType.hotel:
@@ -129,11 +109,11 @@ class _BusinessAppMainState extends ConsumerState<BusinessAppMain> {
       case 0:
         return BusinessDashboardScreen(businessType: widget.businessType);
       case 1:
-        return const BusinessListingsScreen();
+        return BusinessListingsScreen(businessType: widget.businessType);
       case 2:
         return _getManagementScreen();
       case 3:
-        return const BusinessProfileScreen();
+        return BusinessProfileScreen(businessType: widget.businessType);
       default:
         return BusinessDashboardScreen(businessType: widget.businessType);
     }
