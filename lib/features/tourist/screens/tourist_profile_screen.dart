@@ -14,12 +14,8 @@ class TouristProfileScreen extends StatefulWidget {
 }
 
 class _TouristProfileScreenState extends State<TouristProfileScreen> {
-  final _nameController = TextEditingController(
-    text: 'tourist.profile.name'.tr(),
-  );
-  final _emailController = TextEditingController(
-    text: 'amani.hassan@example.com',
-  );
+  final _nameController = TextEditingController(text: 'tourist.profile.default_name'.tr());
+  final _emailController = TextEditingController(text: 'amani.hassan@example.com');
   String _ageRange = '25-34';
   bool _adventure = true;
   bool _relaxation = false;
@@ -30,18 +26,15 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
   final List<Map<String, dynamic>> _badges = [
     {
       'name': 'tourist.challenges.hidden_oasis'.tr(),
-      'imageUrl':
-          'https://www.kemetexperience.com/wp-content/uploads/2019/09/incredible-white-desert-960x636.jpg',
+      'imageUrl': 'https://www.kemetexperience.com/wp-content/uploads/2019/09/incredible-white-desert-960x636.jpg',
     },
     {
       'name': 'tourist.challenges.capture_sunset'.tr(),
-      'imageUrl':
-          'https://thedaydreamdrifters.com/wp-content/uploads/2018/09/Siwa-Oasis-.jpg',
+      'imageUrl': 'https://thedaydreamdrifters.com/wp-content/uploads/2018/09/Siwa-Oasis-.jpg',
     },
     {
       'name': 'tourist.challenges.salt_lake'.tr(),
-      'imageUrl':
-          'https://visitegypt.com/wp-content/uploads/2025/07/the-salt-lake-siwa-oasis.webp',
+      'imageUrl': 'https://visitegypt.com/wp-content/uploads/2025/07/the-salt-lake-siwa-oasis.webp',
     },
   ];
 
@@ -60,7 +53,7 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: Text('tourist.profile.copied'.tr()),
+        title: Text('tourist.profile.title'.tr()),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -74,9 +67,7 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
                   children: [
                     const CircleAvatar(
                       radius: 50,
-                      backgroundImage: NetworkImage(
-                        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop',
-                      ),
+                      backgroundImage: NetworkImage('https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop'),
                     ),
                     Positioned(
                       bottom: 0,
@@ -87,10 +78,7 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          icon: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.white,
-                          ),
+                          icon: const Icon(Icons.camera_alt, color: Colors.white),
                           onPressed: () {
                             // Handle photo upload
                           },
@@ -104,43 +92,29 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
               Center(
                 child: Text(
                   _nameController.text,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ),
               Center(
                 child: Text(
-                  'tourist.profile.adventure'.tr(),
+                  'tourist.profile.user_type_tourist'.tr(),
                   style: const TextStyle(fontSize: 16, color: AppTheme.gray),
                 ),
               ),
               Center(
                 child: Text(
                   'tourist.profile.joined_year'.tr(namedArgs: {'year': '2022'}),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: AppTheme.secondaryGray,
-                  ),
+                  style: const TextStyle(fontSize: 14, color: AppTheme.secondaryGray),
                 ),
               ),
               const SizedBox(height: 32),
-              Text(
-                'tourist.profile.personal_info'.tr(),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text('tourist.profile.personal_info'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               TextField(
                 controller: _nameController,
                 decoration: InputDecoration(
                   labelText: 'tourist.profile.name'.tr(),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -148,48 +122,26 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'auth.email'.tr(),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _ageRange,
+                initialValue: _ageRange,
                 decoration: InputDecoration(
                   labelText: 'tourist.profile.age_range'.tr(),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 items: [
-                  DropdownMenuItem(
-                    value: '18-24',
-                    child: Text('tourist.profile.age_range'.tr()),
-                  ),
-                  DropdownMenuItem(
-                    value: '25-34',
-                    child: Text('tourist.profile.age_range'.tr()),
-                  ),
-                  DropdownMenuItem(
-                    value: '35-44',
-                    child: Text('tourist.profile.age_range'.tr()),
-                  ),
-                  DropdownMenuItem(
-                    value: '45+',
-                    child: Text('tourist.profile.age_range'.tr()),
-                  ),
+                  DropdownMenuItem(value: '18-24', child: Text('tourist.profile.age_ranges.18_24'.tr())),
+                  DropdownMenuItem(value: '25-34', child: Text('tourist.profile.age_ranges.25_34'.tr())),
+                  DropdownMenuItem(value: '35-44', child: Text('tourist.profile.age_ranges.35_44'.tr())),
+                  DropdownMenuItem(value: '45+', child: Text('tourist.profile.age_ranges.45_plus'.tr())),
                 ],
                 onChanged: (value) => setState(() => _ageRange = value!),
               ),
               const SizedBox(height: 32),
-              Text(
-                'tourist.profile.preferences'.tr(),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text('tourist.profile.preferences'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               CheckboxListTile(
                 title: Text('tourist.profile.adventure'.tr()),
@@ -210,13 +162,7 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
                 activeColor: AppTheme.primaryOrange,
               ),
               const SizedBox(height: 32),
-              Text(
-                'tourist.profile.referral_code'.tr(),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text('tourist.profile.referral_code'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -225,37 +171,25 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
                       readOnly: true,
                       controller: TextEditingController(text: _referralCode),
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                     ),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: _referralCode));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('tourist.profile.copied'.tr())),
-                      );
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('tourist.profile.copied'.tr())));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryOrange,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: Text('tourist.profile.copy'.tr()),
                   ),
                 ],
               ),
               const SizedBox(height: 32),
-              Text(
-                'tourist.profile.gps_consent'.tr(),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text('tourist.profile.gps_consent'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               SwitchListTile(
                 title: Text('auth.enable_gps'.tr()),
@@ -265,13 +199,7 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
                 activeThumbColor: AppTheme.primaryOrange,
               ),
               const SizedBox(height: 32),
-              Text(
-                'tourist.profile.badges'.tr(),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text('tourist.profile.badges'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               SizedBox(
                 height: 100,
@@ -301,16 +229,12 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-              Text(
-                'common.language'.tr(),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text('common.language'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              Center(
-                child: LanguageSwitcher(style: LanguageSwitcherStyle.button),
+              const Center(
+                child: LanguageSwitcher(
+                  style: LanguageSwitcherStyle.button,
+                ),
               ),
               const SizedBox(height: 32),
             ],

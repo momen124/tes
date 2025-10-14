@@ -12,8 +12,7 @@ class MenuManagementScreen extends ConsumerStatefulWidget {
   const MenuManagementScreen({super.key});
 
   @override
-  ConsumerState<MenuManagementScreen> createState() =>
-      _MenuManagementScreenState();
+  ConsumerState<MenuManagementScreen> createState() => _MenuManagementScreenState();
 }
 
 class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
@@ -79,15 +78,12 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
     ],
   };
 
-  int get totalItems =>
-      _menuByCategory.values.fold(0, (sum, list) => sum + list.length);
+  int get totalItems => _menuByCategory.values.fold(0, (sum, list) => sum + list.length);
 
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(
-      duration: const Duration(seconds: 1),
-    );
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
   }
 
   @override
@@ -107,7 +103,7 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
-        title: Text('restaurants.view_menu'.tr()),
+        title: Text('Menu'.tr()),
         backgroundColor: AppTheme.lightBlueGray,
         elevation: 0,
       ),
@@ -131,15 +127,10 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Theme(
-                    data: Theme.of(
-                      context,
-                    ).copyWith(dividerColor: Colors.transparent),
+                    data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                     child: ExpansionTile(
                       initiallyExpanded: false,
-                      tilePadding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 8,
-                      ),
+                      tilePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                       childrenPadding: const EdgeInsets.only(bottom: 8),
                       title: Text(
                         category,
@@ -147,13 +138,9 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                       ),
                       subtitle: Text(
                         '${items.length} items',
-                        style: AppTheme.bodyMedium.copyWith(
-                          color: AppTheme.gray,
-                        ),
+                        style: AppTheme.bodyMedium.copyWith(color: AppTheme.gray),
                       ),
-                      children: items
-                          .map((item) => _buildMenuItem(item, category))
-                          .toList(),
+                      children: items.map((item) => _buildMenuItem(item, category)).toList(),
                     ),
                   ),
                 ).animate().fadeIn();
@@ -166,13 +153,11 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
           onPressed: isOffline ? null : _showAddMenuItem,
           backgroundColor: AppTheme.primaryOrange,
           icon: const Icon(Icons.add),
-          label: Text(
-            'Add Item'.tr(),
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+          label: Text('Add Item'.tr(), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
     );
   }
 
@@ -217,10 +202,7 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                     ),
                     if (item['isSpecial'])
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: AppTheme.warningYellow,
                           borderRadius: BorderRadius.circular(8),
@@ -254,9 +236,7 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
             child: IconButton(
               icon: const Icon(Icons.edit_outlined, size: 20),
               color: AppTheme.primaryOrange,
-              onPressed: isOffline
-                  ? null
-                  : () => _showEditMenuItem(item, category),
+              onPressed: isOffline ? null : () => _showEditMenuItem(item, category),
               padding: const EdgeInsets.all(8),
               constraints: const BoxConstraints(),
             ),
@@ -272,10 +252,7 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
     final priceController = TextEditingController();
     final descController = TextEditingController();
     String selectedCategory = _menuByCategory.keys.first;
-    final ingredientsControllers = <TextEditingController>[
-      TextEditingController(),
-      TextEditingController(),
-    ];
+    final ingredientsControllers = <TextEditingController>[TextEditingController(), TextEditingController()];
     bool isSpecial = false;
 
     showModalBottomSheet(
@@ -310,10 +287,7 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                       children: [
                         const Text(
                           'Add New Menu Item',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         IconButton(
                           icon: const Icon(Icons.close),
@@ -332,24 +306,20 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                           TextFormField(
                             controller: nameController,
                             decoration: InputDecoration(
-                              labelText: 'app.name'.tr(),
+                              labelText: 'Item Name'.tr(),
                               hintText: 'e.g., Grilled Lamb Chops'.tr(),
                             ),
-                            validator: (value) => (value?.isEmpty ?? true)
-                                ? 'Enter item name'
-                                : null,
+                            validator: (value) => (value?.isEmpty ?? true) ? 'Enter item name' : null,
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: descController,
                             decoration: InputDecoration(
-                              labelText: 'business.listings.description'.tr(),
-                              hintText: 'common.no'.tr(),
+                              labelText: 'Description'.tr(),
+                              hintText: 'Brief description of the dish'.tr(),
                             ),
                             maxLines: 2,
-                            validator: (value) => (value?.isEmpty ?? true)
-                                ? 'Enter description'
-                                : null,
+                            validator: (value) => (value?.isEmpty ?? true) ? 'Enter description' : null,
                           ),
                           const SizedBox(height: 16),
                           Row(
@@ -358,30 +328,22 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                                 child: TextFormField(
                                   controller: priceController,
                                   decoration: InputDecoration(
-                                    labelText: 'tourist.search.price'.tr(),
+                                    labelText: 'Price'.tr(),
                                     prefixText: '\$ ',
                                   ),
                                   keyboardType: TextInputType.number,
-                                  validator: (value) => (value?.isEmpty ?? true)
-                                      ? 'Enter price'
-                                      : null,
+                                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
                                 ),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: DropdownButtonFormField<String>(
                                   initialValue: selectedCategory,
-                                  decoration: InputDecoration(
-                                    labelText: 'business.listings.category'.tr(),
-                                  ),
+                                  decoration: InputDecoration(labelText: 'Category'.tr()),
                                   items: _menuByCategory.keys.map((cat) {
-                                    return DropdownMenuItem(
-                                      value: cat,
-                                      child: Text(cat),
-                                    );
+                                    return DropdownMenuItem(value: cat, child: Text(cat));
                                   }).toList(),
-                                  onChanged: (value) =>
-                                      setState(() => selectedCategory = value!),
+                                  onChanged: (value) => setState(() => selectedCategory = value!),
                                 ),
                               ),
                             ],
@@ -389,15 +351,10 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                           const SizedBox(height: 24),
                           const Text(
                             'Ingredients',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 12),
-                          ...List.generate(ingredientsControllers.length, (
-                            index,
-                          ) {
+                          ...List.generate(ingredientsControllers.length, (index) {
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 12),
                               child: Row(
@@ -406,27 +363,17 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                                     child: TextFormField(
                                       controller: ingredientsControllers[index],
                                       decoration: InputDecoration(
-                                        hintText: 'Ingredient ${index + 1}'
-                                            .tr(),
+                                        hintText: 'Ingredient ${index + 1}'.tr(),
                                         suffixIcon: index > 0
                                             ? IconButton(
-                                                icon: const Icon(
-                                                  Icons.close,
-                                                  color: AppTheme.errorRed,
-                                                ),
+                                                icon: const Icon(Icons.close, color: AppTheme.errorRed),
                                                 onPressed: () {
-                                                  setSheetState(
-                                                    () => ingredientsControllers
-                                                        .removeAt(index),
-                                                  );
+                                                  setSheetState(() => ingredientsControllers.removeAt(index));
                                                 },
                                               )
                                             : null,
                                       ),
-                                      validator: (value) =>
-                                          (value?.isEmpty ?? true)
-                                          ? 'Enter ingredient'
-                                          : null,
+                                      validator: (value) => (value?.isEmpty ?? true) ? 'Enter ingredient' : null,
                                     ),
                                   ),
                                 ],
@@ -435,30 +382,22 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                           }),
                           OutlinedButton.icon(
                             onPressed: () {
-                              setSheetState(
-                                () => ingredientsControllers.add(
-                                  TextEditingController(),
-                                ),
-                              );
+                              setSheetState(() => ingredientsControllers.add(TextEditingController()));
                             },
                             icon: const Icon(Icons.add),
-                            label: Text('business.rental.vehicle_types.road'.tr()),
+                            label: Text('Add'.tr()),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppTheme.primaryOrange,
-                              side: const BorderSide(
-                                color: AppTheme.primaryOrange,
-                                style: BorderStyle.none,
-                              ),
+                              side: const BorderSide(color: AppTheme.primaryOrange, style: BorderStyle.none),
                             ),
                           ),
                           const SizedBox(height: 24),
                           SwitchListTile(
                             contentPadding: EdgeInsets.zero,
-                            title: Text('restaurants.specialties'.tr()),
-                            subtitle: Text('Mark as today\'.tr()s special'),
+                            title: Text('Special Item'.tr()),
+                            subtitle: const Text('Mark as today\'.tr()s special'),
                             value: isSpecial,
-                            onChanged: (value) =>
-                                setSheetState(() => isSpecial = value),
+                            onChanged: (value) => setSheetState(() => isSpecial = value),
                             activeThumbColor: AppTheme.primaryOrange,
                           ),
                         ],
@@ -484,11 +423,9 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                             onPressed: () => Navigator.pop(context),
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),
-                              side: BorderSide(
-                                color: AppTheme.gray.withOpacity(0.3),
-                              ),
+                              side: BorderSide(color: AppTheme.gray.withOpacity(0.3)),
                             ),
-                            child: Text('common.cancel'.tr()),
+                            child: Text('Cancel'.tr()),
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -500,9 +437,7 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                                   _menuByCategory[selectedCategory]?.add({
                                     'id': DateTime.now().millisecondsSinceEpoch,
                                     'name': nameController.text,
-                                    'price':
-                                        double.tryParse(priceController.text) ??
-                                        0.0,
+                                    'price': double.tryParse(priceController.text) ?? 0.0,
                                     'description': descController.text,
                                     'ingredients': ingredientsControllers
                                         .map((c) => c.text)
@@ -513,10 +448,8 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                                 });
                                 Navigator.pop(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Menu item added successfully'.tr(),
-                                    ),
+                                   SnackBar(
+                                    content: Text('Menu item added successfully'.tr()),
                                     backgroundColor: AppTheme.successGreen,
                                   ),
                                 );
@@ -545,23 +478,14 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
   void _showEditMenuItem(Map<String, dynamic> item, String category) {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController(text: item['name']);
-    final priceController = TextEditingController(
-      text: item['price'].toString(),
-    );
+    final priceController = TextEditingController(text: item['price'].toString());
     final descController = TextEditingController(text: item['description']);
-    final ingredientsControllers =
-        (item['ingredients'] as List?)
-            ?.map<TextEditingController>(
-              (ing) => TextEditingController(text: ing),
-            )
-            .toList()
-            .cast<TextEditingController>() ??
-        [];
+    final ingredientsControllers = (item['ingredients'] as List?)?.map<TextEditingController>((ing) => TextEditingController(text: ing)).toList().cast<TextEditingController>() ?? [];
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('common.edit'.tr()),
+        title: Text('Edit Menu Item'.tr()),
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -570,28 +494,22 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
               children: [
                 TextFormField(
                   controller: nameController,
-                  decoration: InputDecoration(labelText: 'app.name'.tr()),
-                  validator: (value) =>
-                      (value?.isEmpty ?? true) ? 'Enter item name' : null,
+                  decoration: InputDecoration(labelText: 'Item Name'.tr()),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter item name' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: descController,
-                  decoration: InputDecoration(labelText: 'business.listings.description'.tr()),
+                  decoration: InputDecoration(labelText: 'Description'.tr()),
                   maxLines: 2,
-                  validator: (value) =>
-                      (value?.isEmpty ?? true) ? 'Enter description' : null,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter description' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: priceController,
-                  decoration: InputDecoration(
-                    labelText: 'tourist.search.price'.tr(),
-                    prefixText: '\$ ',
-                  ),
+                  decoration: InputDecoration(labelText: 'Price'.tr(), prefixText: '\$ '),
                   keyboardType: TextInputType.number,
-                  validator: (value) =>
-                      (value?.isEmpty ?? true) ? 'Enter price' : null,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
                 ),
                 const SizedBox(height: 24),
                 const Text(
@@ -611,23 +529,14 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                               hintText: 'Ingredient ${index + 1}'.tr(),
                               suffixIcon: index > 0
                                   ? IconButton(
-                                      icon: const Icon(
-                                        Icons.close,
-                                        color: AppTheme.errorRed,
-                                      ),
+                                      icon: const Icon(Icons.close, color: AppTheme.errorRed),
                                       onPressed: () {
-                                        setState(
-                                          () => ingredientsControllers.removeAt(
-                                            index,
-                                          ),
-                                        );
+                                        setState(() => ingredientsControllers.removeAt(index));
                                       },
                                     )
                                   : null,
                             ),
-                            validator: (value) => (value?.isEmpty ?? true)
-                                ? 'Enter ingredient'
-                                : null,
+                            validator: (value) => (value?.isEmpty ?? true) ? 'Enter ingredient' : null,
                           ),
                         ),
                       ],
@@ -636,18 +545,13 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                 }),
                 OutlinedButton.icon(
                   onPressed: () {
-                    setState(
-                      () => ingredientsControllers.add(TextEditingController()),
-                    );
+                    setState(() => ingredientsControllers.add(TextEditingController()));
                   },
                   icon: const Icon(Icons.add),
-                  label: Text('business.rental.vehicle_types.road'.tr()),
+                  label: Text('Add'.tr()),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppTheme.primaryOrange,
-                    side: const BorderSide(
-                      color: AppTheme.primaryOrange,
-                      style: BorderStyle.none,
-                    ),
+                    side: const BorderSide(color: AppTheme.primaryOrange, style: BorderStyle.none),
                   ),
                 ),
               ],
@@ -659,32 +563,25 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
             onPressed: () {
               setState(() => _menuByCategory[category]?.remove(item));
               Navigator.pop(context);
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('common.delete'.tr())));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Item deleted'.tr())),
+              );
               _confettiController.play();
             },
-            child: Text(
-              'common.delete'.tr(),
-              style: TextStyle(color: AppTheme.errorRed),
-            ),
+            child: Text('Delete'.tr(), style: const TextStyle(color: AppTheme.errorRed)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('common.cancel'.tr()),
+            child: Text('Cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 setState(() {
                   item['name'] = nameController.text;
-                  item['price'] =
-                      double.tryParse(priceController.text) ?? item['price'];
+                  item['price'] = double.tryParse(priceController.text) ?? item['price'];
                   item['description'] = descController.text;
-                  item['ingredients'] = ingredientsControllers
-                      .map((c) => c.text)
-                      .where((t) => t.isNotEmpty)
-                      .toList();
+                  item['ingredients'] = ingredientsControllers.map((c) => c.text).where((t) => t.isNotEmpty).toList();
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -693,10 +590,12 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                 _confettiController.play();
               }
             },
-            child: Text('common.save'.tr()),
+            child: Text('Save'.tr()),
           ),
         ],
       ),
     );
   }
+
+ 
 }

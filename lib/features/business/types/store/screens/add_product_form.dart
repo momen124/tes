@@ -24,53 +24,33 @@ class _AddProductFormState extends State<AddProductForm> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
-              decoration: InputDecoration(
-                labelText: 'transportation.route'.tr(),
-                border: OutlineInputBorder(),
-              ),
+              decoration: InputDecoration(labelText: 'Product Name'.tr(), border: const OutlineInputBorder()),
             ),
             const SizedBox(height: 16),
             Text('Price: ${_price.toInt()}'.tr()),
-            Slider(
-              value: _price,
-              min: 0,
-              max: 500,
-              onChanged: (val) => setState(() => _price = val),
-            ),
+            Slider(value: _price, min: 0, max: 500, onChanged: (val) => setState(() => _price = val)),
             const SizedBox(height: 16),
-            Text('business.listings.photos'.tr()),
-            DottedBorder(
+            Text('Photo'.tr()),
+             DottedBorder(
               child: SizedBox(
                 height: 100,
-                child: Center(child: Text('tourist.challenges.upload_photo'.tr())),
+                child: Center(child: Text('Upload Photo'.tr())),
               ),
             ),
             TextFormField(
-              decoration: InputDecoration(
-                labelText: 'business.listings.description'.tr(),
-                border: OutlineInputBorder(),
-              ),
+              decoration: InputDecoration(labelText: 'Description'.tr(), border: const OutlineInputBorder()),
               maxLines: 3,
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text('common.cancel'.tr()),
-                ),
+                ElevatedButton(onPressed: () => Navigator.pop(context), child: Text('Cancel'.tr())),
                 const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.pop(context);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                  ),
-                  child: Text('business.dashboard.manage_products'.tr()),
-                ),
+                ElevatedButton(onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    Navigator.pop(context);
+                  }
+                }, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange), child: Text('Add Product'.tr())),
               ],
             ),
           ],

@@ -14,10 +14,7 @@ class ServiceDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/tourist_search'),
-        ),
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.go('/tourist_search')),
         title: Text('Siwa Shali Lodge'.tr()),
         elevation: 0,
       ),
@@ -44,9 +41,7 @@ class ServiceDetailScreen extends StatelessWidget {
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'common.no'.tr()s natural beauty.',
-              ),
+              child: Text('Siwa Shali Lodge offers a unique stay in the heart of Siwa Oasis, blending traditional architecture with modern comforts. Experience authentic Siwan hospitality in our eco-friendly lodge, surrounded by the oasis\'.tr()s natural beauty.'),
             ),
             const SizedBox(height: 24),
             const Padding(
@@ -60,10 +55,7 @@ class ServiceDetailScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  Text(
-                    '4.7'.tr(),
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                  ),
+                  Text('4.7'.tr(), style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
                   const SizedBox(width: 8),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,56 +67,16 @@ class ServiceDetailScreen extends StatelessWidget {
                           BarChartData(
                             borderData: FlBorderData(show: false),
                             barGroups: [
-                              BarChartGroupData(
-                                x: 5,
-                                barRods: [
-                                  BarChartRodData(
-                                    toY: 50,
-                                    color: AppTheme.primaryOrange,
-                                  ),
-                                ],
-                              ),
-                              BarChartGroupData(
-                                x: 4,
-                                barRods: [
-                                  BarChartRodData(
-                                    toY: 30,
-                                    color: AppTheme.primaryOrange,
-                                  ),
-                                ],
-                              ),
-                              BarChartGroupData(
-                                x: 3,
-                                barRods: [
-                                  BarChartRodData(
-                                    toY: 10,
-                                    color: AppTheme.primaryOrange,
-                                  ),
-                                ],
-                              ),
-                              BarChartGroupData(
-                                x: 2,
-                                barRods: [
-                                  BarChartRodData(
-                                    toY: 5,
-                                    color: AppTheme.primaryOrange,
-                                  ),
-                                ],
-                              ),
-                              BarChartGroupData(
-                                x: 1,
-                                barRods: [
-                                  BarChartRodData(
-                                    toY: 5,
-                                    color: AppTheme.primaryOrange,
-                                  ),
-                                ],
-                              ),
+                              BarChartGroupData(x: 5, barRods: [BarChartRodData(toY: 50, color: AppTheme.primaryOrange)]),
+                              BarChartGroupData(x: 4, barRods: [BarChartRodData(toY: 30, color: AppTheme.primaryOrange)]),
+                              BarChartGroupData(x: 3, barRods: [BarChartRodData(toY: 10, color: AppTheme.primaryOrange)]),
+                              BarChartGroupData(x: 2, barRods: [BarChartRodData(toY: 5, color: AppTheme.primaryOrange)]),
+                              BarChartGroupData(x: 1, barRods: [BarChartRodData(toY: 5, color: AppTheme.primaryOrange)]),
                             ],
                           ),
                         ),
                       ),
-                      Text('common.reviews'.tr()),
+                      Text('125 reviews'.tr()),
                     ],
                   ),
                 ],
@@ -133,23 +85,18 @@ class ServiceDetailScreen extends StatelessWidget {
             ListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              children: [
+              children:  [
                 ListTile(
-                  leading: CircleAvatar(),
+                  leading: const CircleAvatar(),
                   title: Text('Amira Hassan'.tr()),
-                  subtitle: Text(
-                    '2 weeks ago\nAbsolutely loved my stay at Siwa Shali Lodge! The staff were incredibly welcoming, the rooms were beautifully decorated, and the location was perfect for exploring the oasis. Highly recommend!'
-                        .tr(),
-                  ),
-                  trailing: Icon(Icons.thumb_up_off_alt),
+                  subtitle: Text('2 weeks ago\nAbsolutely loved my stay at Siwa Shali Lodge! The staff were incredibly welcoming, the rooms were beautifully decorated, and the location was perfect for exploring the oasis. Highly recommend!'.tr()),
+                  trailing: const Icon(Icons.thumb_up_off_alt),
                 ),
                 ListTile(
-                  leading: CircleAvatar(),
+                  leading: const CircleAvatar(),
                   title: Text('Omar Khaled'.tr()),
-                  subtitle: Text(
-                    'common.no'.tr()s expected in such a remote location.',
-                  ),
-                  trailing: Icon(Icons.thumb_up_off_alt),
+                  subtitle: const Text('1 month ago\nSiwa Shali Lodge is a great choice for a comfortable and authentic experience in Siwa. The lodge is well-maintained, and the staff are friendly. The only minor issue was the limited Wi-Fi, but that\'.tr()s expected in such a remote location.'),
+                  trailing: const Icon(Icons.thumb_up_off_alt),
                 ),
               ],
             ),
@@ -169,8 +116,7 @@ class ServiceDetailScreen extends StatelessWidget {
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   ),
                   const MarkerLayer(
                     markers: [
@@ -192,11 +138,9 @@ class ServiceDetailScreen extends StatelessWidget {
                   onPressed: () => context.go('/booking_form'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryOrange,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: Text('navigation.bookings'.tr()),
+                  child: Text('Book'.tr()),
                 ),
               ),
             ),
@@ -207,20 +151,11 @@ class ServiceDetailScreen extends StatelessWidget {
         currentIndex: 1,
         selectedItemColor: AppTheme.primaryOrange,
         unselectedItemColor: AppTheme.gray,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'navigation.home'.tr()),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'navigation.search'.tr(),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_border),
-            label: 'navigation.bookings'.tr(),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'navigation.profile'.tr(),
-          ),
+        items:  [
+          BottomNavigationBarItem(icon: const Icon(Icons.home), label: 'Home'.tr()),
+          BottomNavigationBarItem(icon: const Icon(Icons.search), label: 'Search'.tr()),
+          BottomNavigationBarItem(icon: const Icon(Icons.bookmark_border), label: 'Bookings'.tr()),
+          BottomNavigationBarItem(icon: const Icon(Icons.person_outline), label: 'Profile'.tr()),
         ],
         onTap: (index) {
           if (index == 0) context.go('/tourist_home');

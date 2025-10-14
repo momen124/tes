@@ -12,16 +12,17 @@ import 'package:easy_localization/easy_localization.dart';
 
 class BusinessListingsScreen extends ConsumerStatefulWidget {
   final BusinessType businessType;
-
-  const BusinessListingsScreen({super.key, required this.businessType});
+  
+  const BusinessListingsScreen({
+    super.key,
+    required this.businessType,
+  });
 
   @override
-  ConsumerState<BusinessListingsScreen> createState() =>
-      _BusinessListingsScreenState();
+  ConsumerState<BusinessListingsScreen> createState() => _BusinessListingsScreenState();
 }
 
-class _BusinessListingsScreenState
-    extends ConsumerState<BusinessListingsScreen> {
+class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _picker = ImagePicker();
   final _titleController = TextEditingController();
@@ -103,25 +104,20 @@ class _BusinessListingsScreenState
                 Container(
                   decoration: AppTheme.offlineBanner,
                   padding: const EdgeInsets.all(8),
-                  child: Row(
+                  child:  Row(
                     children: [
-                      Icon(Icons.wifi_off, color: Colors.white),
-                      SizedBox(width: 8),
-                      Text(
-                        'common.offline'.tr(),
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      const Icon(Icons.wifi_off, color: Colors.white),
+                      const SizedBox(width: 8),
+                      Text('You are offline'.tr(), style: const TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
               TextFormField(
                 controller: _titleController,
                 decoration: InputDecoration(
-                  labelText: 'business.listings.listing_title'.tr(),
+                  labelText: 'Listing Title'.tr(),
                   hintText: _getTitleHint(),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -134,11 +130,9 @@ class _BusinessListingsScreenState
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
-                  labelText: 'business.listings.description'.tr(),
+                  labelText: 'Description'.tr(),
                   hintText: 'Describe your offering in detail'.tr(),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 maxLines: 4,
                 validator: (value) {
@@ -149,7 +143,7 @@ class _BusinessListingsScreenState
                 },
               ),
               const SizedBox(height: 16),
-              Text('business.listings.photos'.tr()),
+              Text('Listing Photos'.tr()),
               const SizedBox(height: 8),
               GestureDetector(
                 onTap: isOffline ? null : _uploadPhoto,
@@ -161,11 +155,7 @@ class _BusinessListingsScreenState
                   ),
                   child: Center(
                     child: _photo == null
-                        ? const Icon(
-                            Icons.add,
-                            size: 40,
-                            color: AppTheme.primaryOrange,
-                          )
+                        ? const Icon(Icons.add, size: 40, color: AppTheme.primaryOrange)
                         : Image.file(File(_photo!.path), fit: BoxFit.cover),
                   ),
                 ),
@@ -176,28 +166,16 @@ class _BusinessListingsScreenState
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
-                        labelText: 'business.listings.category'.tr(),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        labelText: 'Category'.tr(),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       items: [
-                        DropdownMenuItem(
-                          value: 'standard',
-                          child: Text('Standard'.tr()),
-                        ),
-                        DropdownMenuItem(
-                          value: 'premium',
-                          child: Text('business.listings.preview'.tr()),
-                        ),
-                        DropdownMenuItem(
-                          value: 'luxury',
-                          child: Text('business.rental.vehicle_types.luxury'.tr()),
-                        ),
+                        DropdownMenuItem(value: 'standard', child: Text('Standard'.tr())),
+                        DropdownMenuItem(value: 'premium', child: Text('Premium'.tr())),
+                        DropdownMenuItem(value: 'luxury', child: Text('Luxury'.tr())),
                       ],
                       initialValue: _category.isNotEmpty ? _category : null,
-                      onChanged: (value) =>
-                          setState(() => _category = value ?? ''),
+                      onChanged: (value) => setState(() => _category = value ?? ''),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please select a category';
@@ -211,11 +189,9 @@ class _BusinessListingsScreenState
                     child: TextFormField(
                       controller: _priceController,
                       decoration: InputDecoration(
-                        labelText: 'tourist.search.price'.tr(),
+                        labelText: 'Price'.tr(),
                         hintText: '\$ 50'.tr(),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
@@ -232,14 +208,13 @@ class _BusinessListingsScreenState
                 ],
               ),
               const SizedBox(height: 16),
-              Text('business.listings.availability'.tr()),
+              Text('Availability'.tr()),
               const SizedBox(height: 8),
               TableCalendar(
                 firstDay: DateTime.utc(2010, 10, 16),
                 lastDay: DateTime.utc(2030, 3, 14),
                 focusedDay: _selectedDate ?? DateTime.now(),
-                onDaySelected: (selectedDay, focusedDay) =>
-                    setState(() => _selectedDate = selectedDay),
+                onDaySelected: (selectedDay, focusedDay) => setState(() => _selectedDate = selectedDay),
               ),
               const SizedBox(height: 24),
               SizedBox(
@@ -250,23 +225,16 @@ class _BusinessListingsScreenState
                       : () {
                           if (_formKey.currentState!.validate()) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  '${widget.businessType.displayName} listing created!'
-                                      .tr(),
-                                ),
-                              ),
+                              SnackBar(content: Text('${widget.businessType.displayName} listing created!'.tr())),
                             );
                             Navigator.pop(context);
                           }
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryOrange,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: Text('business.listings.create_listing'.tr()),
+                  child: Text('Create Listing'.tr()),
                 ),
               ),
             ],

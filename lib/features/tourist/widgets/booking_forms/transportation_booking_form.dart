@@ -4,11 +4,13 @@ import 'package:easy_localization/easy_localization.dart';
 class TransportationBookingForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onFormDataChanged;
 
-  const TransportationBookingForm({super.key, required this.onFormDataChanged});
+  const TransportationBookingForm({
+    super.key,
+    required this.onFormDataChanged,
+  });
 
   @override
-  _TransportationBookingFormState createState() =>
-      _TransportationBookingFormState();
+  _TransportationBookingFormState createState() => _TransportationBookingFormState();
 }
 
 class _TransportationBookingFormState extends State<TransportationBookingForm> {
@@ -24,22 +26,25 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
       children: [
         const Text(
           'Book Transportation',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 24),
-
+        
         // Time Selection
         _buildTimeSelection(),
         const SizedBox(height: 24),
-
+        
         // Number of Seats
         _buildSeatSelection(),
         const SizedBox(height: 24),
-
+        
         // Route Selection
         _buildRouteSelection(),
         const SizedBox(height: 24),
-
+        
         // Photo ID Upload
         _buildPhotoIdUpload(),
       ],
@@ -52,12 +57,15 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
       children: [
         const Text(
           'Time',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8),
         ListTile(
           title: Text(
-            _selectedTime != null
+            _selectedTime != null 
                 ? _selectedTime!.format(context)
                 : 'Select Time',
           ),
@@ -74,30 +82,28 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
       children: [
         const Text(
           'Number of Seats',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('business.vehicles.seats'.tr()),
+            Text('Seats'.tr()),
             Row(
               children: [
                 IconButton(
                   icon: const Icon(Icons.remove),
-                  onPressed: _seatCount > 1
-                      ? () => setState(() {
-                          _seatCount--;
-                          _updateFormData();
-                        })
-                      : null,
+                  onPressed: _seatCount > 1 ? () => setState(() {
+                    _seatCount--;
+                    _updateFormData();
+                  }) : null,
                 ),
                 Text(
                   '$_seatCount',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: const Icon(Icons.add),
@@ -120,29 +126,26 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
       children: [
         const Text(
           'Route',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _selectedRoute,
-          items: [
-            DropdownMenuItem(
-              value: 'route1',
-              child: Text('business.profile.set_location'.tr()),
-            ),
-            DropdownMenuItem(
-              value: 'route2',
-              child: Text('Siwa to Alexandria'.tr()),
-            ),
-            DropdownMenuItem(value: 'route3', child: Text('tourist.categories.tours'.tr())),
+          items:  [
+            DropdownMenuItem(value: 'route1', child: Text('Siwa to Cairo'.tr())),
+            DropdownMenuItem(value: 'route2', child: Text('Siwa to Alexandria'.tr())),
+            DropdownMenuItem(value: 'route3', child: Text('City Tour'.tr())),
           ],
           onChanged: (value) => setState(() {
             _selectedRoute = value;
             _updateFormData();
           }),
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'business.rental.select_room_type'.tr(),
+            border: const OutlineInputBorder(),
+            hintText: 'Select Route'.tr(),
           ),
         ),
       ],
@@ -155,7 +158,10 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
       children: [
         const Text(
           'Photo ID',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8),
         GestureDetector(
@@ -163,22 +169,19 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
           child: Container(
             height: 120,
             decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.grey[300]!,
-                style: BorderStyle.solid,
-              ),
+              border: Border.all(color: Colors.grey[300]!, style: BorderStyle.solid),
               borderRadius: BorderRadius.circular(8),
             ),
             child: _photoIdPath != null
                 ? Image.network(_photoIdPath!, fit: BoxFit.cover)
-                : Column(
+                :  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.cloud_upload, size: 40, color: Colors.grey),
-                      SizedBox(height: 8),
-                      Text('business.rental.photo_upload_hint'.tr()),
-                      SizedBox(height: 4),
-                      Text(
+                      const Icon(Icons.cloud_upload, size: 40, color: Colors.grey),
+                      const SizedBox(height: 8),
+                      Text('Click to upload or drag and drop'.tr()),
+                      const SizedBox(height: 4),
+                      const Text(
                         'PNG, JPG or PDF (MAX.800x400px)',
                         style: TextStyle(fontSize: 12, color: Colors.grey),
                       ),

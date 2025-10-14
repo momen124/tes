@@ -12,11 +12,8 @@ class ProductDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => context.pop(),
-        ),
-        title: Text('common.details'.tr()),
+        leading: IconButton(icon: const Icon(Icons.close), onPressed: () => context.pop()),
+        title: Text('Product Details'.tr()),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -34,39 +31,28 @@ class ProductDetailScreen extends StatelessWidget {
                 'https://www.sharm-club.com/assets/images/oasis/tour-white-desert-safari.jpg',
               ].map((url) => Image.network(url, fit: BoxFit.cover)).toList(),
             ),
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                'siwa_info.history'.tr(),
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
+             Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text('Siwa Oasis Tour'.tr(), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'Explore the hidden gems of Siwa Oasis with our expert guides. This tour includes visits to the ancient ruins, salt lakes, and traditional villages.'
-                    .tr(),
-              ),
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text('Explore the hidden gems of Siwa Oasis with our expert guides. This tour includes visits to the ancient ruins, salt lakes, and traditional villages.'.tr()),
             ),
             const SizedBox(height: 24),
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                'Checkout'.tr(),
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
+             Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text('Checkout'.tr(), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
                 decoration: InputDecoration(
-                  labelText: 'tourist.booking.payment_method'.tr(),
+                  labelText: 'Payment Method'.tr(),
                   suffixIcon: const Icon(Icons.credit_card),
                   filled: true,
                   fillColor: AppTheme.lightBlueGray,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 readOnly: true,
                 controller: TextEditingController(text: 'Visa **** 4242'),
@@ -77,12 +63,10 @@ class ProductDetailScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
                 decoration: InputDecoration(
-                  labelText: 'tourist.booking.total_cost'.tr(),
+                  labelText: 'Total'.tr(),
                   filled: true,
                   fillColor: AppTheme.lightBlueGray,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 readOnly: true,
                 controller: TextEditingController(text: '\$220'),
@@ -99,11 +83,9 @@ class ProductDetailScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryOrange,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: Text('common.no'.tr()),
+                  child: Text('Pay Now'.tr()),
                 ),
               ),
             ),
@@ -114,20 +96,11 @@ class ProductDetailScreen extends StatelessWidget {
         currentIndex: 2,
         selectedItemColor: AppTheme.primaryOrange,
         unselectedItemColor: AppTheme.gray,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'navigation.home'.tr()),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'navigation.search'.tr(),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_border),
-            label: 'navigation.bookings'.tr(),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'navigation.profile'.tr(),
-          ),
+        items:  [
+          BottomNavigationBarItem(icon: const Icon(Icons.home), label: 'Home'.tr()),
+          BottomNavigationBarItem(icon: const Icon(Icons.search), label: 'Search'.tr()),
+          BottomNavigationBarItem(icon: const Icon(Icons.bookmark_border), label: 'Bookings'.tr()),
+          BottomNavigationBarItem(icon: const Icon(Icons.person_outline), label: 'Profile'.tr()),
         ],
         onTap: (index) {
           if (index == 0) context.go('/tourist_home');

@@ -14,7 +14,7 @@ class RestaurantsListScreen extends StatefulWidget {
 class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
   String _selectedCuisine = 'all';
   String _priceRange = 'all';
-
+  
   final List<Map<String, dynamic>> _restaurants = [
     {
       'id': 1,
@@ -26,8 +26,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
       'reviews': 234,
       'deliveryTime': '30-45 min',
       'minOrder': 50.0,
-      'imageUrl':
-          'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
+      'imageUrl': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
       'specialties': ['Siwan Dates', 'Tagine', 'Fresh Bread'],
       'openNow': true,
       'openingHours': '8:00 AM - 11:00 PM',
@@ -43,8 +42,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
       'reviews': 456,
       'deliveryTime': '20-30 min',
       'minOrder': 30.0,
-      'imageUrl':
-          'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800',
+      'imageUrl': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800',
       'specialties': ['Siwan Pizza', 'Local Olives', 'Honey'],
       'openNow': true,
       'openingHours': '7:00 AM - 10:00 PM',
@@ -60,8 +58,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
       'reviews': 189,
       'deliveryTime': '40-60 min',
       'minOrder': 100.0,
-      'imageUrl':
-          'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800',
+      'imageUrl': 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800',
       'specialties': ['Gourmet Burgers', 'Pasta', 'Steaks'],
       'openNow': true,
       'openingHours': '12:00 PM - 12:00 AM',
@@ -77,8 +74,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
       'reviews': 345,
       'deliveryTime': '15-25 min',
       'minOrder': 25.0,
-      'imageUrl':
-          'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800',
+      'imageUrl': 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800',
       'specialties': ['Date Coffee', 'Pastries', 'Fresh Juice'],
       'openNow': true,
       'openingHours': '6:00 AM - 9:00 PM',
@@ -94,8 +90,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
       'reviews': 278,
       'deliveryTime': '35-50 min',
       'minOrder': 80.0,
-      'imageUrl':
-          'https://images.unsplash.com/photo-1544025162-d76694265947?w=800',
+      'imageUrl': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800',
       'specialties': ['Kebab', 'Kofta', 'Grilled Chicken'],
       'openNow': false,
       'openingHours': '5:00 PM - 12:00 AM',
@@ -111,8 +106,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
       'reviews': 312,
       'deliveryTime': '30-40 min',
       'minOrder': 60.0,
-      'imageUrl':
-          'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800',
+      'imageUrl': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800',
       'specialties': ['Mezze Platter', 'Seafood', 'Salads'],
       'openNow': true,
       'openingHours': '11:00 AM - 11:00 PM',
@@ -122,11 +116,8 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
 
   List<Map<String, dynamic>> get _filteredRestaurants {
     return _restaurants.where((restaurant) {
-      final cuisineMatch =
-          _selectedCuisine == 'all' ||
-          restaurant['cuisine'] == _selectedCuisine;
-      final priceMatch =
-          _priceRange == 'all' || restaurant['priceRange'] == _priceRange;
+      final cuisineMatch = _selectedCuisine == 'all' || restaurant['cuisine'] == _selectedCuisine;
+      final priceMatch = _priceRange == 'all' || restaurant['priceRange'] == _priceRange;
       return cuisineMatch && priceMatch;
     }).toList();
   }
@@ -141,7 +132,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: Text('restaurants.title'.tr()),
+        title: Text('Restaurants'.tr()),
         elevation: 0,
         actions: [
           IconButton(
@@ -169,28 +160,12 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                   child: Row(
                     children: [
                       _buildCuisineChip('All', 'all', Icons.restaurant),
-                      _buildCuisineChip(
-                        'Egyptian',
-                        'egyptian',
-                        Icons.food_bank,
-                      ),
-                      _buildCuisineChip(
-                        'Traditional',
-                        'traditional',
-                        Icons.local_dining,
-                      ),
-                      _buildCuisineChip(
-                        'International',
-                        'international',
-                        Icons.public,
-                      ),
+                      _buildCuisineChip('Egyptian', 'egyptian', Icons.food_bank),
+                      _buildCuisineChip('Traditional', 'traditional', Icons.local_dining),
+                      _buildCuisineChip('International', 'international', Icons.public),
                       _buildCuisineChip('Café', 'cafe', Icons.local_cafe),
                       _buildCuisineChip('Grill', 'grill', Icons.outdoor_grill),
-                      _buildCuisineChip(
-                        'Mediterranean',
-                        'mediterranean',
-                        Icons.set_meal,
-                      ),
+                      _buildCuisineChip('Mediterranean', 'mediterranean', Icons.set_meal),
                     ],
                   ),
                 ),
@@ -199,7 +174,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
-                      Text('tourist.search.price'.tr(), style: TextStyle(fontSize: 14)),
+                      Text('Price: '.tr(), style: const TextStyle(fontSize: 14)),
                       const SizedBox(width: 8),
                       _buildPriceFilter('All', 'all'),
                       _buildPriceFilter('Budget', 'low'),
@@ -211,9 +186,9 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
               ],
             ),
           ),
-
+          
           const SizedBox(height: 16),
-
+          
           // Restaurants List
           Expanded(
             child: ListView.builder(
@@ -286,7 +261,9 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: InkWell(
         onTap: () {
           _showRestaurantMenu(restaurant);
@@ -302,9 +279,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                   height: 160,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                     image: DecorationImage(
                       image: NetworkImage(restaurant['imageUrl']),
                       fit: BoxFit.cover,
@@ -316,10 +291,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                     top: 12,
                     left: 12,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
                         color: AppTheme.successGreen,
                         borderRadius: BorderRadius.circular(20),
@@ -327,11 +299,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            Icons.access_time,
-                            size: 12,
-                            color: Colors.white,
-                          ),
+                          Icon(Icons.access_time, size: 12, color: Colors.white),
                           SizedBox(width: 4),
                           Text(
                             'Open Now',
@@ -350,15 +318,12 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                     top: 12,
                     left: 12,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
                         color: AppTheme.errorRed,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Closed',
                         style: TextStyle(
                           color: Colors.white,
@@ -372,10 +337,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                   top: 12,
                   right: 12,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -383,11 +345,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
-                          Icons.star,
-                          color: AppTheme.primaryOrange,
-                          size: 14,
-                        ),
+                        const Icon(Icons.star, color: AppTheme.primaryOrange, size: 14),
                         const SizedBox(width: 4),
                         Text(
                           restaurant['rating'].toString(),
@@ -402,7 +360,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                 ),
               ],
             ),
-
+            
             // Content
             Padding(
               padding: const EdgeInsets.all(16),
@@ -425,71 +383,58 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                     ],
                   ),
                   const SizedBox(height: 4),
-
+                  
                   Text(
                     restaurant['description'],
-                    style: const TextStyle(fontSize: 14, color: AppTheme.gray),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppTheme.gray,
+                    ),
                   ),
                   const SizedBox(height: 12),
-
+                  
                   // Info Row
                   Row(
                     children: [
-                      const Icon(
-                        Icons.delivery_dining,
-                        size: 16,
-                        color: AppTheme.gray,
-                      ),
+                      const Icon(Icons.delivery_dining, size: 16, color: AppTheme.gray),
                       const SizedBox(width: 4),
                       Text(
                         '${restaurant['deliveryTime']} • ',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: AppTheme.gray,
-                        ),
+                        style: const TextStyle(fontSize: 13, color: AppTheme.gray),
                       ),
-                      const Icon(
-                        Icons.payments,
-                        size: 16,
-                        color: AppTheme.gray,
-                      ),
+                      const Icon(Icons.payments, size: 16, color: AppTheme.gray),
                       const SizedBox(width: 4),
                       Text(
                         'Min EGP ${restaurant['minOrder'].toStringAsFixed(0)}',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: AppTheme.gray,
-                        ),
+                        style: const TextStyle(fontSize: 13, color: AppTheme.gray),
                       ),
                     ],
                   ),
                   const SizedBox(height: 12),
-
+                  
                   // Specialties
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: (restaurant['specialties'] as List<String>)
                         .take(3)
-                        .map(
-                          (specialty) => Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppTheme.lightBlueGray,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              specialty,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: AppTheme.darkGray,
+                        .map((specialty) => Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
                               ),
-                            ),
-                          ),
-                        )
+                              decoration: BoxDecoration(
+                                color: AppTheme.lightBlueGray,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                specialty,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: AppTheme.darkGray,
+                                ),
+                              ),
+                            ))
                         .toList(),
                   ),
                 ],
@@ -516,7 +461,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
       default:
         count = 1;
     }
-
+    
     return Row(
       children: List.generate(
         3,
@@ -557,9 +502,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                     height: 200,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                       image: DecorationImage(
                         image: NetworkImage(restaurant['imageUrl']),
                         fit: BoxFit.cover,
@@ -579,7 +522,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                   ),
                 ],
               ),
-
+              
               // Restaurant Info
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -599,14 +542,9 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: restaurant['openNow']
-                                ? AppTheme.successGreen
-                                : AppTheme.errorRed,
+                            color: restaurant['openNow'] ? AppTheme.successGreen : AppTheme.errorRed,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
@@ -622,29 +560,22 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(
-                          Icons.star,
-                          color: AppTheme.primaryOrange,
-                          size: 20,
-                        ),
+                        const Icon(Icons.star, color: AppTheme.primaryOrange, size: 20),
                         const SizedBox(width: 4),
                         Text(
                           '${restaurant['rating']} (${restaurant['reviews']} reviews)',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: AppTheme.gray,
-                          ),
+                          style: const TextStyle(fontSize: 14, color: AppTheme.gray),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
-
+                    
                     Text(
                       restaurant['description'],
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 24),
-
+                    
                     // Delivery Info
                     Row(
                       children: [
@@ -686,7 +617,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                       ],
                     ),
                     const SizedBox(height: 24),
-
+                    
                     // Specialties
                     const Text(
                       'Specialties',
@@ -700,29 +631,27 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                       spacing: 12,
                       runSpacing: 12,
                       children: (restaurant['specialties'] as List<String>)
-                          .map(
-                            (specialty) => Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                gradient: AppTheme.primaryGradient,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                specialty,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
+                          .map((specialty) => Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
                                 ),
-                              ),
-                            ),
-                          )
+                                decoration: BoxDecoration(
+                                  gradient: AppTheme.primaryGradient,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  specialty,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ))
                           .toList(),
                     ),
                     const SizedBox(height: 24),
-
+                    
                     // Order Button
                     SizedBox(
                       width: double.infinity,
@@ -740,12 +669,9 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                           backgroundColor: AppTheme.primaryOrange,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        child: Text(
+                        child: const Text(
                           'View Menu & Order',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -772,12 +698,18 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(fontSize: 12, color: AppTheme.gray),
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppTheme.gray,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             value,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+            ),
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,

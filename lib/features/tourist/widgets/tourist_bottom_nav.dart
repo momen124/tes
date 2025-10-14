@@ -5,9 +5,9 @@ import 'package:easy_localization/easy_localization.dart';
 
 class TouristBottomNav extends StatelessWidget {
   final int currentIndex;
-
+  
   const TouristBottomNav({super.key, required this.currentIndex});
-
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,31 +34,31 @@ class TouristBottomNav extends StatelessWidget {
           elevation: 0,
           selectedFontSize: 12,
           unselectedFontSize: 12,
-          items: [
+          items:  [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: 'navigation.home'.tr(),
+              icon: const Icon(Icons.home_outlined),
+              activeIcon: const Icon(Icons.home),
+              label: 'Home'.tr(),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.search_outlined),
-              activeIcon: Icon(Icons.search),
-              label: 'navigation.discover'.tr(),
+              icon: const Icon(Icons.search_outlined),
+              activeIcon: const Icon(Icons.search),
+              label: 'Discover'.tr(),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.camera_alt_outlined),
-              activeIcon: Icon(Icons.camera_alt),
-              label: 'navigation.challenges'.tr(),
+              icon: const Icon(Icons.camera_alt_outlined),
+              activeIcon: const Icon(Icons.camera_alt),
+              label: 'Challenges'.tr(),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.bookmark_outline),
-              activeIcon: Icon(Icons.bookmark),
-              label: 'navigation.bookings'.tr(),
+              icon: const Icon(Icons.bookmark_outline),
+              activeIcon: const Icon(Icons.bookmark),
+              label: 'Bookings'.tr(),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
-              label: 'navigation.profile'.tr(),
+              icon: const Icon(Icons.person_outline),
+              activeIcon: const Icon(Icons.person),
+              label: 'Profile'.tr(),
             ),
           ],
           onTap: (index) {

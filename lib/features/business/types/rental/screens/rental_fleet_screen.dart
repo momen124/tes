@@ -82,9 +82,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(
-      duration: const Duration(seconds: 1),
-    );
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
   }
 
   @override
@@ -103,17 +101,17 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
-        title: Text('business.rental.rental_name'.tr()),
+        title: Text('Rental Fleet'.tr()),
         actions: [
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: isOffline ? null : _showRentalHistory,
-            tooltip: 'tour_guides.history'.tr(),
+            tooltip: 'Rental History'.tr(),
           ),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: isOffline ? null : _showAddVehicleDialog,
-            tooltip: 'business.vehicles.add_vehicle'.tr(),
+            tooltip: 'Add Vehicle'.tr(),
           ),
         ],
       ),
@@ -123,7 +121,10 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: AppTheme.offlineBanner,
-                child: Text('Offline', textAlign: TextAlign.center),
+                child: const Text(
+                  'Offline',
+                  textAlign: TextAlign.center,
+                ),
               ),
             )
           : GridView.builder(
@@ -140,6 +141,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                 return _buildVehicleCard(vehicle).animate().fadeIn();
               },
             ),
+
     );
   }
 
@@ -168,21 +170,14 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                     top: 8,
                     right: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: isAvailable
-                            ? AppTheme.successGreen
-                            : AppTheme.errorRed,
+                        color: isAvailable ? AppTheme.successGreen : AppTheme.errorRed,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         isAvailable ? 'Available' : 'Rented',
-                        style: AppTheme.bodySmall.copyWith(
-                          color: AppTheme.white,
-                        ),
+                        style: AppTheme.bodySmall.copyWith(color: AppTheme.white),
                       ),
                     ),
                   ),
@@ -216,9 +211,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                       const SizedBox(height: 4),
                       Text(
                         '\$${vehicle['rate'].toStringAsFixed(0)}/${vehicle['rateType']}',
-                        style: AppTheme.titleMedium.copyWith(
-                          color: AppTheme.primaryOrange,
-                        ),
+                        style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
                       ),
                     ],
                   ),
@@ -228,9 +221,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                       IconButton(
                         icon: const Icon(Icons.edit, size: 20),
                         color: AppTheme.primaryOrange,
-                        onPressed: ref.watch(offlineProvider)
-                            ? null
-                            : () => _showEditVehicleDialog(vehicle),
+                        onPressed: ref.watch(offlineProvider) ? null : () => _showEditVehicleDialog(vehicle),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                       ),
@@ -243,16 +234,11 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                         onPressed: ref.watch(offlineProvider)
                             ? null
                             : () {
-                                setState(
-                                  () => vehicle['available'] =
-                                      !vehicle['available'],
-                                );
+                                setState(() => vehicle['available'] = !vehicle['available']);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      isAvailable
-                                          ? 'Vehicle marked as unavailable'
-                                          : 'Vehicle marked as available',
+                                      isAvailable ? 'Vehicle marked as unavailable' : 'Vehicle marked as available',
                                     ),
                                   ),
                                 );
@@ -282,7 +268,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('business.vehicles.add_vehicle'.tr()),
+        title: Text('Add Vehicle'.tr()),
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -291,34 +277,30 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
               children: [
                 TextFormField(
                   controller: typeController,
-                  decoration: InputDecoration(labelText: 'business.vehicles.vehicle_type'.tr()),
-                  validator: (value) =>
-                      (value?.isEmpty ?? true) ? 'Enter vehicle type' : null,
+                  decoration: InputDecoration(labelText: 'Vehicle Type'.tr()),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter vehicle type' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: modelController,
-                  decoration: InputDecoration(labelText: 'business.vehicles.model'.tr()),
-                  validator: (value) =>
-                      (value?.isEmpty ?? true) ? 'Enter model' : null,
+                  decoration: InputDecoration(labelText: 'Model'.tr()),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter model' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: rateController,
-                  decoration: InputDecoration(labelText: 'tourist.booking.date'.tr()),
+                  decoration: InputDecoration(labelText: 'Rate'.tr()),
                   keyboardType: TextInputType.number,
-                  validator: (value) =>
-                      (value?.isEmpty ?? true) ? 'Enter rate' : null,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter rate' : null,
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   initialValue: selectedRateType,
-                  decoration: InputDecoration(labelText: 'business.vehicles.rate_per_day'.tr()),
+                  decoration: InputDecoration(labelText: 'Rate Type'.tr()),
                   items: ['hour', 'day', 'week'].map((type) {
                     return DropdownMenuItem(value: type, child: Text(type));
                   }).toList(),
-                  onChanged: (value) =>
-                      setState(() => selectedRateType = value!),
+                  onChanged: (value) => setState(() => selectedRateType = value!),
                 ),
               ],
             ),
@@ -327,7 +309,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('common.cancel'.tr()),
+            child: Text('Cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -351,7 +333,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                 _confettiController.play();
               }
             },
-            child: Text('business.rental.vehicle_types.road'.tr()),
+            child: Text('Add'.tr()),
           ),
         ],
       ),
@@ -362,14 +344,12 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
     final formKey = GlobalKey<FormState>();
     final typeController = TextEditingController(text: vehicle['type']);
     final modelController = TextEditingController(text: vehicle['model']);
-    final rateController = TextEditingController(
-      text: vehicle['rate'].toString(),
-    );
+    final rateController = TextEditingController(text: vehicle['rate'].toString());
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('business.vehicles.edit_vehicle'.tr()),
+        title: Text('Edit Vehicle'.tr()),
         content: Form(
           key: formKey,
           child: Column(
@@ -377,24 +357,21 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
             children: [
               TextFormField(
                 controller: typeController,
-                decoration: InputDecoration(labelText: 'business.vehicles.vehicle_type'.tr()),
-                validator: (value) =>
-                    (value?.isEmpty ?? true) ? 'Enter vehicle type' : null,
+                decoration: InputDecoration(labelText: 'Vehicle Type'.tr()),
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter vehicle type' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: modelController,
-                decoration: InputDecoration(labelText: 'business.vehicles.model'.tr()),
-                validator: (value) =>
-                    (value?.isEmpty ?? true) ? 'Enter model' : null,
+                decoration: InputDecoration(labelText: 'Model'.tr()),
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter model' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: rateController,
-                decoration: InputDecoration(labelText: 'tourist.booking.date'.tr()),
+                decoration: InputDecoration(labelText: 'Rate'.tr()),
                 keyboardType: TextInputType.number,
-                validator: (value) =>
-                    (value?.isEmpty ?? true) ? 'Enter rate' : null,
+                validator: (value) => (value?.isEmpty ?? true) ? 'Enter rate' : null,
               ),
             ],
           ),
@@ -404,15 +381,12 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
             onPressed: () {
               setState(() => _fleet.remove(vehicle));
               Navigator.pop(context);
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('common.delete'.tr())));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Vehicle deleted'.tr())),
+              );
               _confettiController.play();
             },
-            child: Text(
-              'common.delete'.tr(),
-              style: TextStyle(color: AppTheme.errorRed),
-            ),
+            child: Text('Delete'.tr(), style: const TextStyle(color: AppTheme.errorRed)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -420,18 +394,17 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                 setState(() {
                   vehicle['type'] = typeController.text;
                   vehicle['model'] = modelController.text;
-                  vehicle['rate'] =
-                      double.tryParse(rateController.text) ?? vehicle['rate'];
+                  vehicle['rate'] = double.tryParse(rateController.text) ?? vehicle['rate'];
                   vehicle['image'] = _getVehicleIcon(typeController.text);
                 });
                 Navigator.pop(context);
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('business.vehicles.vehicle_type'.tr())));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Vehicle updated'.tr())),
+                );
                 _confettiController.play();
               }
             },
-            child: Text('common.save'.tr()),
+            child: Text('Save'.tr()),
           ),
         ],
       ),
@@ -464,7 +437,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('tour_guides.history'.tr(), style: AppTheme.titleLarge),
+                  Text('Rental History'.tr(), style: AppTheme.titleLarge),
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () => Navigator.pop(context),
@@ -489,23 +462,15 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                rental['vehicle'],
-                                style: AppTheme.titleMedium,
-                              ),
+                              Text(rental['vehicle'], style: AppTheme.titleMedium),
                               Text(
                                 '\$${rental['revenue'].toStringAsFixed(0)}',
-                                style: AppTheme.titleMedium.copyWith(
-                                  color: AppTheme.successGreen,
-                                ),
+                                style: AppTheme.titleMedium.copyWith(color: AppTheme.successGreen),
                               ),
                             ],
                           ),
                           const SizedBox(height: 8),
-                          Text(
-                            'Customer: ${rental['.tr()customer']}',
-                            style: AppTheme.bodyMedium,
-                          ),
+                          Text('Customer: ${rental['.tr()customer']}', style: AppTheme.bodyMedium),
                           const SizedBox(height: 4),
                           Text(
                             'Period: ${_formatDate(rental['startDate'])} - ${_formatDate(rental['endDate'])}',

@@ -23,39 +23,24 @@ class _AddRouteFormState extends State<AddRouteForm> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
-              decoration: InputDecoration(
-                labelText: 'auth.username'.tr(),
-                border: OutlineInputBorder(),
-              ),
+              decoration: InputDecoration(labelText: 'Route Name'.tr(), border: const OutlineInputBorder()),
               onChanged: (val) => _name = val,
             ),
             TextFormField(
-              decoration: InputDecoration(
-                labelText: 'business.listings.description'.tr(),
-                border: OutlineInputBorder(),
-              ),
+              decoration: InputDecoration(labelText: 'Description'.tr(), border: const OutlineInputBorder()),
               maxLines: 3,
               onChanged: (val) => _description = val,
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text('common.cancel'.tr()),
-                ),
+                ElevatedButton(onPressed: () => Navigator.pop(context), child: Text('Cancel'.tr())),
                 const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.pop(context);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                  ),
-                  child: Text('transportation.route'.tr()),
-                ),
+                ElevatedButton(onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    Navigator.pop(context);
+                  }
+                }, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange), child: Text('Add Route'.tr())),
               ],
             ),
           ],

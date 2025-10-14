@@ -11,30 +11,19 @@ class ApproveRejectBookingForm extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            'common.ok'.tr(),
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+          Text('Approve or Reject Booking'.tr(), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Approve logic
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: Text('app.name'.tr()),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Reject logic
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: Text('business.rental.vehicle_types.electric'.tr()),
-              ),
+              ElevatedButton(onPressed: () {
+                // Approve logic
+                Navigator.pop(context);
+              }, style: ElevatedButton.styleFrom(backgroundColor: Colors.green), child: Text('Approve'.tr())),
+              ElevatedButton(onPressed: () {
+                // Reject logic
+                Navigator.pop(context);
+              }, style: ElevatedButton.styleFrom(backgroundColor: Colors.red), child: Text('Reject'.tr())),
             ],
           ),
         ],

@@ -4,7 +4,10 @@ import 'package:easy_localization/easy_localization.dart';
 class TripBookingForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onFormDataChanged;
 
-  const TripBookingForm({super.key, required this.onFormDataChanged});
+  const TripBookingForm({
+    super.key,
+    required this.onFormDataChanged,
+  });
 
   @override
   _TripBookingFormState createState() => _TripBookingFormState();
@@ -23,15 +26,15 @@ class _TripBookingFormState extends State<TripBookingForm> {
         // Date Selection with Dual Calendar
         _buildDualCalendar(),
         const SizedBox(height: 24),
-
+        
         // Guest Count
         _buildGuestSelection(),
         const SizedBox(height: 24),
-
+        
         // Meal Preference
         _buildMealPreference(),
         const SizedBox(height: 24),
-
+        
         // Deposit
         _buildDepositSelection(),
       ],
@@ -44,7 +47,10 @@ class _TripBookingFormState extends State<TripBookingForm> {
       children: [
         const Text(
           'Select Dates',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 12),
         Row(
@@ -69,7 +75,10 @@ class _TripBookingFormState extends State<TripBookingForm> {
         children: [
           Text(
             monthYear,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
           const SizedBox(height: 8),
           _buildCalendarGrid(),
@@ -103,7 +112,9 @@ class _TripBookingFormState extends State<TripBookingForm> {
   }
 
   TableRow _buildCalendarRow(List<String> days) {
-    return TableRow(children: days.map((day) => _CalendarCell(day)).toList());
+    return TableRow(
+      children: days.map((day) => _CalendarCell(day)).toList(),
+    );
   }
 
   Widget _buildGuestSelection() {
@@ -112,30 +123,28 @@ class _TripBookingFormState extends State<TripBookingForm> {
       children: [
         const Text(
           'Guests',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('tourist.booking.guests'.tr()),
+            Text('Number of Guests'.tr()),
             Row(
               children: [
                 IconButton(
                   icon: const Icon(Icons.remove),
-                  onPressed: _guestCount > 1
-                      ? () => setState(() {
-                          _guestCount--;
-                          _updateFormData();
-                        })
-                      : null,
+                  onPressed: _guestCount > 1 ? () => setState(() {
+                    _guestCount--;
+                    _updateFormData();
+                  }) : null,
                 ),
                 Text(
                   '$_guestCount',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: const Icon(Icons.add),
@@ -158,27 +167,26 @@ class _TripBookingFormState extends State<TripBookingForm> {
       children: [
         const Text(
           'Meal Preference',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
           initialValue: _mealPreference,
           items: [
-            DropdownMenuItem(
-              value: 'vegetarian',
-              child: Text('restaurants.egyptian'.tr()),
-            ),
-            DropdownMenuItem(
-              value: 'non-vegetarian',
-              child: Text('common.no'.tr()),
-            ),
-            DropdownMenuItem(value: 'vegan', child: Text('transportation.van'.tr())),
+            DropdownMenuItem(value: 'vegetarian', child: Text('Vegetarian'.tr())),
+            DropdownMenuItem(value: 'non-vegetarian', child: Text('Non-Vegetarian'.tr())),
+            DropdownMenuItem(value: 'vegan', child: Text('Vegan'.tr())),
           ],
           onChanged: (value) => setState(() {
             _mealPreference = value!;
             _updateFormData();
           }),
-          decoration: InputDecoration(border: OutlineInputBorder()),
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+          ),
         ),
       ],
     );
@@ -190,7 +198,10 @@ class _TripBookingFormState extends State<TripBookingForm> {
       children: [
         const Text(
           'Deposit',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 12),
         Row(
@@ -241,11 +252,8 @@ class _CalendarCell extends StatelessWidget {
         day,
         style: TextStyle(
           fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-          color: day.isEmpty
-              ? Colors.transparent
-              : isHeader
-              ? Colors.grey[600]
-              : Colors.black,
+          color: day.isEmpty ? Colors.transparent : 
+                 isHeader ? Colors.grey[600] : Colors.black,
         ),
       ),
     );

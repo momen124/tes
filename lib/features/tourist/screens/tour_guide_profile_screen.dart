@@ -24,17 +24,10 @@ class TourGuideProfileScreen extends StatelessWidget {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.orange.shade400,
-                          Colors.orange.shade700,
-                        ],
+                        colors: [Colors.orange.shade400, Colors.orange.shade700],
                       ),
                     ),
-                    child: const Icon(
-                      Icons.person,
-                      size: 100,
-                      color: Colors.white70,
-                    ),
+                    child: const Icon(Icons.person, size: 100, color: Colors.white70),
                   ),
                   Positioned(
                     bottom: 0,
@@ -46,10 +39,7 @@ class TourGuideProfileScreen extends StatelessWidget {
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withOpacity(0.7),
-                          ],
+                          colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
                         ),
                       ),
                       child: Column(
@@ -66,11 +56,7 @@ class TourGuideProfileScreen extends StatelessWidget {
                           const SizedBox(height: 4),
                           Row(
                             children: [
-                              const Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                                size: 20,
-                              ),
+                              const Icon(Icons.star, color: Colors.amber, size: 20),
                               const SizedBox(width: 4),
                               const Text(
                                 '4.8',
@@ -82,27 +68,18 @@ class TourGuideProfileScreen extends StatelessWidget {
                               ),
                               const Text(
                                 ' (127 reviews)',
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 14,
-                                ),
+                                style: TextStyle(color: Colors.white70, fontSize: 14),
                               ),
                               const Spacer(),
                               Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 4,
-                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: Colors.green,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                child: Text(
+                                child: const Text(
                                   'Verified',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                  ),
+                                  style: TextStyle(color: Colors.white, fontSize: 12),
                                 ),
                               ),
                             ],
@@ -137,9 +114,9 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Bio/Description
                 _buildSection(
-                  title: 'attractions.about'.tr(),
+                  title: 'About'.tr(),
                   icon: Icons.info_outline,
-                  child: Text(
+                  child: const Text(
                     'Experienced tour guide specializing in Siwa Oasis adventures. '
                     'Passionate about sharing the rich history and natural beauty of '
                     'Egypt with visitors from around the world. Fluent in multiple '
@@ -150,39 +127,23 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Languages Spoken
                 _buildSection(
-                  title: 'tour_guides.languages'.tr(),
+                  title: 'Languages'.tr(),
                   icon: Icons.language,
                   child: Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                      _buildLanguageChip(
-                        'Arabic',
-                        Icons.check_circle,
-                        Colors.green,
-                      ),
-                      _buildLanguageChip(
-                        'English',
-                        Icons.check_circle,
-                        Colors.green,
-                      ),
-                      _buildLanguageChip(
-                        'French',
-                        Icons.check_circle,
-                        Colors.green,
-                      ),
-                      _buildLanguageChip(
-                        'German',
-                        Icons.circle_outlined,
-                        Colors.grey,
-                      ),
+                      _buildLanguageChip('Arabic', Icons.check_circle, Colors.green),
+                      _buildLanguageChip('English', Icons.check_circle, Colors.green),
+                      _buildLanguageChip('French', Icons.check_circle, Colors.green),
+                      _buildLanguageChip('German', Icons.circle_outlined, Colors.grey),
                     ],
                   ),
                 ),
 
                 // Certifications
                 _buildSection(
-                  title: 'tour_guides.certifications'.tr(),
+                  title: 'Certifications'.tr(),
                   icon: Icons.verified,
                   child: Column(
                     children: [
@@ -212,7 +173,7 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Specializations
                 _buildSection(
-                  title: 'restaurants.specialties'.tr(),
+                  title: 'Specializations'.tr(),
                   icon: Icons.star_outline,
                   child: Wrap(
                     spacing: 8,
@@ -230,7 +191,7 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Photo Gallery
                 _buildSection(
-                  title: 'tour_guides.photography'.tr(),
+                  title: 'Photo Gallery'.tr(),
                   icon: Icons.photo_library,
                   child: SizedBox(
                     height: 120,
@@ -245,11 +206,7 @@ class TourGuideProfileScreen extends StatelessWidget {
                             color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(
-                            Icons.image,
-                            size: 40,
-                            color: Colors.grey[600],
-                          ),
+                          child: Icon(Icons.image, size: 40, color: Colors.grey[600]),
                         );
                       },
                     ),
@@ -258,13 +215,13 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Reviews Section
                 _buildSection(
-                  title: 'common.reviews'.tr(),
+                  title: 'Reviews'.tr(),
                   icon: Icons.rate_review,
                   trailing: TextButton(
                     onPressed: () {
                       // Navigate to all reviews
                     },
-                    child: Text('tourist.see_all'.tr()),
+                    child: Text('See All'.tr()),
                   ),
                   child: Column(
                     children: [
@@ -292,7 +249,7 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Available Tours
                 _buildSection(
-                  title: 'business.listings.availability'.tr(),
+                  title: 'Available Tours'.tr(),
                   icon: Icons.explore,
                   child: Column(
                     children: [
@@ -320,17 +277,14 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Schedule/Availability
                 _buildSection(
-                  title: 'business.rental.room_types.double'.tr(),
+                  title: 'Schedule'.tr(),
                   icon: Icons.calendar_month,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
                         'Upcoming Availability',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
                       ),
                       const SizedBox(height: 12),
                       _buildAvailabilityItem('Mon, Oct 14', true),
@@ -370,12 +324,9 @@ class TourGuideProfileScreen extends StatelessWidget {
                 _showContactDialog(context);
               },
               icon: const Icon(Icons.message),
-              label: Text('common.contact'.tr()),
+              label: Text('Contact'.tr()),
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 side: const BorderSide(color: Colors.orange),
                 foregroundColor: Colors.orange,
               ),
@@ -384,14 +335,10 @@ class TourGuideProfileScreen extends StatelessWidget {
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/booking_form',
-                    arguments: 'tour_guide',
-                  );
+                  Navigator.pushNamed(context, '/booking_form', arguments: 'tour_guide');
                 },
                 icon: const Icon(Icons.book_online),
-                label: Text('tourist.booking.book_now'.tr()),
+                label: Text('Book Now'.tr()),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                   foregroundColor: Colors.white,
@@ -414,7 +361,10 @@ class TourGuideProfileScreen extends StatelessWidget {
           value,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        Text(label, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+        Text(
+          label,
+          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+        ),
       ],
     );
   }
@@ -436,12 +386,12 @@ class TourGuideProfileScreen extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              if (trailing != null) ...[const Spacer(), trailing],
+              if (trailing != null) ...[
+                const Spacer(),
+                trailing,
+              ],
             ],
           ),
           const SizedBox(height: 12),
@@ -466,10 +416,7 @@ class TourGuideProfileScreen extends StatelessWidget {
         child: Icon(icon, color: Colors.orange),
       ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-      subtitle: Text(
-        issuer,
-        style: TextStyle(color: Colors.grey[600], fontSize: 13),
-      ),
+      subtitle: Text(issuer, style: TextStyle(color: Colors.grey[600], fontSize: 13)),
       contentPadding: EdgeInsets.zero,
     );
   }
@@ -482,12 +429,7 @@ class TourGuideProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildReviewItem(
-    String name,
-    int rating,
-    String comment,
-    String date,
-  ) {
+  Widget _buildReviewItem(String name, int rating, String comment, String date) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
@@ -503,20 +445,14 @@ class TourGuideProfileScreen extends StatelessWidget {
               CircleAvatar(
                 radius: 20,
                 backgroundColor: Colors.orange.withOpacity(0.2),
-                child: Text(
-                  name[0],
-                  style: const TextStyle(color: Colors.orange),
-                ),
+                child: Text(name[0], style: const TextStyle(color: Colors.orange)),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
                     Row(
                       children: List.generate(
                         5,
@@ -530,10 +466,7 @@ class TourGuideProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Text(
-                date,
-                style: TextStyle(color: Colors.grey[600], fontSize: 12),
-              ),
+              Text(date, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
             ],
           ),
           const SizedBox(height: 8),
@@ -543,12 +476,7 @@ class TourGuideProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTourItem(
-    String title,
-    String duration,
-    String price,
-    IconData icon,
-  ) {
+  Widget _buildTourItem(String title, String duration, String price, IconData icon) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
@@ -575,14 +503,10 @@ class TourGuideProfileScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: available
-            ? Colors.green.withOpacity(0.1)
-            : Colors.red.withOpacity(0.1),
+        color: available ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: available
-              ? Colors.green.withOpacity(0.3)
-              : Colors.red.withOpacity(0.3),
+          color: available ? Colors.green.withOpacity(0.3) : Colors.red.withOpacity(0.3),
         ),
       ),
       child: Row(
@@ -593,7 +517,10 @@ class TourGuideProfileScreen extends StatelessWidget {
             size: 20,
           ),
           const SizedBox(width: 12),
-          Text(date, style: const TextStyle(fontWeight: FontWeight.w500)),
+          Text(
+            date,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
           const Spacer(),
           Text(
             available ? 'Available' : 'Booked',
@@ -611,7 +538,7 @@ class TourGuideProfileScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('common.contact'.tr()),
+        title: Text('Contact Guide'.tr()),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -631,7 +558,7 @@ class TourGuideProfileScreen extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.chat, color: Colors.orange),
-              title: Text('common.offline_message'.tr()),
+              title: Text('Send Message'.tr()),
               onTap: () {
                 // Open chat
               },
@@ -641,10 +568,11 @@ class TourGuideProfileScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('common.close'.tr()),
+            child: Text('Close'.tr()),
           ),
         ],
       ),
     );
+ 
   }
 }

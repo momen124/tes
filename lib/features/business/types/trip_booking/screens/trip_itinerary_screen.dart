@@ -13,8 +13,7 @@ class TripItineraryScreen extends ConsumerStatefulWidget {
   const TripItineraryScreen({super.key});
 
   @override
-  ConsumerState<TripItineraryScreen> createState() =>
-      _TripItineraryScreenState();
+  ConsumerState<TripItineraryScreen> createState() => _TripItineraryScreenState();
 }
 
 class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
@@ -61,9 +60,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(
-      duration: const Duration(seconds: 1),
-    );
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
   }
 
   @override
@@ -82,7 +79,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('business.rental.add_new_room'.tr()),
+        title: Text('Add New Stop'.tr()),
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -91,34 +88,26 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
               children: [
                 TextFormField(
                   controller: nameController,
-                  decoration: InputDecoration(labelText: 'app.name'.tr()),
-                  validator: (value) =>
-                      (value?.isEmpty ?? true) ? 'Enter stop name' : null,
+                  decoration: InputDecoration(labelText: 'Stop Name'.tr()),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter stop name' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: durationController,
-                  decoration: InputDecoration(
-                    labelText: 'Duration (e.g., 2h 30m)'.tr(),
-                  ),
-                  validator: (value) =>
-                      (value?.isEmpty ?? true) ? 'Enter duration' : null,
+                  decoration: InputDecoration(labelText: 'Duration (e.g., 2h 30m)'.tr()),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter duration' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: descriptionController,
-                  decoration: InputDecoration(labelText: 'business.listings.description'.tr()),
-                  validator: (value) =>
-                      (value?.isEmpty ?? true) ? 'Enter description' : null,
+                  decoration: InputDecoration(labelText: 'Description'.tr()),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter description' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: timeController,
-                  decoration: InputDecoration(
-                    labelText: 'Time (e.g., 09:00 AM)'.tr(),
-                  ),
-                  validator: (value) =>
-                      (value?.isEmpty ?? true) ? 'Enter time' : null,
+                  decoration: InputDecoration(labelText: 'Time (e.g., 09:00 AM)'.tr()),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter time' : null,
                 ),
               ],
             ),
@@ -127,13 +116,13 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('common.cancel'.tr()),
+            child: Text('Cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 final durationParts = durationController.text.split(' ');
-                final hours = durationParts.isNotEmpty
+                final hours = durationParts.isNotEmpty 
                     ? int.tryParse(durationParts[0].replaceAll('h', '')) ?? 0
                     : 0;
                 final minutes = durationParts.length > 1
@@ -155,7 +144,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                 _confettiController.play();
               }
             },
-            child: Text('business.rental.vehicle_types.road'.tr()),
+            child: Text('Add'.tr()),
           ),
         ],
       ),
@@ -172,7 +161,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
-        title: Text('restaurants.traditional'.tr()),
+        title: Text('Trip Itinerary'.tr()),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -185,16 +174,10 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
           ? Center(
               child: Container(
                 decoration: AppTheme.offlineBanner,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                child: Text(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: const Text(
                   'You are offline',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                 ),
               ),
             )
@@ -205,10 +188,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                   // Booking Statistics
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Text(
-                      'navigation.bookings'.tr(),
-                      style: AppTheme.titleLarge,
-                    ),
+                    child: Text('Booking Statistics'.tr(), style: AppTheme.titleLarge),
                   ).animate().fadeIn(),
                   SizedBox(
                     height: 200,
@@ -218,40 +198,25 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                         PieChartData(
                           sections: [
                             PieChartSectionData(
-                              value: _bookings
-                                  .where((b) => b['status'] == 'confirmed')
-                                  .length
-                                  .toDouble(),
+                              value: _bookings.where((b) => b['status'] == 'confirmed').length.toDouble(),
                               color: AppTheme.successGreen,
-                              title: 'tourist.bookings_status.confirmed'.tr(),
+                              title: 'Confirmed'.tr(),
                               radius: 50,
-                              titleStyle: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                             PieChartSectionData(
-                              value: _bookings
-                                  .where((b) => b['status'] == 'pending')
-                                  .length
-                                  .toDouble(),
+                              value: _bookings.where((b) => b['status'] == 'pending').length.toDouble(),
                               color: AppTheme.warningYellow,
-                              title: 'tourist.bookings_status.pending'.tr(),
+                              title: 'Pending'.tr(),
                               radius: 50,
-                              titleStyle: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                             PieChartSectionData(
                               value: (10 - _bookings.length).toDouble(),
                               color: AppTheme.lightGray,
-                              title: 'business.listings.availability'.tr(),
+                              title: 'Available'.tr(),
                               radius: 50,
-                              titleStyle: const TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              titleStyle: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -264,7 +229,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                   // Itinerary Timeline
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Text('navigation.search'.tr(), style: AppTheme.titleLarge),
+                    child: Text('Itinerary'.tr(), style: AppTheme.titleLarge),
                   ).animate().fadeIn(),
                   ReorderableListView.builder(
                     shrinkWrap: true,
@@ -286,8 +251,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                         key: Key((item['id'] as int?)?.toString() ?? '0'),
                         title: Text(item['name'] as String? ?? ''),
                         subtitle: Text(
-                          '${item['description'] as String? ?? ''} (Duration: ${(item['duration'] as Duration?)?.inHours ?? 0}h ${(item['duration'] as Duration?)?.inMinutes.remainder(60) ?? 0}m, Time: ${item['time'] as String? ?? ''}',
-                        ),
+                          '${item['description'] as String? ?? ''} (Duration: ${(item['duration'] as Duration?)?.inHours ?? 0}h ${(item['duration'] as Duration?)?.inMinutes.remainder(60) ?? 0}m, Time: ${item['time'] as String? ?? ''}'),
                         leading: const Icon(Icons.location_on),
                         trailing: ReorderableDragStartListener(
                           index: index,
@@ -299,6 +263,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                 ],
               ),
             ),
+
     );
   }
 }
