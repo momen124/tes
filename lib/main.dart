@@ -14,10 +14,10 @@ void main() async {
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ar')],
-      path: 'lib/assets/translations',  // Remove trailing slash
+      path: 'translations',  // ✅ CORRECT: Just 'translations' without 'assets/' prefix
       fallbackLocale: const Locale('en'),
-      saveLocale: true, // Persist language choice
-      startLocale: const Locale('en'), // Default start locale
+      saveLocale: true,
+      startLocale: const Locale('en'),
       child: const ProviderScope(child: SiwaApp()),
     ),
   );
