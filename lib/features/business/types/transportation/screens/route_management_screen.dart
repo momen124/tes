@@ -1,3 +1,4 @@
+import 'package:siwa/data/mock_data_repository.dart';
 // lib/features/business/types/transport/screens/route_management_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,69 +22,11 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
   late ConfettiController _confettiController;
   late TabController _tabController;
 
-  final List<Map<String, dynamic>> _routes = [
-    {
-      'id': 1,
-      'name': 'Siwa Local Loop',
-      'stops': [
-        const LatLng(29.2031, 25.5197),
-        const LatLng(29.2000, 25.5200),
-        const LatLng(29.1950, 25.5250),
-      ],
-      'ratePerKm': 2.0,
-      'schedule': 'Daily 8AM-8PM',
-      'distance': '25 km',
-      'duration': '1.5 hours',
-    },
-    {
-      'id': 2,
-      'name': 'Desert Safari Route',
-      'stops': [
-        const LatLng(29.2031, 25.5197),
-        const LatLng(29.1500, 25.4500),
-      ],
-      'ratePerKm': 3.5,
-      'schedule': 'Daily 7AM-6PM',
-      'distance': '80 km',
-      'duration': '4 hours',
-    },
-  ];
+  
 
-  final List<Map<String, dynamic>> _vehicles = [
-    {
-      'id': 1,
-      'type': 'Bus',
-      'plate': 'ABC123',
-      'verified': true,
-      'capacity': 45,
-    },
-    {
-      'id': 2,
-      'type': '4x4 SUV',
-      'plate': 'XYZ789',
-      'verified': true,
-      'capacity': 7,
-    },
-  ];
+  
 
-  final List<Map<String, dynamic>> _trips = [
-    {
-      'id': 1,
-      'guest': 'Jane Doe',
-      'route': 'Siwa Local Loop',
-      'status': 'pending',
-      'time': '09:00 AM',
-      'passengers': 3,
-    },
-    {
-      'id': 2,
-      'guest': 'Ahmed Hassan',
-      'route': 'Desert Safari Route',
-      'status': 'confirmed',
-      'time': '07:30 AM',
-      'passengers': 5,
-    },
-  ];
+  
 
   @override
   void initState() {
@@ -173,9 +116,9 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
   Widget _buildRoutesTab(bool isOffline) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: _routes.length,
+      itemCount: mockData.getAllOther().length,
       itemBuilder: (context, index) {
-        final route = _routes[index];
+        final route = mockData.getAllOther()[index];
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
           child: ExpansionTile(
@@ -249,9 +192,9 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
   Widget _buildVehiclesTab(bool isOffline) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: _vehicles.length,
+      itemCount: mockData.getAllTransportation().length,
       itemBuilder: (context, index) {
-        final vehicle = _vehicles[index];
+        final vehicle = mockData.getAllTransportation()[index];
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           child: ListTile(
@@ -286,9 +229,9 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
   Widget _buildTripsTab(bool isOffline) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: _trips.length,
+      itemCount: mockData.getAllOther().length,
       itemBuilder: (context, index) {
-        final trip = _trips[index];
+        final trip = mockData.getAllOther()[index];
         final isPending = trip['status'] == 'pending';
 
         return Card(
@@ -396,8 +339,8 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 setState(() {
-                  _routes.add({
-                    'id': _routes.length + 1,
+                  mockData.getAllOther().add({
+                    'id': mockData.getAllOther().length + 1,
                     'name': nameController.text,
                     'stops': [const LatLng(29.2031, 25.5197), const LatLng(29.2000, 25.5200)],
                     'ratePerKm': double.tryParse(rateController.text) ?? 2.0,
@@ -560,7 +503,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
           ElevatedButton(
             onPressed: () {
               setState(() {
-                _routes.remove(route);
+                mockData.getAllOther().remove(route);
               });
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(

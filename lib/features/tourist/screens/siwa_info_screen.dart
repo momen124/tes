@@ -1,3 +1,4 @@
+import 'package:siwa/data/mock_data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
@@ -15,18 +16,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
   bool _bestTimeExpanded = false;
   bool _travelTipsExpanded = false;
 
-  final List<Map<String, dynamic>> _relatedServices = [
-    {
-      'title': 'Desert Safari',
-      'subtitle': 'Explore the dunes',
-      'image': Icons.terrain,
-    },
-    {
-      'title': 'Hot Air Balloon Ride',
-      'subtitle': 'Sunrise views',
-      'image': Icons.air,
-    },
-  ];
+  
 
   Widget _buildMapPin(String label, Color color) {
     return Column(
@@ -233,9 +223,9 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                       crossAxisSpacing: 16,
                       childAspectRatio: 0.85,
                     ),
-                    itemCount: _relatedServices.length,
+                    itemCount: mockData.getAllOther().length,
                     itemBuilder: (context, index) {
-                      final service = _relatedServices[index];
+                      final service = mockData.getAllOther()[index];
                       return Card(
                         elevation: 2,
                         shape: RoundedRectangleBorder(

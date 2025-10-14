@@ -1,3 +1,4 @@
+import 'package:siwa/data/mock_data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
@@ -14,152 +15,13 @@ class AttractionsListScreen extends StatefulWidget {
 class _AttractionsListScreenState extends State<AttractionsListScreen> {
   String _selectedCategory = 'all';
 
-  final List<Map<String, dynamic>> _attractions = [
-    {
-      'id': 1,
-      'name': 'Temple of the Oracle',
-      'category': 'historical',
-      'description':
-          'Ancient temple where Alexander the Great consulted the oracle',
-      'price': 50.0,
-      'duration': '2 hours',
-      'rating': 4.8,
-      'reviews': 456,
-      'imageUrl':
-          'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800',
-      'location': 'Aghurmi Village',
-      'highlights': [
-        'Ancient ruins',
-        'Historical significance',
-        'Photo opportunity',
-      ],
-      'openingHours': '8:00 AM - 5:00 PM',
-      'difficulty': 'Easy',
-    },
-    {
-      'id': 2,
-      'name': 'Siwa Salt Lakes',
-      'category': 'nature',
-      'description': 'Crystal-clear salt lakes with therapeutic properties',
-      'price': 30.0,
-      'duration': '3 hours',
-      'rating': 4.9,
-      'reviews': 789,
-      'imageUrl':
-          'https://visitegypt.com/wp-content/uploads/2025/07/the-salt-lake-siwa-oasis.webp',
-      'location': 'Birket Siwa',
-      'highlights': ['Swimming', 'Floating experience', 'Sunset views'],
-      'openingHours': '24/7',
-      'difficulty': 'Easy',
-    },
-    {
-      'id': 3,
-      'name': 'Shali Fortress',
-      'category': 'historical',
-      'description': 'Ancient mud-brick fortress with panoramic oasis views',
-      'price': 25.0,
-      'duration': '1.5 hours',
-      'rating': 4.6,
-      'reviews': 324,
-      'imageUrl':
-          'https://images.unsplash.com/photo-1548013146-72479768bada?w=800',
-      'location': 'Siwa Town Center',
-      'highlights': ['Architecture', 'City views', 'Sunset spot'],
-      'openingHours': '8:00 AM - 6:00 PM',
-      'difficulty': 'Moderate',
-    },
-    {
-      'id': 4,
-      'name': 'Cleopatra\'s Bath',
-      'category': 'nature',
-      'description': 'Natural spring pool with crystal-clear water',
-      'price': 20.0,
-      'duration': '2 hours',
-      'rating': 4.7,
-      'reviews': 612,
-      'imageUrl':
-          'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
-      'location': 'Near Siwa Town',
-      'highlights': ['Swimming', 'Natural spring', 'Relaxation'],
-      'openingHours': '7:00 AM - 7:00 PM',
-      'difficulty': 'Easy',
-    },
-    {
-      'id': 5,
-      'name': 'Great Sand Sea Safari',
-      'category': 'adventure',
-      'description': 'Thrilling 4x4 desert adventure through massive dunes',
-      'price': 200.0,
-      'duration': '6 hours',
-      'rating': 4.9,
-      'reviews': 234,
-      'imageUrl':
-          'https://www.kemetexperience.com/wp-content/uploads/2019/09/incredible-white-desert-960x636.jpg',
-      'location': 'Western Desert',
-      'highlights': ['Sandboarding', 'Dune bashing', 'Desert camping'],
-      'openingHours': 'By appointment',
-      'difficulty': 'Challenging',
-    },
-    {
-      'id': 6,
-      'name': 'Fatnas Island Sunset',
-      'category': 'nature',
-      'description': 'Peaceful palm-covered island perfect for sunset viewing',
-      'price': 15.0,
-      'duration': '2 hours',
-      'rating': 4.8,
-      'reviews': 445,
-      'imageUrl':
-          'https://www.heatheronhertravels.com/wp-content/uploads/2011/09/Sunset-at-Fatnas-Island-in-Siwa-in-Egypt-2.jpg.webp',
-      'location': 'Birket Siwa',
-      'highlights': ['Sunset views', 'Picnic spot', 'Bird watching'],
-      'openingHours': '4:00 PM - 7:00 PM',
-      'difficulty': 'Easy',
-    },
-    {
-      'id': 7,
-      'name': 'Mountain of the Dead',
-      'category': 'historical',
-      'description': 'Ancient necropolis with well-preserved tomb paintings',
-      'price': 40.0,
-      'duration': '1.5 hours',
-      'rating': 4.5,
-      'reviews': 267,
-      'imageUrl':
-          'https://images.unsplash.com/photo-1503756234508-e32369269deb?w=800',
-      'location': 'Gebel al-Mawta',
-      'highlights': ['Ancient tombs', 'Wall paintings', 'History'],
-      'openingHours': '8:00 AM - 5:00 PM',
-      'difficulty': 'Moderate',
-    },
-    {
-      'id': 8,
-      'name': 'Siwa House Museum',
-      'category': 'culture',
-      'description':
-          'Traditional Siwan house showcasing local culture and crafts',
-      'price': 35.0,
-      'duration': '1 hour',
-      'rating': 4.4,
-      'reviews': 189,
-      'imageUrl':
-          'https://images.unsplash.com/photo-1565711561500-691d9ec04506?w=800',
-      'location': 'Siwa Town',
-      'highlights': [
-        'Traditional architecture',
-        'Local crafts',
-        'Cultural insight',
-      ],
-      'openingHours': '9:00 AM - 4:00 PM',
-      'difficulty': 'Easy',
-    },
-  ];
+  
 
   List<Map<String, dynamic>> get _filteredAttractions {
     if (_selectedCategory == 'all') {
-      return _attractions;
+      return mockData.getAllAttractions();
     }
-    return _attractions
+    return mockData.getAllAttractions()
         .where((attraction) => attraction['category'] == _selectedCategory)
         .toList();
   }

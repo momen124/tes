@@ -1,3 +1,4 @@
+import 'package:siwa/data/mock_data_repository.dart';
 // Your provided code for this screen already closely matches the screenshot. Add image URLs for cards.
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -16,35 +17,7 @@ class TouristBookingsScreen extends ConsumerStatefulWidget {
 }
 
 class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
-  final List<Map<String, dynamic>> _bookings = [
-    {
-      'id': 1001,
-      'title': 'Siwa Shali Resort',
-      'date': '2024-07-20',
-      'status': 'Confirmed',
-      'imageUrl':
-          'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
-      'amount': '\$150',
-    },
-    {
-      'id': 1002,
-      'title': 'Mountain Bike Rental',
-      'date': '2024-08-15',
-      'status': 'Pending',
-      'imageUrl':
-          'https://www.quitandgotravel.com/wp-content/uploads/sites/8/2022/04/Cycling-Across-Siwa-Oasis-Lake.jpg',
-      'amount': '\$85',
-    },
-    {
-      'id': 1003,
-      'title': 'Siwa Oasis Tour',
-      'date': '2024-09-05',
-      'status': 'Cancelled',
-      'imageUrl':
-          'https://www.kemetexperience.com/wp-content/uploads/2019/09/incredible-white-desert-960x636.jpg',
-      'amount': '\$65',
-    },
-  ];
+  
 
   Color _getStatusColor(String status) {
     switch (status) {
@@ -111,7 +84,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
 
           // Bookings List
           Expanded(
-            child: _bookings.isEmpty
+            child: mockData.getAllBookings().isEmpty
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -143,9 +116,9 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.all(16),
-                    itemCount: _bookings.length,
+                    itemCount: mockData.getAllBookings().length,
                     itemBuilder: (context, index) {
-                      final booking = _bookings[index];
+                      final booking = mockData.getAllBookings()[index];
                       return Card(
                         margin: const EdgeInsets.only(bottom: 16),
                         elevation: 2,

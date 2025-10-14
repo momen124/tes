@@ -1,3 +1,4 @@
+import 'package:siwa/data/mock_data_repository.dart';
 // lib/features/business/types/store/screens/store_inventory_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,68 +22,12 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
   String _searchQuery = '';
   String _selectedCategory = 'All';
 
-  final List<Map<String, dynamic>> _products = [
-    {
-      'id': 1,
-      'name': 'Siwa Olive Oil',
-      'price': 25.0,
-      'stock': 45,
-      'category': 'Food',
-      'lowStockThreshold': 20,
-      'image':
-          'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
-    },
-    {
-      'id': 2,
-      'name': 'Handwoven Basket',
-      'price': 35.0,
-      'stock': 12,
-      'category': 'Crafts',
-      'lowStockThreshold': 15,
-      'image':
-          'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=300&fit=crop',
-    },
-    {
-      'id': 3,
-      'name': 'Date Palm Honey',
-      'price': 30.0,
-      'stock': 8,
-      'category': 'Food',
-      'lowStockThreshold': 10,
-    },
-    {
-      'id': 4,
-      'name': 'Siwa Salt Lamp',
-      'price': 50.0,
-      'stock': 25,
-      'category': 'Crafts',
-      'lowStockThreshold': 15,
-      'image':
-          'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
-    },
-  ];
+  
 
-  final List<Map<String, dynamic>> _orders = [
-    {
-      'id': 1,
-      'customer': 'Emily Johnson',
-      'items': ['Olive Oil x2', 'Basket x1'],
-      'total': 85.0,
-      'status': 'pending',
-      'date': DateTime.now().subtract(const Duration(hours: 2)),
-    },
-    {
-      'id': 2,
-      'customer': 'Ahmed Khalil',
-      'items': ['Date Honey x3'],
-      'total': 90.0,
-      'status': 'processing',
-      'date': DateTime.now().subtract(const Duration(hours: 5)),
-    },
-  ];
+  
 
   List<Map<String, dynamic>> get filteredProducts {
-    return _products.where((product) {
+    return mockData.getAllProducts().where((product) {
       final matchesSearch =
           (product['name'] as String?)?.toLowerCase().contains(
             _searchQuery.toLowerCase(),
@@ -163,7 +108,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: isOffline ? null : _showOrdersBottomSheet,
         icon: const Icon(Icons.receipt_long),
-        label: Text('Orders (${_orders.length})'.tr()),
+        label: Text('Orders (${mockData.getAllOther().length})'.tr()),
         backgroundColor: isOffline ? AppTheme.gray : AppTheme.primaryOrange,
       ),
     );
@@ -230,7 +175,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
   }
 
   Widget _buildLowStockAlert() {
-    final lowStockProducts = _products
+    final lowStockProducts = mockData.getAllProducts()
         .where((p) => p['stock'] < p['lowStockThreshold'])
         .toList();
 
@@ -427,8 +372,8 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 setState(() {
-                  _products.add({
-                    'id': _products.length + 1,
+                  mockData.getAllProducts().add({
+                    'id': mockData.getAllProducts().length + 1,
                     'name': nameController.text,
                     'price': double.tryParse(priceController.text) ?? 0.0,
                     'stock': int.tryParse(stockController.text) ?? 0,
@@ -618,9 +563,9 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
               child: ListView.builder(
                 controller: scrollController,
                 padding: const EdgeInsets.all(16),
-                itemCount: _orders.length,
+                itemCount: mockData.getAllOther().length,
                 itemBuilder: (context, index) {
-                  final order = _orders[index];
+                  final order = mockData.getAllOther()[index];
                   return _buildOrderCard(order).animate().fadeIn();
                 },
               ),

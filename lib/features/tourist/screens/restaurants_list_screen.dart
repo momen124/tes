@@ -1,3 +1,4 @@
+import 'package:siwa/data/mock_data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
@@ -15,107 +16,10 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
   String _selectedCuisine = 'all';
   String _priceRange = 'all';
   
-  final List<Map<String, dynamic>> _restaurants = [
-    {
-      'id': 1,
-      'name': 'Aghurmi Restaurant',
-      'cuisine': 'egyptian',
-      'description': 'Authentic Siwan and Egyptian cuisine',
-      'priceRange': 'medium',
-      'rating': 4.7,
-      'reviews': 234,
-      'deliveryTime': '30-45 min',
-      'minOrder': 50.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
-      'specialties': ['Siwan Dates', 'Tagine', 'Fresh Bread'],
-      'openNow': true,
-      'openingHours': '8:00 AM - 11:00 PM',
-      'deliveryFee': 15.0,
-    },
-    {
-      'id': 2,
-      'name': 'Abdu\'s Kitchen',
-      'cuisine': 'traditional',
-      'description': 'Traditional Siwan home-cooked meals',
-      'priceRange': 'low',
-      'rating': 4.9,
-      'reviews': 456,
-      'deliveryTime': '20-30 min',
-      'minOrder': 30.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800',
-      'specialties': ['Siwan Pizza', 'Local Olives', 'Honey'],
-      'openNow': true,
-      'openingHours': '7:00 AM - 10:00 PM',
-      'deliveryFee': 10.0,
-    },
-    {
-      'id': 3,
-      'name': 'Oasis Bistro',
-      'cuisine': 'international',
-      'description': 'International fusion with local ingredients',
-      'priceRange': 'high',
-      'rating': 4.6,
-      'reviews': 189,
-      'deliveryTime': '40-60 min',
-      'minOrder': 100.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800',
-      'specialties': ['Gourmet Burgers', 'Pasta', 'Steaks'],
-      'openNow': true,
-      'openingHours': '12:00 PM - 12:00 AM',
-      'deliveryFee': 25.0,
-    },
-    {
-      'id': 4,
-      'name': 'Siwa Dates Café',
-      'cuisine': 'cafe',
-      'description': 'Specialty coffee and local date desserts',
-      'priceRange': 'low',
-      'rating': 4.8,
-      'reviews': 345,
-      'deliveryTime': '15-25 min',
-      'minOrder': 25.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800',
-      'specialties': ['Date Coffee', 'Pastries', 'Fresh Juice'],
-      'openNow': true,
-      'openingHours': '6:00 AM - 9:00 PM',
-      'deliveryFee': 10.0,
-    },
-    {
-      'id': 5,
-      'name': 'Desert Grill House',
-      'cuisine': 'grill',
-      'description': 'Grilled meats and BBQ specialties',
-      'priceRange': 'medium',
-      'rating': 4.5,
-      'reviews': 278,
-      'deliveryTime': '35-50 min',
-      'minOrder': 80.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800',
-      'specialties': ['Kebab', 'Kofta', 'Grilled Chicken'],
-      'openNow': false,
-      'openingHours': '5:00 PM - 12:00 AM',
-      'deliveryFee': 20.0,
-    },
-    {
-      'id': 6,
-      'name': 'Palm Tree Restaurant',
-      'cuisine': 'mediterranean',
-      'description': 'Mediterranean flavors with Egyptian touch',
-      'priceRange': 'medium',
-      'rating': 4.7,
-      'reviews': 312,
-      'deliveryTime': '30-40 min',
-      'minOrder': 60.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800',
-      'specialties': ['Mezze Platter', 'Seafood', 'Salads'],
-      'openNow': true,
-      'openingHours': '11:00 AM - 11:00 PM',
-      'deliveryFee': 15.0,
-    },
-  ];
+  
 
   List<Map<String, dynamic>> get _filteredRestaurants {
-    return _restaurants.where((restaurant) {
+    return mockData.getAllRestaurants().where((restaurant) {
       final cuisineMatch = _selectedCuisine == 'all' || restaurant['cuisine'] == _selectedCuisine;
       final priceMatch = _priceRange == 'all' || restaurant['priceRange'] == _priceRange;
       return cuisineMatch && priceMatch;

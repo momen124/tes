@@ -1,3 +1,4 @@
+import 'package:siwa/data/mock_data_repository.dart';
 // lib/features/business/types/rental/screens/rental_fleet_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,67 +18,9 @@ class RentalFleetScreen extends ConsumerStatefulWidget {
 
 class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
   late ConfettiController _confettiController;
-  final List<Map<String, dynamic>> _fleet = [
-    {
-      'id': 1,
-      'type': 'Mountain Bike',
-      'model': 'Trek X-Caliber',
-      'rate': 25.0,
-      'rateType': 'day',
-      'available': true,
-      'condition': 'Excellent',
-      'image': Icons.pedal_bike,
-    },
-    {
-      'id': 2,
-      'type': 'SUV',
-      'model': 'Toyota Land Cruiser',
-      'rate': 120.0,
-      'rateType': 'day',
-      'available': false,
-      'condition': 'Good',
-      'image': Icons.directions_car,
-    },
-    {
-      'id': 3,
-      'type': 'Electric Scooter',
-      'model': 'Xiaomi Pro 2',
-      'rate': 15.0,
-      'rateType': 'hour',
-      'available': true,
-      'condition': 'Excellent',
-      'image': Icons.electric_scooter,
-    },
-    {
-      'id': 4,
-      'type': 'ATV',
-      'model': 'Polaris Sportsman',
-      'rate': 80.0,
-      'rateType': 'day',
-      'available': true,
-      'condition': 'Good',
-      'image': Icons.terrain,
-    },
-  ];
+  
 
-  final List<Map<String, dynamic>> _rentalHistory = [
-    {
-      'id': 1,
-      'vehicle': 'Mountain Bike',
-      'customer': 'Sarah Johnson',
-      'startDate': DateTime.now().subtract(const Duration(days: 3)),
-      'endDate': DateTime.now().subtract(const Duration(days: 1)),
-      'revenue': 50.0,
-    },
-    {
-      'id': 2,
-      'vehicle': 'SUV',
-      'customer': 'Ahmed Hassan',
-      'startDate': DateTime.now().subtract(const Duration(days: 1)),
-      'endDate': DateTime.now().add(const Duration(days: 2)),
-      'revenue': 360.0,
-    },
-  ];
+  
 
   @override
   void initState() {
@@ -135,9 +78,9 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
               ),
-              itemCount: _fleet.length,
+              itemCount: mockData.getAllOther().length,
               itemBuilder: (context, index) {
-                final vehicle = _fleet[index];
+                final vehicle = mockData.getAllOther()[index];
                 return _buildVehicleCard(vehicle).animate().fadeIn();
               },
             ),
@@ -315,8 +258,8 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 setState(() {
-                  _fleet.add({
-                    'id': _fleet.length + 1,
+                  mockData.getAllOther().add({
+                    'id': mockData.getAllOther().length + 1,
                     'type': typeController.text,
                     'model': modelController.text,
                     'rate': double.tryParse(rateController.text) ?? 0.0,
@@ -379,7 +322,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              setState(() => _fleet.remove(vehicle));
+              setState(() => mockData.getAllOther().remove(vehicle));
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Vehicle deleted'.tr())),
@@ -449,9 +392,9 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
               child: ListView.builder(
                 controller: scrollController,
                 padding: const EdgeInsets.all(16),
-                itemCount: _rentalHistory.length,
+                itemCount: mockData.getAllOther().length,
                 itemBuilder: (context, index) {
-                  final rental = _rentalHistory[index];
+                  final rental = mockData.getAllOther()[index];
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
                     child: Padding(

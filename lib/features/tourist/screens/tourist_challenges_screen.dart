@@ -1,3 +1,4 @@
+import 'package:siwa/data/mock_data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:siwa/app/theme.dart';
@@ -14,50 +15,16 @@ class TouristChallengesScreen extends StatefulWidget {
 }
 
 class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
-  final List<Map<String, dynamic>> _challenges = [
-    {
-      'id': 1,
-      'title': 'Capture the Sunset',
-      'description':
-          'Find the perfect spot to photograph the sunset over the desert dunes.',
-      'imageUrl':
-          'https://www.heatheronhertravels.com/wp-content/uploads/2011/09/Sunset-at-Fatnas-Island-in-Siwa-in-Egypt-2.jpg.webp',
-      'completed': false,
-      'points': 50,
-      'proof': null,
-    },
-    {
-      'id': 2,
-      'title': 'Hidden Oasis',
-      'description':
-          'Discover and photograph a hidden oasis within the Siwa desert.',
-      'imageUrl':
-          'https://thedaydreamdrifters.com/wp-content/uploads/2018/09/Siwa-Oasis-.jpg',
-      'completed': false,
-      'points': 75,
-      'proof': null,
-    },
-    {
-      'id': 3,
-      'title': 'Salt Lake Reflection',
-      'description':
-          'Capture the stunning reflections on the surface of the salt lakes.',
-      'imageUrl':
-          'https://visitegypt.com/wp-content/uploads/2025/07/the-salt-lake-siwa-oasis.webp',
-      'completed': false,
-      'points': 60,
-      'proof': null,
-    },
-  ];
+  
 
   int get _totalPoints {
-    return _challenges
+    return mockData.getAllOther()
         .where((c) => c['completed'] == true)
         .fold(0, (sum, c) => sum + (c['points'] as int? ?? 0));
   }
 
   int get _completedCount {
-    return _challenges.where((c) => c['completed'] == true).length;
+    return mockData.getAllOther().where((c) => c['completed'] == true).length;
   }
 
   Future<void> _uploadPhoto(Map<String, dynamic> challenge) async {
@@ -131,9 +98,9 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                 Text('tourist.challenges.challenge_progress'.tr(), style: AppTheme.titleMedium),
                 const SizedBox(height: 12),
                 LinearProgressIndicator(
-                  value: _challenges.isEmpty
+                  value: mockData.getAllOther().isEmpty
                       ? 0
-                      : _completedCount / _challenges.length,
+                      : _completedCount / mockData.getAllOther().length,
                   backgroundColor: AppTheme.gray.withOpacity(0.2),
                   valueColor: const AlwaysStoppedAnimation(
                     AppTheme.primaryOrange,
@@ -142,7 +109,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '$_completedCount/${_challenges.length} Completed',
+                  '$_completedCount/${mockData.getAllOther().length} Completed',
                   style: AppTheme.bodySmall.copyWith(color: AppTheme.gray),
                 ),
               ],
@@ -155,9 +122,9 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: _challenges.length,
+              itemCount: mockData.getAllOther().length,
               itemBuilder: (context, index) {
-                final challenge = _challenges[index];
+                final challenge = mockData.getAllOther()[index];
                 return Card(
                   margin: const EdgeInsets.only(bottom: 16),
                   child: Column(

@@ -1,3 +1,4 @@
+import 'package:siwa/data/mock_data_repository.dart';
 // lib/features/business/types/tour_guide/screens/trip_itinerary_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,44 +19,9 @@ class TripItineraryScreen extends ConsumerStatefulWidget {
 
 class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
   late ConfettiController _confettiController;
-  final List<Map<String, dynamic>> _itinerary = [
-    {
-      'id': 1,
-      'name': 'Salt Lakes Tour',
-      'duration': const Duration(hours: 2),
-      'description': 'Explore the stunning natural salt lakes',
-      'time': '09:00 AM',
-    },
-    {
-      'id': 2,
-      'name': 'Cleopatra Spring',
-      'duration': const Duration(hours: 1, minutes: 30),
-      'description': 'Swimming in the famous natural spring',
-      'time': '11:30 AM',
-    },
-    {
-      'id': 3,
-      'name': 'Traditional Lunch',
-      'duration': const Duration(hours: 1),
-      'description': 'Authentic Siwan cuisine',
-      'time': '01:00 PM',
-    },
-  ];
+  
 
-  final List<Map<String, dynamic>> _bookings = [
-    {
-      'id': 1,
-      'guest': 'Group of 5',
-      'date': DateTime.now().add(const Duration(days: 5)),
-      'status': 'confirmed',
-    },
-    {
-      'id': 2,
-      'guest': 'Family of 4',
-      'date': DateTime.now().add(const Duration(days: 12)),
-      'status': 'pending',
-    },
-  ];
+  
 
   @override
   void initState() {
@@ -129,8 +95,8 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                     ? int.tryParse(durationParts[1].replaceAll('m', '')) ?? 0
                     : 0;
                 setState(() {
-                  _itinerary.add({
-                    'id': _itinerary.length + 1,
+                  mockData.getAllOther().add({
+                    'id': mockData.getAllOther().length + 1,
                     'name': nameController.text,
                     'duration': Duration(hours: hours, minutes: minutes),
                     'description': descriptionController.text,
@@ -198,21 +164,21 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                         PieChartData(
                           sections: [
                             PieChartSectionData(
-                              value: _bookings.where((b) => b['status'] == 'confirmed').length.toDouble(),
+                              value: mockData.getAllBookings().where((b) => b['status'] == 'confirmed').length.toDouble(),
                               color: AppTheme.successGreen,
                               title: 'Confirmed'.tr(),
                               radius: 50,
                               titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                             PieChartSectionData(
-                              value: _bookings.where((b) => b['status'] == 'pending').length.toDouble(),
+                              value: mockData.getAllBookings().where((b) => b['status'] == 'pending').length.toDouble(),
                               color: AppTheme.warningYellow,
                               title: 'Pending'.tr(),
                               radius: 50,
                               titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                             PieChartSectionData(
-                              value: (10 - _bookings.length).toDouble(),
+                              value: (10 - mockData.getAllBookings().length).toDouble(),
                               color: AppTheme.lightGray,
                               title: 'Available'.tr(),
                               radius: 50,
@@ -235,18 +201,18 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: _itinerary.length,
+                    itemCount: mockData.getAllOther().length,
                     onReorder: (oldIndex, newIndex) {
                       if (!isOffline) {
                         setState(() {
                           if (newIndex > oldIndex) newIndex--;
-                          final item = _itinerary.removeAt(oldIndex);
-                          _itinerary.insert(newIndex, item);
+                          final item = mockData.getAllOther().removeAt(oldIndex);
+                          mockData.getAllOther().insert(newIndex, item);
                         });
                       }
                     },
                     itemBuilder: (context, index) {
-                      final item = _itinerary[index];
+                      final item = mockData.getAllOther()[index];
                       return ListTile(
                         key: Key((item['id'] as int?)?.toString() ?? '0'),
                         title: Text(item['name'] as String? ?? ''),

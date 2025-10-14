@@ -1,3 +1,4 @@
+import 'package:siwa/data/mock_data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -23,20 +24,7 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
   final String _referralCode = 'SIWA-EXPLORER-24';
   bool _gpsConsent = false;
 
-  final List<Map<String, dynamic>> _badges = [
-    {
-      'name': 'tourist.challenges.hidden_oasis'.tr(),
-      'imageUrl': 'https://www.kemetexperience.com/wp-content/uploads/2019/09/incredible-white-desert-960x636.jpg',
-    },
-    {
-      'name': 'tourist.challenges.capture_sunset'.tr(),
-      'imageUrl': 'https://thedaydreamdrifters.com/wp-content/uploads/2018/09/Siwa-Oasis-.jpg',
-    },
-    {
-      'name': 'tourist.challenges.salt_lake'.tr(),
-      'imageUrl': 'https://visitegypt.com/wp-content/uploads/2025/07/the-salt-lake-siwa-oasis.webp',
-    },
-  ];
+  
 
   @override
   void dispose() {
@@ -205,9 +193,9 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
                 height: 100,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: _badges.length,
+                  itemCount: mockData.getAllBadges().length,
                   itemBuilder: (context, index) {
-                    final badge = _badges[index];
+                    final badge = mockData.getAllBadges()[index];
                     return Padding(
                       padding: const EdgeInsets.only(right: 16),
                       child: Column(

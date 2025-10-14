@@ -1,3 +1,4 @@
+import 'package:siwa/data/mock_data_repository.dart';
 // lib/features/tourist/screens/tourist_search_screen.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -29,79 +30,7 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
   bool _showFilterPanel = false;
 
   // Sample data - Replace with actual data from backend/provider
-  final List<Map<String, dynamic>> _allServices = [
-    {
-      'name': 'Siwa Shali Resort',
-      'price': 120.0,
-      'rating': 4.5,
-      'location': 'Siwa, Egypt',
-      'imageUrl': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg?w=900&h=500&s=1',
-      'eco_friendly': true,
-      'reviews': 125,
-      'category': 'accommodation',
-      'description': 'Luxury eco-resort with traditional architecture',
-      'tags': ['luxury', 'eco', 'pool', 'spa'],
-      'featured': true,
-    },
-    {
-      'name': 'Adrar Amellal',
-      'price': 150.0,
-      'rating': 4.7,
-      'location': 'Siwa, Egypt',
-      'imageUrl': 'https://www.adrereamellal.com/adrere/wp-content/uploads/2019/09/Adrere-amellal-siwa-oasis-eco-lodge-Omar-Hikal.jpg',
-      'eco_friendly': true,
-      'reviews': 98,
-      'category': 'accommodation',
-      'description': 'Candlelit eco-lodge without electricity',
-      'tags': ['eco', 'unique', 'romantic'],
-      'featured': true,
-    },
-    {
-      'name': 'Taziry Ecolodge Siwa',
-      'price': 90.0,
-      'rating': 4.3,
-      'location': 'Siwa, Egypt',
-      'eco_friendly': true,
-      'reviews': 67,
-      'category': 'accommodation',
-      'description': 'Budget-friendly eco-lodge',
-      'tags': ['eco', 'budget'],
-    },
-    {
-      'name': 'Desert Safari Adventure',
-      'price': 80.0,
-      'rating': 4.6,
-      'location': 'Siwa Desert',
-      'imageUrl': 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800',
-      'reviews': 128,
-      'category': 'attraction',
-      'description': 'Thrilling 4x4 desert safari',
-      'tags': ['adventure', 'desert', 'safari'],
-      'hidden_gem': true,
-    },
-    {
-      'name': 'Abdu Restaurant',
-      'price': 25.0,
-      'rating': 4.8,
-      'location': 'Market Square, Siwa',
-      'imageUrl': 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800',
-      'reviews': 234,
-      'category': 'restaurant',
-      'description': 'Traditional Siwan cuisine',
-      'tags': ['traditional', 'local', 'authentic'],
-      'hidden_gem': true,
-    },
-    {
-      'name': 'Siwa Express Bus',
-      'price': 150.0,
-      'rating': 4.5,
-      'location': 'Cairo - Siwa',
-      'reviews': 234,
-      'category': 'transportation',
-      'description': 'Comfortable express bus service',
-      'tags': ['bus', 'transport', 'comfortable'],
-    },
-  ];
+  
 
   @override
   void initState() {
@@ -141,7 +70,7 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
       create: (_) => SearchFilterProvider(),
       child: Consumer<SearchFilterProvider>(
         builder: (context, filterProvider, child) {
-          final filteredServices = filterProvider.filterServices(_allServices);
+          final filteredServices = filterProvider.filterServices(mockData.getAllOther());
           
           return Scaffold(
             backgroundColor: AppTheme.lightBlueGray,

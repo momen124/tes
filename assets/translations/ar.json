@@ -379,6 +379,7 @@
     "$period": "{count} {count, plural, one{يوم} other{أيام}}"
   },
   "errors": {
+    "route_not_found": "المسار غير موجود: {route}",
     "invalid_email": "الرجاء إدخال بريد إلكتروني صحيح",
     "password_short": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
     "required_field": "هذا الحقل مطلوب",

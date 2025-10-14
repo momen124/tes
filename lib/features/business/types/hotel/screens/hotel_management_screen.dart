@@ -1,3 +1,4 @@
+import 'package:siwa/data/mock_data_repository.dart';
 // lib/features/business/types/hotel/screens/hotel_management_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,57 +28,9 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
   final Set<DateTime> _blockedDates = {};
   late ConfettiController _confettiController;
 
-  final List<Map<String, dynamic>> _rooms = [
-    {
-      'id': 1,
-      'type': 'Deluxe Suite',
-      'price': 150.0,
-      'amenities': ['WiFi', 'AC', 'TV', 'Mini Bar'],
-      'available': true,
-      'photos': [
-        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop',
-      ],
-    },
-    {
-      'id': 2,
-      'type': 'Standard Room',
-      'price': 80.0,
-      'amenities': ['WiFi', 'AC', 'TV'],
-      'available': true,
-      'photos': [
-        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
-      ],
-    },
-    {
-      'id': 3,
-      'type': 'Family Room',
-      'price': 200.0,
-      'amenities': ['WiFi', 'AC', 'TV', 'Kitchen', 'Balcony'],
-      'available': false,
-      'photos': [
-        'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&h=600&fit=crop',
-      ],
-    },
-  ];
+  
 
-  final List<Map<String, dynamic>> _reservations = [
-    {
-      'id': 1,
-      'guest': 'Sarah Johnson',
-      'room': 'Deluxe Suite',
-      'checkIn': DateTime.now().add(const Duration(days: 2)),
-      'checkOut': DateTime.now().add(const Duration(days: 5)),
-      'status': 'pending',
-    },
-    {
-      'id': 2,
-      'guest': 'Ahmed Hassan',
-      'room': 'Family Room',
-      'checkIn': DateTime.now().add(const Duration(days: 1)),
-      'checkOut': DateTime.now().add(const Duration(days: 4)),
-      'status': 'confirmed',
-    },
-  ];
+  
 
   @override
   void initState() {
@@ -150,9 +103,9 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
   Widget _buildRoomsTab() {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: _rooms.length,
+      itemCount: mockData.getAllOther().length,
       itemBuilder: (context, index) {
-        final room = _rooms[index];
+        final room = mockData.getAllOther()[index];
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
           child: Column(
@@ -434,9 +387,9 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
     final isOffline = ref.watch(offlineProvider);
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: _reservations.length,
+      itemCount: mockData.getAllBookings().length,
       itemBuilder: (context, index) {
-        final reservation = _reservations[index];
+        final reservation = mockData.getAllBookings()[index];
         final isPending = reservation['status'] == 'pending';
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
@@ -578,7 +531,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
         builder: (_, controller) => AddRoomForm(
           onRoomAdded: (roomData) {
             setState(() {
-              _rooms.add(roomData);
+              mockData.getAllOther().add(roomData);
             });
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
