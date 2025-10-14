@@ -31,9 +31,7 @@ class DashedBorderContainer extends StatelessWidget {
         dashSpace: dashSpace,
         borderRadius: borderRadius,
       ),
-      child: padding != null
-          ? Padding(padding: padding!, child: child)
-          : child,
+      child: padding != null ? Padding(padding: padding!, child: child) : child,
     );
   }
 }
@@ -67,7 +65,7 @@ class DashedBorderPainter extends CustomPainter {
     );
 
     final path = Path()..addRRect(rrect);
-    
+
     _drawDashedPath(canvas, path, paint);
   }
 
@@ -78,10 +76,7 @@ class DashedBorderPainter extends CustomPainter {
     for (final metric in metrics) {
       double distance = 0.0;
       while (distance < metric.length) {
-        final segment = metric.extractPath(
-          distance,
-          distance + dashWidth,
-        );
+        final segment = metric.extractPath(distance, distance + dashWidth);
         dashPath.addPath(segment, Offset.zero);
         distance += dashWidth + dashSpace;
       }

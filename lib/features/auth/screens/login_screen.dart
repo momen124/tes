@@ -94,7 +94,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       children: [
                         const Icon(Icons.park, color: AppTheme.primaryOrange, size: 36),
                         const SizedBox(width: 12),
-                        Text('Siwa Oasis'.tr(), style: AppTheme.headlineLarge),
+                        Text('app.name'.tr(), style: AppTheme.headlineLarge),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -113,8 +113,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           TextFormField(
                             controller: _emailController,
                             decoration: InputDecoration(
-                              labelText: 'Email'.tr(),
-                              prefixIcon: Icon(Icons.email_outlined),
+                              labelText: 'auth.email'.tr(),
+                              prefixIcon: const Icon(Icons.email_outlined),
                             ),
                             keyboardType: TextInputType.emailAddress,
                             validator: Validators.validateEmail,
@@ -124,8 +124,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           TextFormField(
                             controller: _passwordController,
                             decoration: InputDecoration(
-                              labelText: 'Password'.tr(),
-                              prefixIcon: Icon(Icons.lock_outline),
+                              labelText: 'auth.password'.tr(),
+                              prefixIcon: const Icon(Icons.lock_outline),
                             ),
                             obscureText: true,
                             validator: Validators.validatePassword,
@@ -145,7 +145,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       strokeWidth: 2,
                                     ),
                                   )
-                                : Text('Login'.tr(), style: AppTheme.buttonText),
+                                : Text('auth.login'.tr()
+, style: AppTheme.buttonText),
                             ),
                           ),
                         ],

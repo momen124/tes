@@ -17,7 +17,7 @@ class SettingsScreen extends ConsumerWidget {
     final isOffline = ref.watch(offlineProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Settings'.tr())),
+      appBar: AppBar(title: Text('common.settings'.tr())),
       body: ListView(
         children: [
           if (isOffline)
@@ -32,15 +32,19 @@ class SettingsScreen extends ConsumerWidget {
           SwitchListTile(
             title: Text('Language (English/Arabic)'.tr()),
             value: business.language == 'en',
-            onChanged: isOffline ? null : (val) => businessNotifier.setLanguage(val ? 'en' : 'ar'),
+            onChanged: isOffline
+                ? null
+                : (val) => businessNotifier.setLanguage(val ? 'en' : 'ar'),
           ),
           SwitchListTile(
-            title: Text('Enable GPS'.tr()),
+            title: Text('auth.enable_gps'.tr()),
             value: business.gpsEnabled,
-            onChanged: isOffline ? null : (val) => businessNotifier.toggleGps(val),
+            onChanged: isOffline
+                ? null
+                : (val) => businessNotifier.toggleGps(val),
           ),
           ListTile(
-            title: Text('Logout'.tr()),
+            title: Text('auth.logout'.tr()),
             trailing: const Icon(Icons.logout),
             onTap: isOffline
                 ? null
@@ -51,7 +55,6 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ],
       ),
- 
     );
   }
 }

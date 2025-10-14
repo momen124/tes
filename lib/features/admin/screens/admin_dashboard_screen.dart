@@ -9,14 +9,9 @@ class AdminDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:  Text('Admin Dashboard'.tr())),
+      appBar: AppBar(title: Text('navigation.dashboard'.tr())),
       body: Column(
-        children: [
-          SizedBox(
-            height: 200,
-            child: BarChart(BarChartData()),
-          ),
-        ],
+        children: [SizedBox(height: 200, child: BarChart(BarChartData()))],
       ),
     );
   }

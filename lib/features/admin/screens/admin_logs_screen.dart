@@ -7,19 +7,21 @@ class AdminLogsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Logs'.tr())),
+      appBar: AppBar(title: Text('auth.login'.tr())),
       body: DataTable(
-        columns:  [
-          DataColumn(label: Text('ID'.tr())),
-          DataColumn(label: Text('Type'.tr())),
-          DataColumn(label: Text('Details'.tr())),
+        columns: [
+          DataColumn(label: Text('tourist.search.mid'.tr())),
+          DataColumn(label: Text('business.rental.room_type'.tr())),
+          DataColumn(label: Text('common.details'.tr())),
         ],
-        rows:  [
-          DataRow(cells: [
-            DataCell(Text('1'.tr())),
-            DataCell(Text('Audit'.tr())),
-            DataCell(Text('Mock details'.tr())),
-          ]), // Added closing bracket
+        rows: [
+          DataRow(
+            cells: [
+              DataCell(Text('1'.tr())),
+              DataCell(Text('common.edit'.tr())),
+              DataCell(Text('common.details'.tr())),
+            ],
+          ), // Added closing bracket
           // Add mock rows
         ],
       ),

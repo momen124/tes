@@ -73,21 +73,13 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              Icon(
-                isExpanded ? Icons.expand_less : Icons.expand_more,
-              ),
+              Text(title, style: Theme.of(context).textTheme.titleMedium),
+              Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
             ],
           ),
         ),
         if (isExpanded)
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Text(content),
-          ),
+          Padding(padding: const EdgeInsets.only(top: 8), child: Text(content)),
       ],
     );
   }
@@ -102,7 +94,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: Text('Siwa Oasis'.tr()),
+        title: Text('app.name'.tr()),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -114,7 +106,9 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
               width: double.infinity,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage('https://images.unsplash.com/photo-1589993464410-6c55678afc12'),
+                  image: NetworkImage(
+                    'https://images.unsplash.com/photo-1589993464410-6c55678afc12',
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -146,28 +140,35 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
 
                   // History Section
                   _buildExpandableSection(
-                    title: 'History'.tr(),
+                    title: 'tour_guides.history'.tr(),
                     isExpanded: _historyExpanded,
-                    onTap: () => setState(() => _historyExpanded = !_historyExpanded),
-                    content: 'Siwa\'s history dates back to ancient Egypt, serving as a crucial trade route and home to the Oracle of Amun. Its isolation preserved its unique Berber culture and traditions.',
+                    onTap: () =>
+                        setState(() => _historyExpanded = !_historyExpanded),
+                    content:
+                        'Siwa\'s history dates back to ancient Egypt, serving as a crucial trade route and home to the Oracle of Amun. Its isolation preserved its unique Berber culture and traditions.',
                   ),
                   const SizedBox(height: 16),
 
                   // Best Time to Visit
                   _buildExpandableSection(
-                    title: 'Best Time to Visit'.tr(),
+                    title: 'siwa_info.best_time'.tr(),
                     isExpanded: _bestTimeExpanded,
-                    onTap: () => setState(() => _bestTimeExpanded = !_bestTimeExpanded),
-                    content: 'The best time to visit Siwa is between October and April when temperatures are mild. Avoid summer months (June-August) when it can get extremely hot.',
+                    onTap: () =>
+                        setState(() => _bestTimeExpanded = !_bestTimeExpanded),
+                    content:
+                        'The best time to visit Siwa is between October and April when temperatures are mild. Avoid summer months (June-August) when it can get extremely hot.',
                   ),
                   const SizedBox(height: 16),
 
                   // Travel Tips
                   _buildExpandableSection(
-                    title: 'Travel Tips'.tr(),
+                    title: 'siwa_info.travel_tips'.tr(),
                     isExpanded: _travelTipsExpanded,
-                    onTap: () => setState(() => _travelTipsExpanded = !_travelTipsExpanded),
-                    content: '• Bring cash as ATMs are limited\n• Respect local customs and dress modestly\n• Stay hydrated in the desert climate\n• Book accommodations in advance during peak season\n• Try the local dates and olive oil',
+                    onTap: () => setState(
+                      () => _travelTipsExpanded = !_travelTipsExpanded,
+                    ),
+                    content:
+                        '• Bring cash as ATMs are limited\n• Respect local customs and dress modestly\n• Stay hydrated in the desert climate\n• Book accommodations in advance during peak season\n• Try the local dates and olive oil',
                   ),
                   const SizedBox(height: 24),
 
@@ -186,13 +187,13 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                             color: Colors.blue[50],
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child:  Center(
+                          child: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.map, size: 60, color: Colors.blue),
                                 SizedBox(height: 8),
-                                Text('Interactive Map'.tr()),
+                                Text('restaurants.international'.tr()),
                               ],
                             ),
                           ),
@@ -227,12 +228,13 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      childAspectRatio: 0.85,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                          childAspectRatio: 0.85,
+                        ),
                     itemCount: _relatedServices.length,
                     itemBuilder: (context, index) {
                       final service = _relatedServices[index];
@@ -247,7 +249,9 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                             Expanded(
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: AppTheme.primaryOrange.withOpacity(0.2),
+                                  color: AppTheme.primaryOrange.withOpacity(
+                                    0.2,
+                                  ),
                                   borderRadius: const BorderRadius.vertical(
                                     top: Radius.circular(16),
                                   ),

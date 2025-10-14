@@ -8,10 +8,7 @@ part 'business.g.dart';
 class Business {
   final int id;
   final String name;
-  @JsonKey(
-    fromJson: _businessTypeFromJson,
-    toJson: _businessTypeToJson,
-  )
+  @JsonKey(fromJson: _businessTypeFromJson, toJson: _businessTypeToJson)
   final BusinessType type;
   final String contactEmail;
   final String phone;
@@ -40,7 +37,8 @@ class Business {
     required this.updatedAt,
   });
 
-  factory Business.fromJson(Map<String, dynamic> json) => _$BusinessFromJson(json);
+  factory Business.fromJson(Map<String, dynamic> json) =>
+      _$BusinessFromJson(json);
   Map<String, dynamic> toJson() => _$BusinessToJson(this);
 
   static BusinessType _businessTypeFromJson(dynamic value) {

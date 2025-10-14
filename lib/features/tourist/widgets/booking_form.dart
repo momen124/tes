@@ -10,9 +10,9 @@ class BookingForm extends StatelessWidget {
     return Form(
       child: Column(
         children: [
-          TextFormField(decoration: InputDecoration(labelText: 'Date'.tr())),
-          TextFormField(decoration: InputDecoration(labelText: 'Guests'.tr())),
-          ElevatedButton(onPressed: () {}, child: Text('Book'.tr())),
+          TextFormField(decoration: InputDecoration(labelText: 'tourist.booking.date'.tr())),
+          TextFormField(decoration: InputDecoration(labelText: 'tourist.booking.guests'.tr())),
+          ElevatedButton(onPressed: () {}, child: Text('navigation.bookings'.tr())),
         ],
       ),
     );

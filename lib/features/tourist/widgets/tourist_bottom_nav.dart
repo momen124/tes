@@ -5,9 +5,9 @@ import 'package:easy_localization/easy_localization.dart';
 
 class TouristBottomNav extends StatelessWidget {
   final int currentIndex;
-  
+
   const TouristBottomNav({super.key, required this.currentIndex});
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,31 +34,31 @@ class TouristBottomNav extends StatelessWidget {
           elevation: 0,
           selectedFontSize: 12,
           unselectedFontSize: 12,
-          items:  [
+          items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
               activeIcon: Icon(Icons.home),
-              label: 'Home'.tr(),
+              label: 'navigation.home'.tr(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.search_outlined),
               activeIcon: Icon(Icons.search),
-              label: 'Discover'.tr(),
+              label: 'navigation.discover'.tr(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.camera_alt_outlined),
               activeIcon: Icon(Icons.camera_alt),
-              label: 'Challenges'.tr(),
+              label: 'navigation.challenges'.tr(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.bookmark_outline),
               activeIcon: Icon(Icons.bookmark),
-              label: 'Bookings'.tr(),
+              label: 'navigation.bookings'.tr(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),
               activeIcon: Icon(Icons.person),
-              label: 'Profile'.tr(),
+              label: 'navigation.profile'.tr(),
             ),
           ],
           onTap: (index) {

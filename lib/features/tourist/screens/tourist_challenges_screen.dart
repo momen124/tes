@@ -9,7 +9,8 @@ class TouristChallengesScreen extends StatefulWidget {
   const TouristChallengesScreen({super.key});
 
   @override
-  State<TouristChallengesScreen> createState() => _TouristChallengesScreenState();
+  State<TouristChallengesScreen> createState() =>
+      _TouristChallengesScreenState();
 }
 
 class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
@@ -17,8 +18,10 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
     {
       'id': 1,
       'title': 'Capture the Sunset',
-      'description': 'Find the perfect spot to photograph the sunset over the desert dunes.',
-      'imageUrl': 'https://www.heatheronhertravels.com/wp-content/uploads/2011/09/Sunset-at-Fatnas-Island-in-Siwa-in-Egypt-2.jpg.webp',
+      'description':
+          'Find the perfect spot to photograph the sunset over the desert dunes.',
+      'imageUrl':
+          'https://www.heatheronhertravels.com/wp-content/uploads/2011/09/Sunset-at-Fatnas-Island-in-Siwa-in-Egypt-2.jpg.webp',
       'completed': false,
       'points': 50,
       'proof': null,
@@ -26,8 +29,10 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
     {
       'id': 2,
       'title': 'Hidden Oasis',
-      'description': 'Discover and photograph a hidden oasis within the Siwa desert.',
-      'imageUrl': 'https://thedaydreamdrifters.com/wp-content/uploads/2018/09/Siwa-Oasis-.jpg',
+      'description':
+          'Discover and photograph a hidden oasis within the Siwa desert.',
+      'imageUrl':
+          'https://thedaydreamdrifters.com/wp-content/uploads/2018/09/Siwa-Oasis-.jpg',
       'completed': false,
       'points': 75,
       'proof': null,
@@ -35,8 +40,10 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
     {
       'id': 3,
       'title': 'Salt Lake Reflection',
-      'description': 'Capture the stunning reflections on the surface of the salt lakes.',
-      'imageUrl': 'https://visitegypt.com/wp-content/uploads/2025/07/the-salt-lake-siwa-oasis.webp',
+      'description':
+          'Capture the stunning reflections on the surface of the salt lakes.',
+      'imageUrl':
+          'https://visitegypt.com/wp-content/uploads/2025/07/the-salt-lake-siwa-oasis.webp',
       'completed': false,
       'points': 60,
       'proof': null,
@@ -45,8 +52,8 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
 
   int get _totalPoints {
     return _challenges
-      .where((c) => c['completed'] == true)
-      .fold(0, (sum, c) => sum + (c['points'] as int? ?? 0));
+        .where((c) => c['completed'] == true)
+        .fold(0, (sum, c) => sum + (c['points'] as int? ?? 0));
   }
 
   int get _completedCount {
@@ -56,16 +63,18 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
   Future<void> _uploadPhoto(Map<String, dynamic> challenge) async {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.camera);
-    
+
     if (image != null) {
       setState(() {
         challenge['proof'] = image.path;
         challenge['completed'] = true;
       });
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Challenge completed! +${challenge['.tr()points']} points'),
+          content: Text(
+            "${'tourist.challenges.challenge_completed'.tr()} ${challenge['points']} points",
+          ),
           backgroundColor: AppTheme.successGreen,
         ),
       );
@@ -82,7 +91,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: Text('Photo Challenges'.tr()),
+        title: Text('tourist.challenges.photo_challenges'.tr()),
         elevation: 0,
         actions: [
           Center(
@@ -119,12 +128,16 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Challenge Progress'.tr(), style: AppTheme.titleMedium),
+                Text('tourist.challenges.challenge_progress'.tr(), style: AppTheme.titleMedium),
                 const SizedBox(height: 12),
                 LinearProgressIndicator(
-                  value: _challenges.isEmpty ? 0 : _completedCount / _challenges.length,
+                  value: _challenges.isEmpty
+                      ? 0
+                      : _completedCount / _challenges.length,
                   backgroundColor: AppTheme.gray.withOpacity(0.2),
-                  valueColor: const AlwaysStoppedAnimation(AppTheme.primaryOrange),
+                  valueColor: const AlwaysStoppedAnimation(
+                    AppTheme.primaryOrange,
+                  ),
                   minHeight: 8,
                 ),
                 const SizedBox(height: 8),
@@ -135,9 +148,9 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Challenge Cards
           Expanded(
             child: ListView.builder(
@@ -163,24 +176,24 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                           ),
                         ),
                         child: challenge['completed']
-                          ? Container(
-                              decoration: BoxDecoration(
-                                color: AppTheme.successGreen.withOpacity(0.8),
-                                borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(16),
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  color: AppTheme.successGreen.withOpacity(0.8),
+                                  borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(16),
+                                  ),
                                 ),
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.check_circle,
-                                  size: 64,
-                                  color: Colors.white,
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.check_circle,
+                                    size: 64,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                            )
-                          : null,
+                              )
+                            : null,
                       ),
-                      
+
                       // Challenge Details
                       Padding(
                         padding: const EdgeInsets.all(16),
@@ -203,8 +216,8 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: challenge['completed']
-                                      ? AppTheme.successGreen
-                                      : AppTheme.primaryOrange,
+                                        ? AppTheme.successGreen
+                                        : AppTheme.primaryOrange,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -229,22 +242,22 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                               width: double.infinity,
                               child: ElevatedButton.icon(
                                 onPressed: challenge['completed']
-                                  ? null
-                                  : () => _uploadPhoto(challenge),
+                                    ? null
+                                    : () => _uploadPhoto(challenge),
                                 icon: Icon(
                                   challenge['completed']
-                                    ? Icons.check_circle
-                                    : Icons.camera_alt,
+                                      ? Icons.check_circle
+                                      : Icons.camera_alt,
                                 ),
                                 label: Text(
                                   challenge['completed']
-                                    ? 'Completed'
-                                    : 'Upload Photo',
+                                      ? 'Completed'
+                                      : 'Upload Photo',
                                 ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: challenge['completed']
-                                    ? AppTheme.successGreen
-                                    : AppTheme.primaryOrange,
+                                      ? AppTheme.successGreen
+                                      : AppTheme.primaryOrange,
                                 ),
                               ),
                             ),

@@ -7,22 +7,28 @@ class AdminModerationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Moderation Queue'.tr())),
+      appBar: AppBar(title: Text('attractions.duration'.tr())),
       body: DataTable(
-        columns:  [
-          DataColumn(label: Text('ID'.tr())),
-          DataColumn(label: Text('Type'.tr())),
-          DataColumn(label: Text('Actions'.tr())),
+        columns: [
+          DataColumn(label: Text('tourist.search.mid'.tr())),
+          DataColumn(label: Text('business.rental.room_type'.tr())),
+          DataColumn(label: Text('tourist.categories.attractions'.tr())),
         ],
         rows: [
-          DataRow(cells: [
-            DataCell(Text('1'.tr())),
-            DataCell(Text('Business'.tr())),
-            DataCell(Row(children: [
-              IconButton(icon: const Icon(Icons.check), onPressed: () {}),
-              IconButton(icon: const Icon(Icons.close), onPressed: () {}),
-            ])),
-          ]),
+          DataRow(
+            cells: [
+              DataCell(Text('1'.tr())),
+              DataCell(Text('business.profile.business_name'.tr())),
+              DataCell(
+                Row(
+                  children: [
+                    IconButton(icon: const Icon(Icons.check), onPressed: () {}),
+                    IconButton(icon: const Icon(Icons.close), onPressed: () {}),
+                  ],
+                ),
+              ),
+            ],
+          ),
           // Add mock rows as needed
         ],
       ),

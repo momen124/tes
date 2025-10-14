@@ -12,7 +12,8 @@ class StoreInventoryScreen extends ConsumerStatefulWidget {
   const StoreInventoryScreen({super.key});
 
   @override
-  ConsumerState<StoreInventoryScreen> createState() => _StoreInventoryScreenState();
+  ConsumerState<StoreInventoryScreen> createState() =>
+      _StoreInventoryScreenState();
 }
 
 class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
@@ -28,7 +29,8 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
       'stock': 45,
       'category': 'Food',
       'lowStockThreshold': 20,
-      'image': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
+      'image':
+          'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
     },
     {
       'id': 2,
@@ -37,7 +39,8 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
       'stock': 12,
       'category': 'Crafts',
       'lowStockThreshold': 15,
-      'image': 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=300&fit=crop',
+      'image':
+          'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=300&fit=crop',
     },
     {
       'id': 3,
@@ -54,7 +57,8 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
       'stock': 25,
       'category': 'Crafts',
       'lowStockThreshold': 15,
-      'image': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
+      'image':
+          'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
     },
   ];
 
@@ -79,8 +83,14 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
 
   List<Map<String, dynamic>> get filteredProducts {
     return _products.where((product) {
-      final matchesSearch = (product['name'] as String?)?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false;
-      final matchesCategory = _selectedCategory == 'All' || product['category'] == _selectedCategory;
+      final matchesSearch =
+          (product['name'] as String?)?.toLowerCase().contains(
+            _searchQuery.toLowerCase(),
+          ) ??
+          false;
+      final matchesCategory =
+          _selectedCategory == 'All' ||
+          product['category'] == _selectedCategory;
       return matchesSearch && matchesCategory;
     }).toList();
   }
@@ -88,7 +98,9 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 1),
+    );
   }
 
   @override
@@ -112,7 +124,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: isOffline ? null : _showAddProductDialog,
-            tooltip: 'Add Product'.tr(),
+            tooltip: 'business.dashboard.manage_products'.tr(),
           ),
         ],
       ),
@@ -121,7 +133,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
               child: Container(
                 decoration: AppTheme.offlineBanner,
                 padding: const EdgeInsets.all(16),
-                child: Text('You are offline'.tr(), style: AppTheme.bodyMedium),
+                child: Text('common.offline'.tr(), style: AppTheme.bodyMedium),
               ),
             )
           : Column(
@@ -132,7 +144,9 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                   child: GridView.builder(
                     padding: const EdgeInsets.all(16),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+                      crossAxisCount: MediaQuery.of(context).size.width > 600
+                          ? 3
+                          : 2,
                       childAspectRatio: 0.7,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
@@ -152,7 +166,6 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
         label: Text('Orders (${_orders.length})'.tr()),
         backgroundColor: isOffline ? AppTheme.gray : AppTheme.primaryOrange,
       ),
-
     );
   }
 
@@ -174,11 +187,16 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
           TextField(
             onChanged: (value) => setState(() => _searchQuery = value),
             decoration: InputDecoration(
-              hintText: 'Search products...'.tr(),
-              prefixIcon: const Icon(Icons.search, color: AppTheme.primaryOrange),
+              hintText: 'navigation.search'.tr(),
+              prefixIcon: const Icon(
+                Icons.search,
+                color: AppTheme.primaryOrange,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: AppTheme.secondaryGray.withOpacity(0.3)),
+                borderSide: BorderSide(
+                  color: AppTheme.secondaryGray.withOpacity(0.3),
+                ),
               ),
             ),
           ),
@@ -212,7 +230,9 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
   }
 
   Widget _buildLowStockAlert() {
-    final lowStockProducts = _products.where((p) => p['stock'] < p['lowStockThreshold']).toList();
+    final lowStockProducts = _products
+        .where((p) => p['stock'] < p['lowStockThreshold'])
+        .toList();
 
     if (lowStockProducts.isEmpty) return const SizedBox.shrink();
 
@@ -258,16 +278,25 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stack) => Container(
                     color: AppTheme.lightBlueGray,
-                    child: const Icon(Icons.inventory, size: 40, color: AppTheme.gray),
+                    child: const Icon(
+                      Icons.inventory,
+                      size: 40,
+                      color: AppTheme.gray,
+                    ),
                   ),
                 ),
                 Positioned(
                   top: 8,
                   right: 8,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
-                      color: isLowStock ? AppTheme.errorRed : AppTheme.successGreen,
+                      color: isLowStock
+                          ? AppTheme.errorRed
+                          : AppTheme.successGreen,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -299,7 +328,9 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                       const SizedBox(height: 4),
                       Text(
                         "\$${(product['price'] as double?)?.toStringAsFixed(0) ?? '0'}",
-                        style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
+                        style: AppTheme.titleMedium.copyWith(
+                          color: AppTheme.primaryOrange,
+                        ),
                       ),
                     ],
                   ),
@@ -309,14 +340,18 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                       IconButton(
                         icon: const Icon(Icons.edit, size: 20),
                         color: AppTheme.primaryOrange,
-                        onPressed: isOffline ? null : () => _showEditProductDialog(product),
+                        onPressed: isOffline
+                            ? null
+                            : () => _showEditProductDialog(product),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                       ),
                       IconButton(
                         icon: const Icon(Icons.inventory_2, size: 20),
                         color: AppTheme.primaryOrange,
-                        onPressed: isOffline ? null : () => _showStockAdjustmentDialog(product),
+                        onPressed: isOffline
+                            ? null
+                            : () => _showStockAdjustmentDialog(product),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                       ),
@@ -341,7 +376,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add New Product'.tr()),
+        title: Text('business.dashboard.manage_products'.tr()),
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -350,27 +385,30 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
               children: [
                 TextFormField(
                   controller: nameController,
-                  decoration: InputDecoration(labelText: 'Product Name'.tr()),
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter product name' : null,
+                  decoration: InputDecoration(labelText: 'transportation.route'.tr()),
+                  validator: (value) =>
+                      (value?.isEmpty ?? true) ? 'Enter product name' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: priceController,
-                  decoration: InputDecoration(labelText: 'Price'.tr()),
+                  decoration: InputDecoration(labelText: 'tourist.search.price'.tr()),
                   keyboardType: TextInputType.number,
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
+                  validator: (value) =>
+                      (value?.isEmpty ?? true) ? 'Enter price' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: stockController,
                   decoration: InputDecoration(labelText: 'Initial Stock'.tr()),
                   keyboardType: TextInputType.number,
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter stock' : null,
+                  validator: (value) =>
+                      (value?.isEmpty ?? true) ? 'Enter stock' : null,
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   initialValue: selectedCategory,
-                  decoration: InputDecoration(labelText: 'Category'.tr()),
+                  decoration: InputDecoration(labelText: 'business.listings.category'.tr()),
                   items: ['Food', 'Crafts'].map((cat) {
                     return DropdownMenuItem(value: cat, child: Text(cat));
                   }).toList(),
@@ -383,7 +421,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'.tr()),
+            child: Text('common.cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -396,7 +434,8 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                     'stock': int.tryParse(stockController.text) ?? 0,
                     'category': selectedCategory,
                     'lowStockThreshold': 10,
-                    'image': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
+                    'image':
+                        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
                   });
                 });
                 Navigator.pop(context);
@@ -406,7 +445,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                 _confettiController.play();
               }
             },
-            child: Text('Add'.tr()),
+            child: Text('business.rental.vehicle_types.road'.tr()),
           ),
         ],
       ),
@@ -416,12 +455,14 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
   void _showEditProductDialog(Map<String, dynamic> product) {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController(text: product['name']);
-    final priceController = TextEditingController(text: (product['price'] as double?)?.toString() ?? '0');
+    final priceController = TextEditingController(
+      text: (product['price'] as double?)?.toString() ?? '0',
+    );
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Edit Product'.tr()),
+        title: Text('common.edit'.tr()),
         content: Form(
           key: formKey,
           child: Column(
@@ -429,15 +470,17 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
             children: [
               TextFormField(
                 controller: nameController,
-                decoration: InputDecoration(labelText: 'Product Name'.tr()),
-                validator: (value) => (value?.isEmpty ?? true) ? 'Enter product name' : null,
+                decoration: InputDecoration(labelText: 'transportation.route'.tr()),
+                validator: (value) =>
+                    (value?.isEmpty ?? true) ? 'Enter product name' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: priceController,
-                decoration: InputDecoration(labelText: 'Price'.tr()),
+                decoration: InputDecoration(labelText: 'tourist.search.price'.tr()),
                 keyboardType: TextInputType.number,
-                validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
+                validator: (value) =>
+                    (value?.isEmpty ?? true) ? 'Enter price' : null,
               ),
             ],
           ),
@@ -445,14 +488,15 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'.tr()),
+            child: Text('common.cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 setState(() {
                   product['name'] = nameController.text;
-                  product['price'] = double.tryParse(priceController.text) ?? product['price'];
+                  product['price'] =
+                      double.tryParse(priceController.text) ?? product['price'];
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -461,7 +505,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                 _confettiController.play();
               }
             },
-            child: Text('Save'.tr()),
+            child: Text('common.save'.tr()),
           ),
         ],
       ),
@@ -502,19 +546,25 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
               const SizedBox(height: 8),
               Text(
                 'New Stock: ${product['stock'] + stockAdjustment.toInt()}',
-                style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
+                style: AppTheme.titleMedium.copyWith(
+                  color: AppTheme.primaryOrange,
+                ),
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'.tr()),
+              child: Text('common.cancel'.tr()),
             ),
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  product['stock'] = (product['stock'] + stockAdjustment.toInt()).clamp(0, 10000);
+                  product['stock'] =
+                      (product['stock'] + stockAdjustment.toInt()).clamp(
+                        0,
+                        10000,
+                      );
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -522,7 +572,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                 );
                 _confettiController.play();
               },
-              child: Text('Update'.tr()),
+              child: Text('tourist.booking.date'.tr()),
             ),
           ],
         ),
@@ -556,7 +606,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Orders'.tr(), style: AppTheme.titleLarge),
+                  Text('business.rental.vehicle_types.others'.tr(), style: AppTheme.titleLarge),
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () => Navigator.pop(context),
@@ -596,7 +646,10 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
               children: [
                 Text(order['customer'], style: AppTheme.titleMedium),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: order['status'] == 'pending'
                         ? AppTheme.warningYellow
@@ -611,11 +664,16 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            ...(order['items'] as List?)?.map<Widget>((item) => Text('• $item'.tr(), style: AppTheme.bodyMedium)) ?? [],
+            ...(order['items'] as List?)?.map<Widget>(
+                  (item) => Text('• $item'.tr(), style: AppTheme.bodyMedium),
+                ) ??
+                [],
             const SizedBox(height: 8),
             Text(
               "Total: \$${(order['total'] as double?)?.toStringAsFixed(2) ?? '0.00'}",
-              style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
+              style: AppTheme.titleMedium.copyWith(
+                color: AppTheme.primaryOrange,
+              ),
             ),
             if (order['status'] == 'pending') ...[
               const SizedBox(height: 12),
@@ -623,13 +681,17 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: isOffline ? null : () => _handleOrder(order, 'cancelled'),
-                    child: Text('Cancel'.tr()),
+                    onPressed: isOffline
+                        ? null
+                        : () => _handleOrder(order, 'cancelled'),
+                    child: Text('common.cancel'.tr()),
                   ),
                   const SizedBox(width: 8),
                   ElevatedButton(
-                    onPressed: isOffline ? null : () => _handleOrder(order, 'processing'),
-                    child: Text('Process'.tr()),
+                    onPressed: isOffline
+                        ? null
+                        : () => _handleOrder(order, 'processing'),
+                    child: Text('tourist.search.price'.tr()),
                   ),
                 ],
               ),
@@ -645,9 +707,9 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
       order['status'] = newStatus;
     });
     Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Order $newStatus'.tr())),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Order $newStatus'.tr())));
     _confettiController.play();
   }
 }

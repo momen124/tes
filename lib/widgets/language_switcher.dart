@@ -5,11 +5,9 @@ import 'package:easy_localization/easy_localization.dart';
 /// Can be used as a button, toggle, or dropdown
 class LanguageSwitcher extends StatelessWidget {
   final LanguageSwitcherStyle style;
-  
-  const LanguageSwitcher({
-    Key? key,
-    this.style = LanguageSwitcherStyle.toggle,
-  }) : super(key: key);
+
+  const LanguageSwitcher({Key? key, this.style = LanguageSwitcherStyle.toggle})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +27,11 @@ class LanguageSwitcher extends StatelessWidget {
 }
 
 enum LanguageSwitcherStyle {
-  toggle,    // Toggle switch style
-  button,    // Button style
-  dropdown,  // Dropdown menu
-  fab,       // Floating action button
-  iconButton // Icon button in AppBar
+  toggle, // Toggle switch style
+  button, // Button style
+  dropdown, // Dropdown menu
+  fab, // Floating action button
+  iconButton, // Icon button in AppBar
 }
 
 /// Toggle Switch Style (Recommended for Settings)
@@ -41,15 +39,13 @@ class _ToggleLanguageSwitcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isArabic = context.locale.languageCode == 'ar';
-    
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Theme.of(context).dividerColor,
-        ),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -58,7 +54,7 @@ class _ToggleLanguageSwitcher extends StatelessWidget {
             'English',
             style: TextStyle(
               fontWeight: !isArabic ? FontWeight.bold : FontWeight.normal,
-              color: !isArabic 
+              color: !isArabic
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(context).colorScheme.onSurface,
             ),
@@ -76,7 +72,7 @@ class _ToggleLanguageSwitcher extends StatelessWidget {
             'العربية',
             style: TextStyle(
               fontWeight: isArabic ? FontWeight.bold : FontWeight.normal,
-              color: isArabic 
+              color: isArabic
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(context).colorScheme.onSurface,
             ),
@@ -92,7 +88,7 @@ class _ButtonLanguageSwitcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isArabic = context.locale.languageCode == 'ar';
-    
+
     return ElevatedButton.icon(
       onPressed: () {
         _changeLanguage(context, isArabic ? 'en' : 'ar');
@@ -101,9 +97,7 @@ class _ButtonLanguageSwitcher extends StatelessWidget {
       label: Text(isArabic ? 'English' : 'العربية'),
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -115,7 +109,7 @@ class _DropdownLanguageSwitcher extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
       icon: Icon(Icons.language),
-      tooltip: 'language'.tr(),
+      tooltip: 'tour_guides.language'.tr(),
       onSelected: (languageCode) {
         _changeLanguage(context, languageCode);
       },
@@ -158,7 +152,7 @@ class _FabLanguageSwitcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isArabic = context.locale.languageCode == 'ar';
-    
+
     return FloatingActionButton.extended(
       onPressed: () {
         _changeLanguage(context, isArabic ? 'en' : 'ar');
@@ -175,7 +169,7 @@ class _IconButtonLanguageSwitcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isArabic = context.locale.languageCode == 'ar';
-    
+
     return IconButton(
       icon: Container(
         padding: EdgeInsets.all(6),
@@ -203,18 +197,18 @@ class _IconButtonLanguageSwitcher extends StatelessWidget {
 /// Helper function to change language
 void _changeLanguage(BuildContext context, String languageCode) async {
   await context.setLocale(Locale(languageCode));
-  
+
   // Force rebuild of the entire widget tree
   if (context.mounted) {
     // Pop all routes and rebuild
     Navigator.of(context).popUntil((route) => route.isFirst);
-    
+
     // Optional: Show a snackbar confirmation
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          languageCode == 'ar' 
-              ? 'تم التبديل إلى العربية' 
+          languageCode == 'ar'
+              ? 'تم التبديل إلى العربية'
               : 'Switched to English',
         ),
         duration: Duration(seconds: 2),
@@ -229,7 +223,8 @@ class AnimatedLanguageSwitcher extends StatefulWidget {
   const AnimatedLanguageSwitcher({Key? key}) : super(key: key);
 
   @override
-  State<AnimatedLanguageSwitcher> createState() => _AnimatedLanguageSwitcherState();
+  State<AnimatedLanguageSwitcher> createState() =>
+      _AnimatedLanguageSwitcherState();
 }
 
 class _AnimatedLanguageSwitcherState extends State<AnimatedLanguageSwitcher> {
@@ -238,7 +233,7 @@ class _AnimatedLanguageSwitcherState extends State<AnimatedLanguageSwitcher> {
   @override
   Widget build(BuildContext context) {
     final isArabic = context.locale.languageCode == 'ar';
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -267,7 +262,9 @@ class _AnimatedLanguageSwitcherState extends State<AnimatedLanguageSwitcher> {
               Container(
                 height: 24,
                 width: 1,
-                color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.3),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onPrimaryContainer.withOpacity(0.3),
               ),
               SizedBox(width: 8),
               _buildLanguageOption(context, 'ar', 'العربية', '🇪🇬'),
@@ -286,9 +283,14 @@ class _AnimatedLanguageSwitcherState extends State<AnimatedLanguageSwitcher> {
     );
   }
 
-  Widget _buildLanguageOption(BuildContext context, String code, String label, String flag) {
+  Widget _buildLanguageOption(
+    BuildContext context,
+    String code,
+    String label,
+    String flag,
+  ) {
     final isSelected = context.locale.languageCode == code;
-    
+
     return GestureDetector(
       onTap: () {
         _changeLanguage(context, code);
@@ -299,7 +301,7 @@ class _AnimatedLanguageSwitcherState extends State<AnimatedLanguageSwitcher> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected 
+          color: isSelected
               ? Theme.of(context).colorScheme.primary
               : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
@@ -331,7 +333,7 @@ class LanguageSwitcherListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isArabic = context.locale.languageCode == 'ar';
-    
+
     return ListTile(
       leading: Container(
         padding: EdgeInsets.all(8),
@@ -344,7 +346,7 @@ class LanguageSwitcherListTile extends StatelessWidget {
           color: Theme.of(context).colorScheme.onPrimaryContainer,
         ),
       ),
-      title: Text('language'.tr()),
+      title: Text('tour_guides.language'.tr()),
       subtitle: Text(isArabic ? 'العربية' : 'English'),
       trailing: Icon(Icons.chevron_right),
       onTap: () {
@@ -357,7 +359,7 @@ class LanguageSwitcherListTile extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('select_language'.tr()),
+        title: Text('tour_guides.language'.tr()),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -370,9 +372,14 @@ class LanguageSwitcherListTile extends StatelessWidget {
     );
   }
 
-  Widget _buildLanguageOption(BuildContext context, String code, String label, String flag) {
+  Widget _buildLanguageOption(
+    BuildContext context,
+    String code,
+    String label,
+    String flag,
+  ) {
     final isSelected = context.locale.languageCode == code;
-    
+
     return InkWell(
       onTap: () {
         _changeLanguage(context, code);
@@ -382,7 +389,7 @@ class LanguageSwitcherListTile extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected 
+          color: isSelected
               ? Theme.of(context).colorScheme.primaryContainer
               : Colors.transparent,
           borderRadius: BorderRadius.circular(12),

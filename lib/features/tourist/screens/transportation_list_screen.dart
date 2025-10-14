@@ -8,12 +8,13 @@ class TransportationListScreen extends StatefulWidget {
   const TransportationListScreen({super.key});
 
   @override
-  State<TransportationListScreen> createState() => _TransportationListScreenState();
+  State<TransportationListScreen> createState() =>
+      _TransportationListScreenState();
 }
 
 class _TransportationListScreenState extends State<TransportationListScreen> {
   String _selectedType = 'all';
-  
+
   final List<Map<String, dynamic>> _transportServices = [
     {
       'id': 1,
@@ -25,7 +26,8 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
       'rating': 4.5,
       'reviews': 234,
       'departures': ['06:00 AM', '08:00 AM', '02:00 PM', '10:00 PM'],
-      'imageUrl': 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800',
       'amenities': ['AC', 'WiFi', 'Restroom', 'Snacks'],
       'seats': 45,
     },
@@ -38,7 +40,8 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
       'duration': 'Flexible',
       'rating': 4.8,
       'reviews': 156,
-      'imageUrl': 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800',
       'amenities': ['AC', 'Driver', 'Door-to-door'],
       'seats': 4,
     },
@@ -52,7 +55,8 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
       'rating': 4.9,
       'reviews': 89,
       'departures': ['Flexible booking'],
-      'imageUrl': 'https://images.unsplash.com/photo-1527786356703-4b100091cd2c?w=800',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1527786356703-4b100091cd2c?w=800',
       'amenities': ['AC', 'WiFi', 'Luggage space', 'Refreshments'],
       'seats': 8,
     },
@@ -66,7 +70,8 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
       'rating': 4.2,
       'reviews': 312,
       'departures': ['07:00 AM', '03:00 PM', '11:00 PM'],
-      'imageUrl': 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=800',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=800',
       'amenities': ['AC', 'Restroom'],
       'seats': 50,
     },
@@ -76,7 +81,9 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
     if (_selectedType == 'all') {
       return _transportServices;
     }
-    return _transportServices.where((service) => service['type'] == _selectedType).toList();
+    return _transportServices
+        .where((service) => service['type'] == _selectedType)
+        .toList();
   }
 
   @override
@@ -89,7 +96,7 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: Text('Transportation'.tr()),
+        title: Text('tourist.categories.transportation'.tr()),
         elevation: 0,
       ),
       body: Column(
@@ -111,9 +118,9 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Transportation List
           Expanded(
             child: ListView.builder(
@@ -166,9 +173,7 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () {
           context.push(
@@ -187,7 +192,9 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                   height: 180,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
                     image: DecorationImage(
                       image: NetworkImage(service['imageUrl']),
                       fit: BoxFit.cover,
@@ -198,7 +205,10 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                   top: 12,
                   left: 12,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: AppTheme.primaryOrange,
                       borderRadius: BorderRadius.circular(20),
@@ -228,7 +238,10 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                   top: 12,
                   right: 12,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -236,7 +249,11 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.star, color: AppTheme.primaryOrange, size: 14),
+                        const Icon(
+                          Icons.star,
+                          color: AppTheme.primaryOrange,
+                          size: 14,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           service['rating'].toString(),
@@ -251,7 +268,7 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                 ),
               ],
             ),
-            
+
             // Content
             Padding(
               padding: const EdgeInsets.all(16),
@@ -266,7 +283,7 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  
+
                   Row(
                     children: [
                       const Icon(Icons.route, size: 16, color: AppTheme.gray),
@@ -281,10 +298,14 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  
+
                   Row(
                     children: [
-                      const Icon(Icons.access_time, size: 16, color: AppTheme.gray),
+                      const Icon(
+                        Icons.access_time,
+                        size: 16,
+                        color: AppTheme.gray,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         service['duration'],
@@ -294,7 +315,11 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                         ),
                       ),
                       const SizedBox(width: 16),
-                      const Icon(Icons.event_seat, size: 16, color: AppTheme.gray),
+                      const Icon(
+                        Icons.event_seat,
+                        size: 16,
+                        color: AppTheme.gray,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         '${service['seats']} seats',
@@ -306,33 +331,35 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  
+
                   // Amenities
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: (service['amenities'] as List<String>)
-                        .map((amenity) => Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
+                        .map(
+                          (amenity) => Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppTheme.lightBlueGray,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              amenity,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppTheme.darkGray,
                               ),
-                              decoration: BoxDecoration(
-                                color: AppTheme.lightBlueGray,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                amenity,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: AppTheme.darkGray,
-                                ),
-                              ),
-                            ))
+                            ),
+                          ),
+                        )
                         .toList(),
                   ),
                   const SizedBox(height: 12),
-                  
+
                   // Price and Book Button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -371,7 +398,7 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                             vertical: 12,
                           ),
                         ),
-                        child: Text('Book Now'.tr()),
+                        child: Text('tourist.booking.book_now'.tr()),
                       ),
                     ],
                   ),

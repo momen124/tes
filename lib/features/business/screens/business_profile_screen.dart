@@ -10,14 +10,12 @@ import 'package:easy_localization/easy_localization.dart';
 
 class BusinessProfileScreen extends ConsumerStatefulWidget {
   final BusinessType businessType;
-  
-  const BusinessProfileScreen({
-    super.key,
-    required this.businessType,
-  });
+
+  const BusinessProfileScreen({super.key, required this.businessType});
 
   @override
-  ConsumerState<BusinessProfileScreen> createState() => _BusinessProfileScreenState();
+  ConsumerState<BusinessProfileScreen> createState() =>
+      _BusinessProfileScreenState();
 }
 
 class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
@@ -172,7 +170,7 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
           children: [
             Icon(_getBusinessIcon(), color: businessColor),
             const SizedBox(width: 8),
-            Text('${widget.businessType.displayName} Profile'.tr()),
+            Text('navigation.profile'.tr()),
           ],
         ),
         elevation: 0,
@@ -188,7 +186,10 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
               if (isOffline)
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 16,
+                  ),
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: AppTheme.offlineBanner,
                   child: const Row(
@@ -202,11 +203,13 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                     ],
                   ),
                 ),
-              
+
               // Business header card
               Card(
                 elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Row(
@@ -236,7 +239,9 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                             const SizedBox(height: 4),
                             Text(
                               'Manage your business profile',
-                              style: AppTheme.bodyMedium.copyWith(color: AppTheme.gray),
+                              style: AppTheme.bodyMedium.copyWith(
+                                color: AppTheme.gray,
+                              ),
                             ),
                           ],
                         ),
@@ -245,23 +250,27 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Business Information Section
               Text(
                 'Business Information',
-                style: AppTheme.titleMedium.copyWith(fontWeight: FontWeight.bold),
+                style: AppTheme.titleMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _businessNameController,
                 decoration: InputDecoration(
-                  labelText: 'Business Name'.tr(),
+                  labelText: 'business.profile.business_name'.tr(),
                   hintText: _getBusinessNameHint(),
                   prefixIcon: Icon(Icons.business, color: businessColor),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: AppTheme.lightGray),
@@ -278,16 +287,18 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
-                  labelText: 'Description'.tr(),
+                  labelText: 'business.listings.description'.tr(),
                   hintText: _getDescriptionHint(),
                   prefixIcon: Icon(Icons.description, color: businessColor),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: AppTheme.lightGray),
@@ -305,23 +316,27 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Contact Information Section
               Text(
                 'Contact Information',
-                style: AppTheme.titleMedium.copyWith(fontWeight: FontWeight.bold),
+                style: AppTheme.titleMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(
-                  labelText: 'Contact Email'.tr(),
+                  labelText: 'business.profile.contact_email'.tr(),
                   hintText: _getEmailHint(),
                   prefixIcon: Icon(Icons.email, color: businessColor),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: AppTheme.lightGray),
@@ -342,16 +357,18 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _phoneController,
                 decoration: InputDecoration(
-                  labelText: 'Contact Phone'.tr(),
+                  labelText: 'business.profile.contact_phone'.tr(),
                   hintText: '+20 123 456 7890'.tr(),
                   prefixIcon: Icon(Icons.phone, color: businessColor),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: AppTheme.lightGray),
@@ -369,13 +386,15 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Location Section
               Text(
                 'Business Location',
-                style: AppTheme.titleMedium.copyWith(fontWeight: FontWeight.bold),
+                style: AppTheme.titleMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
@@ -383,14 +402,16 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                 style: AppTheme.bodySmall.copyWith(color: AppTheme.gray),
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _addressController,
                 decoration: InputDecoration(
-                  labelText: 'Address'.tr(),
+                  labelText: 'tourist.profile.badges'.tr(),
                   hintText: _getAddressHint(),
                   prefixIcon: Icon(Icons.location_on, color: businessColor),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: AppTheme.lightGray),
@@ -407,9 +428,9 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               Container(
                 height: 250,
                 decoration: BoxDecoration(
@@ -425,7 +446,8 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                   ),
                   children: [
                     TileLayer(
-                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      urlTemplate:
+                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     ),
                     MarkerLayer(
                       markers: [
@@ -442,9 +464,9 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -458,15 +480,17 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                     Expanded(
                       child: Text(
                         'Coordinates: ${_location.latitude.toStringAsFixed(4)}, ${_location.longitude.toStringAsFixed(4)}',
-                        style: AppTheme.bodySmall.copyWith(color: AppTheme.darkGray),
+                        style: AppTheme.bodySmall.copyWith(
+                          color: AppTheme.darkGray,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Save button
               SizedBox(
                 width: double.infinity,
@@ -478,7 +502,10 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                           if (_formKey.currentState!.validate()) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('${widget.businessType.displayName} profile updated successfully!'.tr()),
+                                content: Text(
+                                  '${widget.businessType.displayName} profile updated successfully!'
+                                      .tr(),
+                                ),
                                 backgroundColor: AppTheme.successGreen,
                               ),
                             );
@@ -499,13 +526,15 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                       const SizedBox(width: 8),
                       Text(
                         'Save Changes',
-                        style: AppTheme.titleMedium.copyWith(color: AppTheme.white),
+                        style: AppTheme.titleMedium.copyWith(
+                          color: AppTheme.white,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 16),
             ],
           ),

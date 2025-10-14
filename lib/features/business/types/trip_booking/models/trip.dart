@@ -38,42 +38,42 @@ class Trip {
   bool get isFull => currentParticipants >= maxParticipants;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'businessId': businessId,
-        'title': title,
-        'description': description,
-        'itinerary': itinerary.map((i) => i.toJson()).toList(),
-        'price': price,
-        'maxParticipants': maxParticipants,
-        'currentParticipants': currentParticipants,
-        'duration': duration,
-        'included': included,
-        'requirements': requirements,
-        'difficultyLevel': difficultyLevel,
-        'images': images,
-        'rating': rating,
-        'reviewCount': reviewCount,
-      };
+    'id': id,
+    'businessId': businessId,
+    'title': title,
+    'description': description,
+    'itinerary': itinerary.map((i) => i.toJson()).toList(),
+    'price': price,
+    'maxParticipants': maxParticipants,
+    'currentParticipants': currentParticipants,
+    'duration': duration,
+    'included': included,
+    'requirements': requirements,
+    'difficultyLevel': difficultyLevel,
+    'images': images,
+    'rating': rating,
+    'reviewCount': reviewCount,
+  };
 
   factory Trip.fromJson(Map<String, dynamic> json) => Trip(
-        id: json['id'],
-        businessId: json['businessId'],
-        title: json['title'],
-        description: json['description'],
-        itinerary: (json['itinerary'] as List)
-            .map((i) => ItineraryStop.fromJson(i))
-            .toList(),
-        price: json['price'],
-        maxParticipants: json['maxParticipants'],
-        currentParticipants: json['currentParticipants'] ?? 0,
-        duration: json['duration'],
-        included: List<String>.from(json['included']),
-        requirements: List<String>.from(json['requirements']),
-        difficultyLevel: json['difficultyLevel'] ?? 'moderate',
-        images: List<String>.from(json['images']),
-        rating: json['rating'] ?? 0.0,
-        reviewCount: json['reviewCount'] ?? 0,
-      );
+    id: json['id'],
+    businessId: json['businessId'],
+    title: json['title'],
+    description: json['description'],
+    itinerary: (json['itinerary'] as List)
+        .map((i) => ItineraryStop.fromJson(i))
+        .toList(),
+    price: json['price'],
+    maxParticipants: json['maxParticipants'],
+    currentParticipants: json['currentParticipants'] ?? 0,
+    duration: json['duration'],
+    included: List<String>.from(json['included']),
+    requirements: List<String>.from(json['requirements']),
+    difficultyLevel: json['difficultyLevel'] ?? 'moderate',
+    images: List<String>.from(json['images']),
+    rating: json['rating'] ?? 0.0,
+    reviewCount: json['reviewCount'] ?? 0,
+  );
 }
 
 class ItineraryStop {
@@ -98,26 +98,26 @@ class ItineraryStop {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'time': time,
-        'duration': duration,
-        'description': description,
-        'latitude': latitude,
-        'longitude': longitude,
-        'order': order,
-      };
+    'id': id,
+    'title': title,
+    'time': time,
+    'duration': duration,
+    'description': description,
+    'latitude': latitude,
+    'longitude': longitude,
+    'order': order,
+  };
 
   factory ItineraryStop.fromJson(Map<String, dynamic> json) => ItineraryStop(
-        id: json['id'],
-        title: json['title'],
-        time: json['time'],
-        duration: json['duration'],
-        description: json['description'],
-        latitude: json['latitude'],
-        longitude: json['longitude'],
-        order: json['order'],
-      );
+    id: json['id'],
+    title: json['title'],
+    time: json['time'],
+    duration: json['duration'],
+    description: json['description'],
+    latitude: json['latitude'],
+    longitude: json['longitude'],
+    order: json['order'],
+  );
 }
 
 class TripBooking {
@@ -146,30 +146,30 @@ class TripBooking {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'tripId': tripId,
-        'userId': userId,
-        'userName': userName,
-        'numberOfPeople': numberOfPeople,
-        'bookingDate': bookingDate.toIso8601String(),
-        'tripDate': tripDate.toIso8601String(),
-        'totalPrice': totalPrice,
-        'status': status,
-        'specialRequests': specialRequests,
-      };
+    'id': id,
+    'tripId': tripId,
+    'userId': userId,
+    'userName': userName,
+    'numberOfPeople': numberOfPeople,
+    'bookingDate': bookingDate.toIso8601String(),
+    'tripDate': tripDate.toIso8601String(),
+    'totalPrice': totalPrice,
+    'status': status,
+    'specialRequests': specialRequests,
+  };
 
   factory TripBooking.fromJson(Map<String, dynamic> json) => TripBooking(
-        id: json['id'],
-        tripId: json['tripId'],
-        userId: json['userId'],
-        userName: json['userName'],
-        numberOfPeople: json['numberOfPeople'],
-        bookingDate: DateTime.parse(json['bookingDate']),
-        tripDate: DateTime.parse(json['tripDate']),
-        totalPrice: json['totalPrice'],
-        status: json['status'],
-        specialRequests: json['specialRequests'],
-      );
+    id: json['id'],
+    tripId: json['tripId'],
+    userId: json['userId'],
+    userName: json['userName'],
+    numberOfPeople: json['numberOfPeople'],
+    bookingDate: DateTime.parse(json['bookingDate']),
+    tripDate: DateTime.parse(json['tripDate']),
+    totalPrice: json['totalPrice'],
+    status: json['status'],
+    specialRequests: json['specialRequests'],
+  );
 }
 
 class TripSchedule {
@@ -190,18 +190,18 @@ class TripSchedule {
   bool get isAvailable => status == 'available' && availableSlots > 0;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'tripId': tripId,
-        'date': date.toIso8601String(),
-        'status': status,
-        'availableSlots': availableSlots,
-      };
+    'id': id,
+    'tripId': tripId,
+    'date': date.toIso8601String(),
+    'status': status,
+    'availableSlots': availableSlots,
+  };
 
   factory TripSchedule.fromJson(Map<String, dynamic> json) => TripSchedule(
-        id: json['id'],
-        tripId: json['tripId'],
-        date: DateTime.parse(json['date']),
-        status: json['status'] ?? 'available',
-        availableSlots: json['availableSlots'],
-      );
+    id: json['id'],
+    tripId: json['tripId'],
+    date: DateTime.parse(json['date']),
+    status: json['status'] ?? 'available',
+    availableSlots: json['availableSlots'],
+  );
 }

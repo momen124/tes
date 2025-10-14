@@ -17,7 +17,8 @@ class RestaurantBookingForm extends StatefulWidget {
 
 class _RestaurantBookingFormState extends State<RestaurantBookingForm> {
   TimeOfDay? _deliveryTime;
-  final TextEditingController _specialRequestsController = TextEditingController();
+  final TextEditingController _specialRequestsController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -39,11 +40,11 @@ class _RestaurantBookingFormState extends State<RestaurantBookingForm> {
         // Restaurant Info
         _buildRestaurantInfo(),
         const SizedBox(height: 24),
-        
+
         // Delivery Time
         _buildDeliveryTime(),
         const SizedBox(height: 24),
-        
+
         // Special Requests
         _buildSpecialRequests(),
       ],
@@ -56,27 +57,15 @@ class _RestaurantBookingFormState extends State<RestaurantBookingForm> {
       children: [
         Text(
           'Aghurmi Restaurant',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 4),
         Text(
           'Authentic Siwan Cuisine',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey,
-          ),
+          style: TextStyle(fontSize: 16, color: Colors.grey),
         ),
         SizedBox(height: 4),
-        Text(
-          'Siwa Oasis',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey,
-          ),
-        ),
+        Text('Siwa Oasis', style: TextStyle(fontSize: 14, color: Colors.grey)),
       ],
     );
   }
@@ -87,15 +76,12 @@ class _RestaurantBookingFormState extends State<RestaurantBookingForm> {
       children: [
         const Text(
           'Delivery Time',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         ListTile(
           title: Text(
-            _deliveryTime != null 
+            _deliveryTime != null
                 ? _deliveryTime!.format(context)
                 : 'Select Time',
           ),
@@ -112,10 +98,7 @@ class _RestaurantBookingFormState extends State<RestaurantBookingForm> {
       children: [
         const Text(
           'Special Requests',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         TextFormField(

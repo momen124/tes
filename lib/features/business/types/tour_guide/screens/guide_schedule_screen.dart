@@ -13,7 +13,8 @@ class GuideScheduleScreen extends ConsumerStatefulWidget {
   const GuideScheduleScreen({super.key});
 
   @override
-  ConsumerState<GuideScheduleScreen> createState() => _GuideScheduleScreenState();
+  ConsumerState<GuideScheduleScreen> createState() =>
+      _GuideScheduleScreenState();
 }
 
 class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
@@ -33,7 +34,9 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 1),
+    );
     // Add sample tours
     final today = DateTime.now();
     _tours[DateTime(today.year, today.month, today.day + 2)] = [
@@ -63,12 +66,12 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
-        title: Text('Guide Schedule'.tr()),
+        title: Text('tour_guides.culture'.tr()),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: isOffline ? null : _showExpertiseDialog,
-            tooltip: 'Update Expertise'.tr(),
+            tooltip: 'tour_guides.experience'.tr(),
           ),
         ],
       ),
@@ -77,7 +80,7 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
               child: Container(
                 decoration: AppTheme.offlineBanner,
                 padding: const EdgeInsets.all(12),
-                child: Text('You are offline'.tr()),
+                child: Text('common.offline'.tr()),
               ),
             )
           : Column(
@@ -87,12 +90,15 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
               ],
             ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: isOffline || _selectedDay == null ? null : () => _showAddTourDialog(_selectedDay!),
+        onPressed: isOffline || _selectedDay == null
+            ? null
+            : () => _showAddTourDialog(_selectedDay!),
         icon: const Icon(Icons.add),
-        label: Text('Add Tour'.tr()),
-        backgroundColor: _selectedDay != null && !isOffline ? AppTheme.primaryOrange : AppTheme.gray,
+        label: Text('tourist.categories.tours'.tr()),
+        backgroundColor: _selectedDay != null && !isOffline
+            ? AppTheme.primaryOrange
+            : AppTheme.gray,
       ),
-
     );
   }
 
@@ -150,7 +156,11 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
       );
     }
 
-    final normalizedDay = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day);
+    final normalizedDay = DateTime(
+      _selectedDay!.year,
+      _selectedDay!.month,
+      _selectedDay!.day,
+    );
     final toursForDay = _tours[normalizedDay] ?? [];
 
     if (toursForDay.isEmpty) {
@@ -193,8 +203,8 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 4),
-                  Text('Duration: ${tour['.tr()duration']}'),
-                  Text('Guests: ${tour['.tr()guests']}'),
+                  Text('attractions.duration'.tr()duration']}'),
+                  Text('tourist.booking.guests'.tr()guests']}'),
                 ],
               ),
               trailing: Column(
@@ -203,7 +213,9 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
                 children: [
                   Text(
                     "\$${tour['price'].toStringAsFixed(0)}",
-                    style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
+                    style: AppTheme.titleMedium.copyWith(
+                      color: AppTheme.primaryOrange,
+                    ),
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -246,28 +258,37 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
               children: [
                 TextFormField(
                   controller: titleController,
-                  decoration: InputDecoration(labelText: 'Tour Title'.tr()),
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter tour title' : null,
+                  decoration: InputDecoration(labelText: 'tour_guides.title'.tr()),
+                  validator: (value) =>
+                      (value?.isEmpty ?? true) ? 'Enter tour title' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: durationController,
-                  decoration: InputDecoration(labelText: 'Duration (e.g., 3 hours)'.tr()),
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter duration' : null,
+                  decoration: InputDecoration(
+                    labelText: 'attractions.hours'.tr(),
+                  ),
+                  validator: (value) =>
+                      (value?.isEmpty ?? true) ? 'Enter duration' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: guestsController,
-                  decoration: InputDecoration(labelText: 'Number of Guests'.tr()),
+                  decoration: InputDecoration(
+                    labelText: 'tourist.booking.guests'.tr(),
+                  ),
                   keyboardType: TextInputType.number,
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter number of guests' : null,
+                  validator: (value) => (value?.isEmpty ?? true)
+                      ? 'Enter number of guests'
+                      : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: priceController,
-                  decoration: InputDecoration(labelText: 'Price'.tr()),
+                  decoration: InputDecoration(labelText: 'tourist.search.price'.tr()),
                   keyboardType: TextInputType.number,
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
+                  validator: (value) =>
+                      (value?.isEmpty ?? true) ? 'Enter price' : null,
                 ),
               ],
             ),
@@ -276,7 +297,7 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'.tr()),
+            child: Text('common.cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -301,7 +322,7 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
                 _confettiController.play();
               }
             },
-            child: Text('Add'.tr()),
+            child: Text('business.rental.vehicle_types.road'.tr()),
           ),
         ],
       ),
@@ -312,13 +333,17 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
     final formKey = GlobalKey<FormState>();
     final titleController = TextEditingController(text: tour['title']);
     final durationController = TextEditingController(text: tour['duration']);
-    final guestsController = TextEditingController(text: tour['guests'].toString());
-    final priceController = TextEditingController(text: tour['price'].toString());
+    final guestsController = TextEditingController(
+      text: tour['guests'].toString(),
+    );
+    final priceController = TextEditingController(
+      text: tour['price'].toString(),
+    );
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Edit Tour'.tr()),
+        title: Text('common.edit'.tr()),
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -327,28 +352,35 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
               children: [
                 TextFormField(
                   controller: titleController,
-                  decoration: InputDecoration(labelText: 'Tour Title'.tr()),
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter tour title' : null,
+                  decoration: InputDecoration(labelText: 'tour_guides.title'.tr()),
+                  validator: (value) =>
+                      (value?.isEmpty ?? true) ? 'Enter tour title' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: durationController,
-                  decoration: InputDecoration(labelText: 'Duration'.tr()),
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter duration' : null,
+                  decoration: InputDecoration(labelText: 'attractions.duration'.tr()),
+                  validator: (value) =>
+                      (value?.isEmpty ?? true) ? 'Enter duration' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: guestsController,
-                  decoration: InputDecoration(labelText: 'Number of Guests'.tr()),
+                  decoration: InputDecoration(
+                    labelText: 'tourist.booking.guests'.tr(),
+                  ),
                   keyboardType: TextInputType.number,
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter number of guests' : null,
+                  validator: (value) => (value?.isEmpty ?? true)
+                      ? 'Enter number of guests'
+                      : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: priceController,
-                  decoration: InputDecoration(labelText: 'Price'.tr()),
+                  decoration: InputDecoration(labelText: 'tourist.search.price'.tr()),
                   keyboardType: TextInputType.number,
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
+                  validator: (value) =>
+                      (value?.isEmpty ?? true) ? 'Enter price' : null,
                 ),
               ],
             ),
@@ -359,16 +391,19 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
             onPressed: () {
               setState(() => _tours[day]?.remove(tour));
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Tour deleted'.tr())),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('common.delete'.tr())));
               _confettiController.play();
             },
-            child: Text('Delete'.tr(), style: TextStyle(color: AppTheme.errorRed)),
+            child: Text(
+              'common.delete'.tr(),
+              style: TextStyle(color: AppTheme.errorRed),
+            ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'.tr()),
+            child: Text('common.cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -376,17 +411,19 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
                 setState(() {
                   tour['title'] = titleController.text;
                   tour['duration'] = durationController.text;
-                  tour['guests'] = int.tryParse(guestsController.text) ?? tour['guests'];
-                  tour['price'] = double.tryParse(priceController.text) ?? tour['price'];
+                  tour['guests'] =
+                      int.tryParse(guestsController.text) ?? tour['guests'];
+                  tour['price'] =
+                      double.tryParse(priceController.text) ?? tour['price'];
                 });
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Tour updated'.tr())),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('tour_guides.nature'.tr())));
                 _confettiController.play();
               }
             },
-            child: Text('Save'.tr()),
+            child: Text('common.save'.tr()),
           ),
         ],
       ),
@@ -401,7 +438,7 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            title: Text('Your Expertise'.tr()),
+            title: Text('tour_guides.experience'.tr()),
             content: Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -409,7 +446,9 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
                 return Chip(
                   label: Text(tag),
                   backgroundColor: AppTheme.oasisTeal,
-                  labelStyle: AppTheme.bodySmall.copyWith(color: AppTheme.white),
+                  labelStyle: AppTheme.bodySmall.copyWith(
+                    color: AppTheme.white,
+                  ),
                   onDeleted: () {
                     setState(() => editableTags.remove(tag));
                   },
@@ -434,11 +473,11 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
                   setState(() => _expertiseTags.addAll(editableTags));
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Expertise updated'.tr())),
+                    SnackBar(content: Text('tour_guides.experience'.tr())),
                   );
                   _confettiController.play();
                 },
-                child: Text('Save'.tr()),
+                child: Text('common.save'.tr()),
               ),
             ],
           );

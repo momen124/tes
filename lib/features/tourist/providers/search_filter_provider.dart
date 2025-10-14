@@ -25,7 +25,8 @@ class SearchFilterProvider extends ChangeNotifier {
   double get minRating => _minRating;
 
   // Sort options
-  String _sortBy = 'recommended'; // 'recommended', 'price_low', 'price_high', 'rating'
+  String _sortBy =
+      'recommended'; // 'recommended', 'price_low', 'price_high', 'rating'
   String get sortBy => _sortBy;
 
   // Featured/Hidden Gem filters
@@ -130,18 +131,23 @@ class SearchFilterProvider extends ChangeNotifier {
   }
 
   // Filter services based on current filters
-  List<Map<String, dynamic>> filterServices(List<Map<String, dynamic>> services) {
+  List<Map<String, dynamic>> filterServices(
+    List<Map<String, dynamic>> services,
+  ) {
     var filtered = services.where((service) {
       // Search query filter
       if (_searchQuery.isNotEmpty) {
         final searchLower = _searchQuery.toLowerCase();
         final name = (service['name'] ?? '').toString().toLowerCase();
-        final description = (service['description'] ?? '').toString().toLowerCase();
+        final description = (service['description'] ?? '')
+            .toString()
+            .toLowerCase();
         final location = (service['location'] ?? '').toString().toLowerCase();
-        final tags = (service['tags'] as List<String>?)?.join(' ').toLowerCase() ?? '';
-        
-        if (!name.contains(searchLower) && 
-            !description.contains(searchLower) && 
+        final tags =
+            (service['tags'] as List<String>?)?.join(' ').toLowerCase() ?? '';
+
+        if (!name.contains(searchLower) &&
+            !description.contains(searchLower) &&
             !location.contains(searchLower) &&
             !tags.contains(searchLower)) {
           return false;
@@ -149,7 +155,12 @@ class SearchFilterProvider extends ChangeNotifier {
       }
 
       // Price range filter
-      final price = (service['price'] ?? service['hourlyRate'] ?? service['pricePerNight'] ?? 0.0) as double;
+      final price =
+          (service['price'] ??
+                  service['hourlyRate'] ??
+                  service['pricePerNight'] ??
+                  0.0)
+              as double;
       if (price < _minPrice || price > _maxPrice) {
         return false;
       }
@@ -199,19 +210,29 @@ class SearchFilterProvider extends ChangeNotifier {
   }
 
   // Sort services
-  List<Map<String, dynamic>> _sortServices(List<Map<String, dynamic>> services) {
+  List<Map<String, dynamic>> _sortServices(
+    List<Map<String, dynamic>> services,
+  ) {
     switch (_sortBy) {
       case 'price_low':
         services.sort((a, b) {
-          final priceA = (a['price'] ?? a['hourlyRate'] ?? a['pricePerNight'] ?? 0.0) as double;
-          final priceB = (b['price'] ?? b['hourlyRate'] ?? b['pricePerNight'] ?? 0.0) as double;
+          final priceA =
+              (a['price'] ?? a['hourlyRate'] ?? a['pricePerNight'] ?? 0.0)
+                  as double;
+          final priceB =
+              (b['price'] ?? b['hourlyRate'] ?? b['pricePerNight'] ?? 0.0)
+                  as double;
           return priceA.compareTo(priceB);
         });
         break;
       case 'price_high':
         services.sort((a, b) {
-          final priceA = (a['price'] ?? a['hourlyRate'] ?? a['pricePerNight'] ?? 0.0) as double;
-          final priceB = (b['price'] ?? b['hourlyRate'] ?? b['pricePerNight'] ?? 0.0) as double;
+          final priceA =
+              (a['price'] ?? a['hourlyRate'] ?? a['pricePerNight'] ?? 0.0)
+                  as double;
+          final priceB =
+              (b['price'] ?? b['hourlyRate'] ?? b['pricePerNight'] ?? 0.0)
+                  as double;
           return priceB.compareTo(priceA);
         });
         break;

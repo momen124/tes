@@ -39,11 +39,11 @@ class _StoreBookingFormState extends State<StoreBookingForm> {
         // Product Info
         _buildProductInfo(),
         const SizedBox(height: 24),
-        
+
         // Delivery/Pickup Selection
         _buildDeliveryOptions(),
         const SizedBox(height: 24),
-        
+
         // Notes
         _buildNotesSection(),
       ],
@@ -56,18 +56,12 @@ class _StoreBookingFormState extends State<StoreBookingForm> {
       children: [
         const Text(
           'Siva Dates',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         const Text(
           'Delicious Siva dates, perfect for a healthy snack.',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey,
-          ),
+          style: TextStyle(fontSize: 16, color: Colors.grey),
         ),
         const SizedBox(height: 16),
         Text(
@@ -88,10 +82,7 @@ class _StoreBookingFormState extends State<StoreBookingForm> {
       children: [
         const Text(
           'Delivery or Pickup',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         Row(
@@ -125,7 +116,12 @@ class _StoreBookingFormState extends State<StoreBookingForm> {
     );
   }
 
-  Widget _buildDeliveryOption(String title, IconData icon, bool isSelected, VoidCallback onTap) {
+  Widget _buildDeliveryOption(
+    String title,
+    IconData icon,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -139,11 +135,7 @@ class _StoreBookingFormState extends State<StoreBookingForm> {
         ),
         child: Column(
           children: [
-            Icon(
-              icon,
-              color: isSelected ? Colors.blue : Colors.grey,
-              size: 32,
-            ),
+            Icon(icon, color: isSelected ? Colors.blue : Colors.grey, size: 32),
             const SizedBox(height: 8),
             Text(
               title,
@@ -164,17 +156,14 @@ class _StoreBookingFormState extends State<StoreBookingForm> {
       children: [
         const Text(
           'Notes',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         TextFormField(
           controller: _notesController,
           maxLines: 3,
           decoration: InputDecoration(
-            hintText: 'Add notes (e.g., gift wrap instructions)'.tr(),
+            hintText: 'common.no'.tr(),
             border: OutlineInputBorder(),
           ),
         ),

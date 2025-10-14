@@ -6,10 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 class AddRoomForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onRoomAdded;
 
-  const AddRoomForm({
-    super.key,
-    required this.onRoomAdded,
-  });
+  const AddRoomForm({super.key, required this.onRoomAdded});
 
   @override
   State<AddRoomForm> createState() => _AddRoomFormState();
@@ -19,7 +16,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   String? _selectedRoomType;
   double _price = 150.0;
   int _capacity = 2;
@@ -85,7 +82,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Add New Room'.tr(), style: AppTheme.titleLarge),
+                  Text('business.rental.add_new_room'.tr(), style: AppTheme.titleLarge),
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () => Navigator.pop(context),
@@ -98,8 +95,8 @@ class _AddRoomFormState extends State<AddRoomForm> {
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  labelText: 'Room Name'.tr(),
-                  hintText: 'e.g., Ocean View Suite 101'.tr(),
+                  labelText: 'business.rental.room_name'.tr(),
+                  hintText: 'business.rental.room_name_hint'.tr(),
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.label),
                 ),
@@ -116,11 +113,11 @@ class _AddRoomFormState extends State<AddRoomForm> {
               DropdownButtonFormField<String>(
                 initialValue: _selectedRoomType,
                 decoration: InputDecoration(
-                  labelText: 'Room Type'.tr(),
+                  labelText: 'business.rental.room_type'.tr(),
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.hotel),
                 ),
-                hint: Text('Select room type'.tr()),
+                hint: Text('business.rental.select_room_type'.tr()),
                 items: _roomTypes.map((type) {
                   return DropdownMenuItem<String>(
                     value: type['value'],
@@ -168,7 +165,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Guest Capacity'.tr(), style: AppTheme.titleMedium),
+                  Text('business.rental.guest_capacity'.tr(), style: AppTheme.titleMedium),
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: AppTheme.gray.withOpacity(0.3)),
@@ -183,7 +180,9 @@ class _AddRoomFormState extends State<AddRoomForm> {
                             }
                           },
                           icon: const Icon(Icons.remove),
-                          color: _capacity > 1 ? AppTheme.primaryOrange : AppTheme.gray,
+                          color: _capacity > 1
+                              ? AppTheme.primaryOrange
+                              : AppTheme.gray,
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -201,7 +200,9 @@ class _AddRoomFormState extends State<AddRoomForm> {
                             }
                           },
                           icon: const Icon(Icons.add),
-                          color: _capacity < 10 ? AppTheme.primaryOrange : AppTheme.gray,
+                          color: _capacity < 10
+                              ? AppTheme.primaryOrange
+                              : AppTheme.gray,
                         ),
                       ],
                     ),
@@ -211,7 +212,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
               const SizedBox(height: 20),
 
               // Add-ons Section
-              Text('Add-ons (Optional)'.tr(), style: AppTheme.titleMedium),
+              Text('transportation.all'.tr(), style: AppTheme.titleMedium),
               const SizedBox(height: 12),
               ..._addOns.keys.map((addOn) => _buildAddOnRow(addOn)),
               const SizedBox(height: 20),
@@ -229,17 +230,22 @@ class _AddRoomFormState extends State<AddRoomForm> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Base Price'.tr(), style: AppTheme.bodyMedium),
+                        Text('business.rental.base_price'.tr(), style: AppTheme.bodyMedium),
                         Text(
                           '\$${_price.toInt()}/night',
-                          style: AppTheme.bodySmall.copyWith(color: AppTheme.gray),
+                          style: AppTheme.bodySmall.copyWith(
+                            color: AppTheme.gray,
+                          ),
                         ),
                       ],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('Total with Add-ons'.tr(), style: AppTheme.bodyMedium),
+                        Text(
+                          'business.rental.total_with_add_ons'.tr(),
+                          style: AppTheme.bodyMedium,
+                        ),
                         Text(
                           '\$${_totalPrice.toInt()}/night',
                           style: AppTheme.titleMedium.copyWith(
@@ -255,7 +261,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
               const SizedBox(height: 20),
 
               // Photo Upload - Now using the reusable widget
-              Text('Room Photo'.tr(), style: AppTheme.titleMedium),
+              Text('business.rental.room_photo'.tr(), style: AppTheme.titleMedium),
               const SizedBox(height: 8),
               DashedBorderContainer(
                 color: AppTheme.gray,
@@ -273,15 +279,23 @@ class _AddRoomFormState extends State<AddRoomForm> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.cloud_upload, size: 40, color: AppTheme.gray),
+                      const Icon(
+                        Icons.cloud_upload,
+                        size: 40,
+                        color: AppTheme.gray,
+                      ),
                       const SizedBox(height: 8),
                       Text(
                         'Click to upload or drag and drop',
-                        style: AppTheme.bodyMedium.copyWith(color: AppTheme.gray),
+                        style: AppTheme.bodyMedium.copyWith(
+                          color: AppTheme.gray,
+                        ),
                       ),
                       Text(
                         'PNG, JPG (MAX. 1920x1080px)',
-                        style: AppTheme.bodySmall.copyWith(color: AppTheme.gray),
+                        style: AppTheme.bodySmall.copyWith(
+                          color: AppTheme.gray,
+                        ),
                       ),
                     ],
                   ),
@@ -291,9 +305,14 @@ class _AddRoomFormState extends State<AddRoomForm> {
 
               // Availability Toggle
               SwitchListTile(
-                title: Text('Available for Booking'.tr(), style: AppTheme.titleMedium),
+                title: Text(
+                  'business.rental.available_for_booking'.tr(),
+                  style: AppTheme.titleMedium,
+                ),
                 subtitle: Text(
-                  _available ? 'Guests can book this room' : 'Room is unavailable',
+                  _available
+                      ? 'Guests can book this room'
+                      : 'Room is unavailable',
                   style: AppTheme.bodySmall,
                 ),
                 value: _available,
@@ -307,8 +326,8 @@ class _AddRoomFormState extends State<AddRoomForm> {
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
-                  labelText: 'Description'.tr(),
-                  hintText: 'Describe the room amenities and features...'.tr(),
+                  labelText: 'business.listings.description'.tr(),
+                  hintText: 'business.rental.description_hint'.tr(),
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.description),
                   alignLabelWithHint: true,
@@ -336,7 +355,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         side: const BorderSide(color: AppTheme.gray),
                       ),
-                      child: Text('Cancel'.tr()),
+                      child: Text('common.cancel'.tr()),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -408,14 +427,19 @@ class _AddRoomFormState extends State<AddRoomForm> {
                   },
                   icon: const Icon(Icons.remove, size: 20),
                   color: quantity > 0 ? AppTheme.primaryOrange : AppTheme.gray,
-                  constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                  constraints: const BoxConstraints(
+                    minWidth: 36,
+                    minHeight: 36,
+                  ),
                   padding: EdgeInsets.zero,
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
                     '$quantity',
-                    style: AppTheme.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                    style: AppTheme.bodyMedium.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 IconButton(
@@ -426,7 +450,10 @@ class _AddRoomFormState extends State<AddRoomForm> {
                   },
                   icon: const Icon(Icons.add, size: 20),
                   color: quantity < 10 ? AppTheme.primaryOrange : AppTheme.gray,
-                  constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                  constraints: const BoxConstraints(
+                    minWidth: 36,
+                    minHeight: 36,
+                  ),
                   padding: EdgeInsets.zero,
                 ),
               ],
@@ -440,8 +467,9 @@ class _AddRoomFormState extends State<AddRoomForm> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       // Get selected room type label
-      final roomTypeLabel = _roomTypes
-          .firstWhere((type) => type['value'] == _selectedRoomType)['label'];
+      final roomTypeLabel = _roomTypes.firstWhere(
+        (type) => type['value'] == _selectedRoomType,
+      )['label'];
 
       // Prepare room data
       final roomData = {
@@ -470,10 +498,10 @@ class _AddRoomFormState extends State<AddRoomForm> {
 
   List<String> _buildDefaultAmenities() {
     List<String> amenities = ['WiFi', 'AC', 'TV'];
-    
+
     if (_addOns['Mini Bar']! > 0) amenities.add('Mini Bar');
     if (_addOns['Breakfast']! > 0) amenities.add('Breakfast Included');
-    
+
     // Add amenities based on room type
     switch (_selectedRoomType) {
       case 'suite':
@@ -485,7 +513,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
         amenities.addAll(['Kitchen', 'Living Area']);
         break;
     }
-    
+
     return amenities;
   }
 }

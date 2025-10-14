@@ -10,10 +10,7 @@ import 'package:easy_localization/easy_localization.dart';
 class BusinessDashboardScreen extends ConsumerWidget {
   final BusinessType businessType;
 
-  const BusinessDashboardScreen({
-    super.key,
-    required this.businessType,
-  });
+  const BusinessDashboardScreen({super.key, required this.businessType});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,12 +27,20 @@ class BusinessDashboardScreen extends ConsumerWidget {
               color: AppTheme.lightGray,
               child: Row(
                 children: [
-                  const Icon(Icons.wifi_off, color: AppTheme.errorRed, size: 20),
+                  const Icon(
+                    Icons.wifi_off,
+                    color: AppTheme.errorRed,
+                    size: 20,
+                  ),
                   const SizedBox(width: 12),
                   const Expanded(
                     child: Text(
                       'Offline. Data syncs when connected.',
-                      style: TextStyle(color: AppTheme.darkGray, fontSize: 14, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        color: AppTheme.darkGray,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   IconButton(
@@ -66,23 +71,26 @@ class BusinessDashboardScreen extends ConsumerWidget {
                 ElevatedButton.icon(
                   onPressed: isOffline ? null : () {},
                   icon: const Icon(Icons.add, size: 18),
-                  label: Text('Add'.tr()),
+                  label: Text('business.rental.vehicle_types.road'.tr()),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryOrange,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 16),
-           Padding(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
                 Expanded(
                   child: _StatCard(
-                    title: 'Total Bookings'.tr(),
+                    title: 'business.dashboard.total_bookings'.tr(),
                     value: '173',
                     change: '+12%',
                     icon: Icons.trending_up,
@@ -91,7 +99,7 @@ class BusinessDashboardScreen extends ConsumerWidget {
                 SizedBox(width: 12),
                 Expanded(
                   child: _StatCard(
-                    title: 'Total Revenue'.tr(),
+                    title: 'business.dashboard.revenue'.tr(),
                     value: '\$95,000',
                     change: '+18%',
                     icon: Icons.attach_money,
@@ -105,7 +113,9 @@ class BusinessDashboardScreen extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Card(
               elevation: 2,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: const Padding(
                 padding: EdgeInsets.all(16),
                 child: Column(
@@ -113,7 +123,10 @@ class BusinessDashboardScreen extends ConsumerWidget {
                   children: [
                     Text(
                       'Activities & Services',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 16),
                     _ActivityItem(
@@ -190,7 +203,11 @@ class _StatCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -198,12 +215,19 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             value,
-            style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             '$change from last month',
-            style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 12),
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.9),
+              fontSize: 12,
+            ),
           ),
         ],
       ),
@@ -251,26 +275,39 @@ class _ActivityItem extends StatelessWidget {
               children: [
                 Text(
                   name,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: _getStatusColor(),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         status,
-                        style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Text(
                       '$bookings bookings',
-                      style: const TextStyle(color: AppTheme.gray, fontSize: 14),
+                      style: const TextStyle(
+                        color: AppTheme.gray,
+                        fontSize: 14,
+                      ),
                     ),
                   ],
                 ),
@@ -279,7 +316,11 @@ class _ActivityItem extends StatelessWidget {
           ),
           Text(
             price,
-            style: const TextStyle(color: AppTheme.primaryOrange, fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              color: AppTheme.primaryOrange,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),

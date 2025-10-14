@@ -24,33 +24,55 @@ class _AddItemFormState extends State<AddItemForm> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
-              decoration: InputDecoration(labelText: 'Item Name'.tr(), border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                labelText: 'app.name'.tr(),
+                border: OutlineInputBorder(),
+              ),
             ),
             const SizedBox(height: 16),
             Text('Price: ${_price.toInt()} EGP'.tr()),
-            Slider(value: _price, min: 0, max: 500, onChanged: (val) => setState(() => _price = val)),
+            Slider(
+              value: _price,
+              min: 0,
+              max: 500,
+              onChanged: (val) => setState(() => _price = val),
+            ),
             const SizedBox(height: 16),
-            Text('Photo'.tr()),
-             DottedBorder(
+            Text('business.listings.photos'.tr()),
+            DottedBorder(
               child: SizedBox(
                 height: 100,
-                child: Center(child: Text('Click to upload or drag and drop'.tr())),
+                child: Center(
+                  child: Text('business.rental.photo_upload_hint'.tr()),
+                ),
               ),
             ),
             TextFormField(
-              decoration: InputDecoration(labelText: 'Description'.tr(), border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                labelText: 'business.listings.description'.tr(),
+                border: OutlineInputBorder(),
+              ),
               maxLines: 3,
             ),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(onPressed: () => Navigator.pop(context), child: Text('Cancel'.tr())),
-                ElevatedButton(onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.pop(context);
-                  }
-                }, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange), child: Text('Add Item'.tr())),
+                ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('common.cancel'.tr()),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                  ),
+                  child: Text('Add Item'.tr()),
+                ),
               ],
             ),
           ],

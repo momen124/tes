@@ -28,15 +28,15 @@ class _RentalBookingFormState extends State<RentalBookingForm> {
         // Rental Header
         _buildRentalHeader(),
         const SizedBox(height: 24),
-        
+
         // Date Selection
         _buildDateSelection(),
         const SizedBox(height: 24),
-        
+
         // Mileage Options
         _buildMileageOptions(),
         const SizedBox(height: 24),
-        
+
         // Add-ons
         _buildAddons(),
       ],
@@ -49,25 +49,20 @@ class _RentalBookingFormState extends State<RentalBookingForm> {
       children: [
         const Text(
           'Siva Oasis Rental',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Text(
-          widget.rental['description'] ?? 'Explore the beauty of Siva with our reliable rental services.',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[600],
-          ),
+          widget.rental['description'] ??
+              'Explore the beauty of Siva with our reliable rental services.',
+          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
         ),
         const SizedBox(height: 16),
         ElevatedButton(
           onPressed: () {
             // Show rental details
           },
-          child: Text('View Details'.tr()),
+          child: Text('common.details'.tr()),
         ),
       ],
     );
@@ -79,10 +74,7 @@ class _RentalBookingFormState extends State<RentalBookingForm> {
       children: [
         const Text(
           'Select Dates',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         Container(
@@ -103,10 +95,7 @@ class _RentalBookingFormState extends State<RentalBookingForm> {
                   ),
                   const Text(
                     'October 2024',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
                     icon: const Icon(Icons.chevron_right),
@@ -148,9 +137,7 @@ class _RentalBookingFormState extends State<RentalBookingForm> {
   }
 
   TableRow _buildCalendarRow(List<String> days) {
-    return TableRow(
-      children: days.map((day) => _CalendarCell(day)).toList(),
-    );
+    return TableRow(children: days.map((day) => _CalendarCell(day)).toList());
   }
 
   Widget _buildMileageOptions() {
@@ -159,10 +146,7 @@ class _RentalBookingFormState extends State<RentalBookingForm> {
       children: [
         const Text(
           'Mileage',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         Column(
@@ -204,10 +188,7 @@ class _RentalBookingFormState extends State<RentalBookingForm> {
       children: [
         const Text(
           'Add-ons',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         Column(
@@ -265,8 +246,11 @@ class _CalendarCell extends StatelessWidget {
         day,
         style: TextStyle(
           fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-          color: day.isEmpty ? Colors.transparent : 
-                 isHeader ? Colors.grey[600] : Colors.black,
+          color: day.isEmpty
+              ? Colors.transparent
+              : isHeader
+              ? Colors.grey[600]
+              : Colors.black,
         ),
       ),
     );

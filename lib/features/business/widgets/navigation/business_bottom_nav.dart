@@ -33,7 +33,8 @@ class BusinessBottomNav extends StatelessWidget {
       child: SafeArea(
         child: BottomNavigationBar(
           currentIndex: currentIndex,
-          onTap: (index) => onTap != null ? onTap!(index) : _onTap(context, index),
+          onTap: (index) =>
+              onTap != null ? onTap!(index) : _onTap(context, index),
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -46,18 +47,18 @@ class BusinessBottomNav extends StatelessWidget {
             BottomNavigationBarItem(
               icon: Icon(Icons.dashboard_outlined),
               activeIcon: Icon(Icons.dashboard),
-              label: 'Dashboard'.tr(),
+              label: 'navigation.dashboard'.tr(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.list_alt_outlined),
               activeIcon: Icon(Icons.list_alt),
-              label: 'Listings'.tr(),
+              label: 'business.dashboard.your_listings'.tr(),
             ),
             _getBusinessSpecificNavItem(),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),
               activeIcon: Icon(Icons.person),
-              label: 'Profile'.tr(),
+              label: 'navigation.profile'.tr(),
             ),
           ],
         ),
@@ -72,43 +73,43 @@ class BusinessBottomNav extends StatelessWidget {
         return BottomNavigationBarItem(
           icon: Icon(Icons.hotel_outlined),
           activeIcon: Icon(Icons.hotel),
-          label: 'Rooms'.tr(),
+          label: 'transportation.from'.tr(),
         );
       case BusinessType.rental:
         return BottomNavigationBarItem(
           icon: Icon(Icons.directions_car_outlined),
           activeIcon: Icon(Icons.directions_car),
-          label: 'Fleet'.tr(),
+          label: 'transportation.flexible'.tr(),
         );
       case BusinessType.restaurant:
         return BottomNavigationBarItem(
           icon: Icon(Icons.restaurant_menu_outlined),
           activeIcon: Icon(Icons.restaurant_menu),
-          label: 'Menu'.tr(),
+          label: 'restaurants.view_menu'.tr(),
         );
       case BusinessType.store:
         return BottomNavigationBarItem(
           icon: Icon(Icons.inventory_outlined),
           activeIcon: Icon(Icons.inventory),
-          label: 'Inventory'.tr(),
+          label: 'tour_guides.history'.tr(),
         );
       case BusinessType.tourGuide:
         return BottomNavigationBarItem(
           icon: Icon(Icons.calendar_month_outlined),
           activeIcon: Icon(Icons.calendar_month),
-          label: 'Schedule'.tr(),
+          label: 'business.rental.room_types.double'.tr(),
         );
       case BusinessType.transportation:
         return BottomNavigationBarItem(
           icon: Icon(Icons.route_outlined),
           activeIcon: Icon(Icons.route),
-          label: 'Routes'.tr(),
+          label: 'business.vehicles.routes'.tr(),
         );
       case BusinessType.tripBooking:
         return BottomNavigationBarItem(
           icon: Icon(Icons.map_outlined),
           activeIcon: Icon(Icons.map),
-          label: 'Trips'.tr(),
+          label: 'siwa_info.travel_tips'.tr(),
         );
     }
   }

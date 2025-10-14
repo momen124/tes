@@ -38,19 +38,11 @@ final GoRouter _router = GoRouter(
   navigatorKey: navigatorKey,
   initialLocation: '/',
   errorBuilder: (context, state) => Scaffold(
-    body: Center(
-      child: Text('Route not found: ${state.uri.toString()}'),
-    ),
+    body: Center(child: Text('Route not found: ${state.uri.toString()}')),
   ),
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const SplashScreen(),
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),
+    GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
+    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(
       path: '/register',
       builder: (context, state) {
@@ -82,9 +74,11 @@ final GoRouter _router = GoRouter(
       path: '/booking_form',
       builder: (context, state) {
         final extra = state.extra as Map<String, dynamic>?;
-        final serviceData = extra?['serviceData'] as Map<String, dynamic>? ?? {};
+        final serviceData =
+            extra?['serviceData'] as Map<String, dynamic>? ?? {};
         return BookingFormScreen(
-          serviceName: serviceData['name']?.toString() ?? 'unknown_service'.tr(),
+          serviceName:
+              serviceData['name']?.toString() ?? 'common.no'.tr(),
           serviceType: state.uri.queryParameters['type'] ?? 'default',
           basePrice: (serviceData['price'] as num?)?.toDouble() ?? 0.0,
           imageUrl: serviceData['imageUrl']?.toString(),
@@ -164,14 +158,14 @@ class SiwaApp extends ConsumerWidget {
 
     return MaterialApp.router(
       routerConfig: _router,
-      
+
       // Theming
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
-      
+
       // App metadata
-      title: 'app_name'.tr(),
-      
+      title: 'app.name'.tr(),
+
       // Localization configuration
       supportedLocales: context.supportedLocales,
       locale: currentLocale,
@@ -180,11 +174,11 @@ class SiwaApp extends ConsumerWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
-        
+
         // Easy Localization delegate
         EasyLocalization.of(context)!.delegate,
       ],
-      
+
       // Text direction based on locale
       builder: (context, child) {
         return Directionality(

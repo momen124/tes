@@ -1,6 +1,5 @@
 // lib/utils/mock_data.dart
 
-
 import 'package:siwa/features/business/models/accommodation.dart';
 
 class MockData {

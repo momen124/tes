@@ -35,7 +35,8 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
       'price': 120.0,
       'rating': 4.5,
       'location': 'Siwa, Egypt',
-      'imageUrl': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg?w=900&h=500&s=1',
+      'imageUrl':
+          'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/be/f4/0e/resort.jpg?w=900&h=500&s=1',
       'eco_friendly': true,
       'reviews': 125,
       'category': 'accommodation',
@@ -48,7 +49,8 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
       'price': 150.0,
       'rating': 4.7,
       'location': 'Siwa, Egypt',
-      'imageUrl': 'https://www.adrereamellal.com/adrere/wp-content/uploads/2019/09/Adrere-amellal-siwa-oasis-eco-lodge-Omar-Hikal.jpg',
+      'imageUrl':
+          'https://www.adrereamellal.com/adrere/wp-content/uploads/2019/09/Adrere-amellal-siwa-oasis-eco-lodge-Omar-Hikal.jpg',
       'eco_friendly': true,
       'reviews': 98,
       'category': 'accommodation',
@@ -72,7 +74,8 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
       'price': 80.0,
       'rating': 4.6,
       'location': 'Siwa Desert',
-      'imageUrl': 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800',
       'reviews': 128,
       'category': 'attraction',
       'description': 'Thrilling 4x4 desert safari',
@@ -84,7 +87,8 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
       'price': 25.0,
       'rating': 4.8,
       'location': 'Market Square, Siwa',
-      'imageUrl': 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800',
       'reviews': 234,
       'category': 'restaurant',
       'description': 'Traditional Siwan cuisine',
@@ -108,7 +112,10 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
     super.initState();
     // Set initial filters if provided
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final provider = Provider.of<SearchFilterProvider>(context, listen: false);
+      final provider = Provider.of<SearchFilterProvider>(
+        context,
+        listen: false,
+      );
       if (widget.featuredOnly == true) {
         provider.setFeaturedOnly(true);
       }
@@ -128,7 +135,7 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
   void _onSearchChanged(String query, SearchFilterProvider provider) {
     // Cancel previous timer
     _debounceTimer?.cancel();
-    
+
     // Start new timer (300ms debounce)
     _debounceTimer = Timer(const Duration(milliseconds: 300), () {
       provider.setSearchQuery(query);
@@ -142,7 +149,7 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
       child: Consumer<SearchFilterProvider>(
         builder: (context, filterProvider, child) {
           final filteredServices = filterProvider.filterServices(_allServices);
-          
+
           return Scaffold(
             backgroundColor: AppTheme.lightBlueGray,
             appBar: AppBar(
@@ -151,7 +158,7 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () => context.go('/tourist_home'),
               ),
-              title: Text('Search'.tr()),
+              title: Text('navigation.search'.tr()),
               elevation: 0,
               actions: [
                 // Filter toggle button
@@ -200,10 +207,14 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
                   padding: const EdgeInsets.all(16),
                   child: TextField(
                     controller: _searchController,
-                    onChanged: (value) => _onSearchChanged(value, filterProvider),
+                    onChanged: (value) =>
+                        _onSearchChanged(value, filterProvider),
                     decoration: InputDecoration(
-                      hintText: 'Search by name, location, or tags...'.tr(),
-                      prefixIcon: const Icon(Icons.search, color: AppTheme.primaryOrange),
+                      hintText: 'navigation.search'.tr(),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: AppTheme.primaryOrange,
+                      ),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
                               icon: const Icon(Icons.close),
@@ -227,7 +238,10 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
                 if (filterProvider.activeFilterCount > 0)
                   Container(
                     color: AppTheme.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -275,7 +289,10 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
                 // Results Header
                 Container(
                   color: AppTheme.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -296,10 +313,22 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
                           color: AppTheme.darkGray,
                         ),
                         items: [
-                          DropdownMenuItem(value: 'recommended', child: Text('Recommended'.tr())),
-                          DropdownMenuItem(value: 'price_low', child: Text('Price: Low to High'.tr())),
-                          DropdownMenuItem(value: 'price_high', child: Text('Price: High to Low'.tr())),
-                          DropdownMenuItem(value: 'rating', child: Text('Highest Rated'.tr())),
+                          DropdownMenuItem(
+                            value: 'recommended',
+                            child: Text('common.edit'.tr()),
+                          ),
+                          DropdownMenuItem(
+                            value: 'price_low',
+                            child: Text('Price: Low to High'.tr()),
+                          ),
+                          DropdownMenuItem(
+                            value: 'price_high',
+                            child: Text('Price: High to Low'.tr()),
+                          ),
+                          DropdownMenuItem(
+                            value: 'rating',
+                            child: Text('restaurants.closed'.tr()),
+                          ),
                         ],
                         onChanged: (value) {
                           if (value != null) {
@@ -332,7 +361,8 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
                                 imageUrl: service['imageUrl'],
                                 reviews: service['reviews'],
                                 description: service['description'],
-                                serviceType: service['category'] ?? 'accommodation',
+                                serviceType:
+                                    service['category'] ?? 'accommodation',
                               ),
                             );
                           },
@@ -351,55 +381,57 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
     List<Widget> chips = [];
 
     if (provider.searchQuery.isNotEmpty) {
-      chips.add(_buildFilterChip(
-        'Search: "${provider.searchQuery}"',
-        () {
+      chips.add(
+        _buildFilterChip('Search: "${provider.searchQuery}"', () {
           _searchController.clear();
           provider.setSearchQuery('');
-        },
-      ));
+        }),
+      );
     }
 
     if (provider.minPrice > 0 || provider.maxPrice < 500) {
-      chips.add(_buildFilterChip(
-        provider.getPriceRangeLabel(),
-        () => provider.setPriceRange(0, 500),
-      ));
+      chips.add(
+        _buildFilterChip(
+          provider.getPriceRangeLabel(),
+          () => provider.setPriceRange(0, 500),
+        ),
+      );
     }
 
     for (final category in provider.selectedCategories) {
-      chips.add(_buildFilterChip(
-        category,
-        () => provider.toggleCategory(category),
-      ));
+      chips.add(
+        _buildFilterChip(category, () => provider.toggleCategory(category)),
+      );
     }
 
     if (provider.ecoFriendlyOnly) {
-      chips.add(_buildFilterChip(
-        'Eco-Friendly',
-        () => provider.setEcoFriendly(false),
-      ));
+      chips.add(
+        _buildFilterChip('Eco-Friendly', () => provider.setEcoFriendly(false)),
+      );
     }
 
     if (provider.minRating > 0) {
-      chips.add(_buildFilterChip(
-        '${provider.minRating}+ stars',
-        () => provider.setMinRating(0),
-      ));
+      chips.add(
+        _buildFilterChip(
+          '${provider.minRating}+ stars',
+          () => provider.setMinRating(0),
+        ),
+      );
     }
 
     if (provider.featuredOnly) {
-      chips.add(_buildFilterChip(
-        'Featured',
-        () => provider.setFeaturedOnly(false),
-      ));
+      chips.add(
+        _buildFilterChip('Featured', () => provider.setFeaturedOnly(false)),
+      );
     }
 
     if (provider.hiddenGemsOnly) {
-      chips.add(_buildFilterChip(
-        'Hidden Gems',
-        () => provider.setHiddenGemsOnly(false),
-      ));
+      chips.add(
+        _buildFilterChip(
+          'Hidden Gems',
+          () => provider.setHiddenGemsOnly(false),
+        ),
+      );
     }
 
     return chips;
@@ -407,10 +439,7 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
 
   Widget _buildFilterChip(String label, VoidCallback onRemove) {
     return Chip(
-      label: Text(
-        label,
-        style: const TextStyle(fontSize: 12),
-      ),
+      label: Text(label, style: const TextStyle(fontSize: 12)),
       deleteIcon: const Icon(Icons.close, size: 16),
       onDeleted: onRemove,
       backgroundColor: AppTheme.primaryOrange.withOpacity(0.1),
@@ -484,7 +513,9 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
                   min: 0,
                   max: 5,
                   divisions: 10,
-                  label: provider.minRating > 0 ? '${provider.minRating}+ stars' : 'Any',
+                  label: provider.minRating > 0
+                      ? '${provider.minRating}+ stars'
+                      : 'Any',
                   activeColor: AppTheme.primaryOrange,
                   onChanged: (value) {
                     provider.setMinRating(value);
@@ -493,7 +524,10 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
               ),
               Text(
                 provider.minRating > 0 ? '${provider.minRating}+' : 'Any',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           ),
@@ -569,7 +603,7 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryOrange,
             ),
-            child: Text('Clear All Filters'.tr()),
+            child: Text('tourist.search.clear_filters'.tr()),
           ),
         ],
       ),

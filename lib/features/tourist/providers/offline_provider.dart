@@ -2,7 +2,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-final offlineProvider = StateNotifierProvider<OfflineNotifier, bool>((ref) => OfflineNotifier());
+final offlineProvider = StateNotifierProvider<OfflineNotifier, bool>(
+  (ref) => OfflineNotifier(),
+);
 
 class OfflineNotifier extends StateNotifier<bool> {
   OfflineNotifier() : super(false) {

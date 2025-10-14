@@ -37,42 +37,43 @@ class SafeNetworkImage extends StatelessWidget {
           fit: fit,
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
-            return placeholder ?? Container(
-              color: AppTheme.lightBlueGray,
-              child: const Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryOrange),
-                ),
-              ),
-            );
+            return placeholder ??
+                Container(
+                  color: AppTheme.lightBlueGray,
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppTheme.primaryOrange,
+                      ),
+                    ),
+                  ),
+                );
           },
           errorBuilder: (context, error, stackTrace) {
             // Log the error for debugging
             debugPrint('SafeNetworkImage error: $error');
-            return errorWidget ?? Container(
-              color: AppTheme.lightBlueGray,
-              child: const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.image_not_supported_outlined,
-                      color: AppTheme.primaryOrange,
-                      size: 32,
+            return errorWidget ??
+                Container(
+                  color: AppTheme.lightBlueGray,
+                  child: const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.image_not_supported_outlined,
+                          color: AppTheme.primaryOrange,
+                          size: 32,
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Image unavailable',
+                          style: TextStyle(color: AppTheme.gray, fontSize: 12),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Image unavailable',
-                      style: TextStyle(
-                        color: AppTheme.gray,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
+                  ),
+                );
           },
         ),
       ),

@@ -127,7 +127,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             controller: _emailController,
                             decoration: InputDecoration(
                               labelText: 'Email'.tr(),
-                              prefixIcon: Icon(Icons.email_outlined),
+                              prefixIcon: const Icon(Icons.email_outlined),
                             ),
                             keyboardType: TextInputType.emailAddress,
                             validator: Validators.validateEmail,
@@ -139,7 +139,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             controller: _usernameController,
                             decoration: InputDecoration(
                               labelText: 'Username'.tr(),
-                              prefixIcon: Icon(Icons.person_outline),
+                              prefixIcon: const Icon(Icons.person_outline),
                             ),
                             validator: (v) => Validators.validateRequired(v, 'Username'),
                           ),
@@ -151,7 +151,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             decoration: InputDecoration(
                               labelText: 'Phone'.tr(),
                               hintText: '+20 123 456 7890'.tr(),
-                              prefixIcon: Icon(Icons.phone_outlined),
+                              prefixIcon: const Icon(Icons.phone_outlined),
                             ),
                             keyboardType: TextInputType.phone,
                             validator: Validators.validatePhone,
@@ -163,7 +163,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             controller: _passwordController,
                             decoration: InputDecoration(
                               labelText: 'Password'.tr(),
-                              prefixIcon: Icon(Icons.lock_outline),
+                              prefixIcon: const Icon(Icons.lock_outline),
                             ),
                             obscureText: true,
                             validator: Validators.validatePassword,
@@ -194,7 +194,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             controller: _mfaController,
                             decoration: InputDecoration(
                               labelText: 'MFA Code (Optional)'.tr(),
-                              prefixIcon: Icon(Icons.security_outlined),
+                              prefixIcon: const Icon(Icons.security_outlined),
                             ),
                           ),
                           const SizedBox(height: 24),

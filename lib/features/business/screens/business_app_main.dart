@@ -39,7 +39,9 @@ class _BusinessAppMainState extends ConsumerState<BusinessAppMain> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 1),
+    );
   }
 
   @override
@@ -153,11 +155,7 @@ class _BusinessAppMainState extends ConsumerState<BusinessAppMain> {
                 ),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                _getBusinessIcon(),
-                color: Colors.white,
-                size: 18,
-              ),
+              child: Icon(_getBusinessIcon(), color: Colors.white, size: 18),
             ).animate().fadeIn(duration: 500.ms),
             const SizedBox(width: 12),
             Text(

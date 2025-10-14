@@ -11,7 +11,8 @@ class TouristBookingsScreen extends ConsumerStatefulWidget {
   const TouristBookingsScreen({super.key});
 
   @override
-  ConsumerState<TouristBookingsScreen> createState() => _TouristBookingsScreenState();
+  ConsumerState<TouristBookingsScreen> createState() =>
+      _TouristBookingsScreenState();
 }
 
 class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
@@ -21,7 +22,8 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
       'title': 'Siwa Shali Resort',
       'date': '2024-07-20',
       'status': 'Confirmed',
-      'imageUrl': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
       'amount': '\$150',
     },
     {
@@ -29,7 +31,8 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
       'title': 'Mountain Bike Rental',
       'date': '2024-08-15',
       'status': 'Pending',
-      'imageUrl': 'https://www.quitandgotravel.com/wp-content/uploads/sites/8/2022/04/Cycling-Across-Siwa-Oasis-Lake.jpg',
+      'imageUrl':
+          'https://www.quitandgotravel.com/wp-content/uploads/sites/8/2022/04/Cycling-Across-Siwa-Oasis-Lake.jpg',
       'amount': '\$85',
     },
     {
@@ -37,7 +40,8 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
       'title': 'Siwa Oasis Tour',
       'date': '2024-09-05',
       'status': 'Cancelled',
-      'imageUrl': 'https://www.kemetexperience.com/wp-content/uploads/2019/09/incredible-white-desert-960x636.jpg',
+      'imageUrl':
+          'https://www.kemetexperience.com/wp-content/uploads/2019/09/incredible-white-desert-960x636.jpg',
       'amount': '\$65',
     },
   ];
@@ -67,14 +71,14 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: Text('Bookings'.tr()),
+        title: Text('navigation.bookings'.tr()),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Booking settings'.tr())),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('common.settings'.tr())));
             },
           ),
         ],
@@ -98,16 +102,13 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                   Expanded(
                     child: Text(
                       'You are offline. Data might be outdated.',
-                      style: TextStyle(
-                        color: AppTheme.black,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: AppTheme.black, fontSize: 14),
                     ),
                   ),
                 ],
               ),
             ),
-          
+
           // Bookings List
           Expanded(
             child: _bookings.isEmpty
@@ -172,7 +173,8 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         booking['title'],
@@ -206,16 +208,21 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                                           vertical: 4,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: _getStatusColor(booking['status'])
-                                              .withOpacity(0.15),
-                                          borderRadius: BorderRadius.circular(8),
+                                          color: _getStatusColor(
+                                            booking['status'],
+                                          ).withOpacity(0.15),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         child: Text(
                                           booking['status'],
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600,
-                                            color: _getStatusColor(booking['status']),
+                                            color: _getStatusColor(
+                                              booking['status'],
+                                            ),
                                           ),
                                         ),
                                       ),

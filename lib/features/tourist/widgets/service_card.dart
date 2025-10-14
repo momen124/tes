@@ -46,9 +46,7 @@ class ServiceCard extends StatelessWidget {
                 : (isFeatured ? 350.0 : 200.0);
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              constraints: BoxConstraints(
-                maxWidth: cardWidth,
-              ),
+              constraints: BoxConstraints(maxWidth: cardWidth),
               decoration: BoxDecoration(
                 color: AppTheme.white,
                 borderRadius: BorderRadius.circular(20),
@@ -101,7 +99,9 @@ class ServiceCard extends StatelessWidget {
                         if (reviews != null || location != null) ...[
                           const SizedBox(height: 4),
                           ConstrainedBox(
-                            constraints: BoxConstraints(maxWidth: cardWidth - 16), // Match padding
+                            constraints: BoxConstraints(
+                              maxWidth: cardWidth - 16,
+                            ), // Match padding
                             child: Wrap(
                               spacing: 6,
                               runSpacing: 4,
@@ -216,10 +216,7 @@ class ServiceCard extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                Colors.transparent,
-                Colors.black.withOpacity(0.3),
-              ],
+              colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
             ),
           ),
         ),
@@ -243,11 +240,7 @@ class ServiceCard extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.star,
-                  color: AppTheme.primaryOrange,
-                  size: 12,
-                ),
+                const Icon(Icons.star, color: AppTheme.primaryOrange, size: 12),
                 const SizedBox(width: 3),
                 Text(
                   rating.toStringAsFixed(1),

@@ -19,77 +19,77 @@ class UnifiedBottomNav extends StatelessWidget {
   List<BottomNavigationBarItem> get _items {
     switch (type) {
       case NavBarType.tourist:
-        return  [
+        return [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
-            label: 'Home'.tr(),
+            label: 'navigation.home'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search_outlined),
             activeIcon: Icon(Icons.search),
-            label: 'Search'.tr(),
+            label: 'navigation.search'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today_outlined),
             activeIcon: Icon(Icons.calendar_today),
-            label: 'Bookings'.tr(),
+            label: 'navigation.bookings'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.emoji_events_outlined),
             activeIcon: Icon(Icons.emoji_events),
-            label: 'Challenges'.tr(),
+            label: 'navigation.challenges'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
-            label: 'Profile'.tr(),
+            label: 'navigation.profile'.tr(),
           ),
         ];
       case NavBarType.business:
-        return  [
+        return [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard_outlined),
             activeIcon: Icon(Icons.dashboard),
-            label: 'Dashboard'.tr(),
+            label: 'navigation.dashboard'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt_outlined),
             activeIcon: Icon(Icons.list_alt),
-            label: 'Listings'.tr(),
+            label: 'business.dashboard.your_listings'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today_outlined),
             activeIcon: Icon(Icons.calendar_today),
-            label: 'Bookings'.tr(),
+            label: 'navigation.bookings'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
-            label: 'Profile'.tr(),
+            label: 'navigation.profile'.tr(),
           ),
         ];
       case NavBarType.admin:
-        return  [
+        return [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard_outlined),
             activeIcon: Icon(Icons.dashboard),
-            label: 'Dashboard'.tr(),
+            label: 'navigation.dashboard'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people_outline),
             activeIcon: Icon(Icons.people),
-            label: 'Users'.tr(),
+            label: 'business.rental.vehicle_types.cruiser'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.verified_user_outlined),
             activeIcon: Icon(Icons.verified_user),
-            label: 'Moderation'.tr(),
+            label: 'attractions.duration'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history_outlined),
             activeIcon: Icon(Icons.history),
-            label: 'Logs'.tr(),
+            label: 'auth.login'.tr(),
           ),
         ];
     }
@@ -207,16 +207,14 @@ class UnifiedAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(
         title,
-        style: const TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
-        ),
+        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
       ),
       centerTitle: false,
       elevation: 0,
       backgroundColor: AppTheme.white,
       foregroundColor: AppTheme.darkGray,
-      leading: leading ??
+      leading:
+          leading ??
           (showBackButton
               ? IconButton(
                   icon: const Icon(Icons.arrow_back),
@@ -229,7 +227,6 @@ class UnifiedAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(
-        kToolbarHeight + (bottom?.preferredSize.height ?? 0),
-      );
+  Size get preferredSize =>
+      Size.fromHeight(kToolbarHeight + (bottom?.preferredSize.height ?? 0));
 }

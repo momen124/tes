@@ -23,28 +23,45 @@ class _AddTourFormState extends State<AddTourForm> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: Text('Select Date'.tr()),
+              title: Text('tourist.booking.select_dates'.tr()),
               subtitle: Text(_date.toString()),
               onTap: () async {
-                final selected = await showDatePicker(context: context, initialDate: _date, firstDate: DateTime.now(), lastDate: DateTime(2030));
+                final selected = await showDatePicker(
+                  context: context,
+                  initialDate: _date,
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime(2030),
+                );
                 if (selected != null) setState(() => _date = selected);
               },
             ),
             TextFormField(
-              decoration: InputDecoration(labelText: 'Description'.tr(), border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                labelText: 'business.listings.description'.tr(),
+                border: OutlineInputBorder(),
+              ),
               maxLines: 3,
               onChanged: (val) => _description = val,
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                ElevatedButton(onPressed: () => Navigator.pop(context), child: Text('Cancel'.tr())),
+                ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('common.cancel'.tr()),
+                ),
                 const SizedBox(width: 8),
-                ElevatedButton(onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.pop(context);
-                  }
-                }, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange), child: Text('Add Tour'.tr())),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                  ),
+                  child: Text('tourist.categories.tours'.tr()),
+                ),
               ],
             ),
           ],

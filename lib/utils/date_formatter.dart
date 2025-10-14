@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 class DateFormatter {
   static String formatDate(DateTime date, BuildContext context) {
     final locale = context.locale.languageCode;
-    
+
     if (locale == 'ar') {
       // Arabic date format
       final formatter = DateFormat('d MMMM yyyy', 'ar');
@@ -15,10 +15,10 @@ class DateFormatter {
       return formatter.format(date);
     }
   }
-  
+
   static String formatBookingDate(DateTime date, BuildContext context) {
     final locale = context.locale.languageCode;
-    
+
     if (locale == 'ar') {
       final formatter = DateFormat('EEEE، d MMMM', 'ar');
       return formatter.format(date);
@@ -27,10 +27,10 @@ class DateFormatter {
       return formatter.format(date);
     }
   }
-  
+
   static String formatTime(DateTime time, BuildContext context) {
     final locale = context.locale.languageCode;
-    
+
     if (locale == 'ar') {
       final formatter = DateFormat('h:mm a', 'ar');
       return formatter.format(time);

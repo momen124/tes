@@ -49,18 +49,18 @@ class BookingFormScreen extends StatefulWidget {
 class _BookingFormScreenState extends State<BookingFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _specialRequestsController = TextEditingController();
-  
+
   // Date selection
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedCheckIn;
   DateTime? _selectedCheckOut;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   final RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOn;
-  
+
   // Guest counters
   int _adultCount = 1;
   int _childCount = 0;
-  
+
   // Constraints
   static const int _minAdults = 1;
   static const int _maxAdults = 10;
@@ -83,8 +83,8 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!_isDateSelectable(selectedDay)) {
       ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(
-          content: Text('Cannot select past dates'.tr()),
+        SnackBar(
+          content: Text('common.no'.tr()),
           backgroundColor: AppTheme.errorRed,
           duration: Duration(seconds: 2),
         ),
@@ -94,8 +94,8 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
 
     setState(() {
       _focusedDay = focusedDay;
-      
-      if (_selectedCheckIn == null || 
+
+      if (_selectedCheckIn == null ||
           _selectedCheckOut != null ||
           selectedDay.isBefore(_selectedCheckIn!)) {
         // First selection or reset
@@ -136,12 +136,12 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
       nights = _selectedCheckOut!.difference(_selectedCheckIn!).inDays;
       if (nights < 1) nights = 1;
     }
-    
+
     // Base price per night/day
     // Adults pay full price, children pay 50%
     double adultPrice = widget.basePrice * _adultCount;
     double childPrice = widget.basePrice * _childCount * 0.5;
-    
+
     return (adultPrice + childPrice) * nights;
   }
 
@@ -156,23 +156,29 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
   Future<bool> _onWillPop() async {
     if (_selectedCheckIn != null || _adultCount > 1 || _childCount > 0) {
       return await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Cancel Booking?'.tr()),
-          content: Text('Are you sure you want to cancel this booking? All entered information will be lost.'.tr()),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text('Continue Booking'.tr()),
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('common.cancel'.tr()),
+              content: Text(
+                'Are you sure you want to cancel this booking? All entered information will be lost.'
+                    .tr(),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: Text('tourist.booking.confirm_booking'.tr()),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.errorRed,
+                  ),
+                  child: Text('common.cancel'.tr()),
+                ),
+              ],
             ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context, true),
-              style: ElevatedButton.styleFrom(backgroundColor: AppTheme.errorRed),
-              child: Text('Yes, Cancel'.tr()),
-            ),
-          ],
-        ),
-      ) ?? false;
+          ) ??
+          false;
     }
     return true;
   }
@@ -181,7 +187,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
     if (_formKey.currentState!.validate()) {
       if (_selectedCheckIn == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(
+          SnackBar(
             content: Text('Please select a check-in date'.tr()),
             backgroundColor: AppTheme.errorRed,
           ),
@@ -190,11 +196,11 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
       }
 
       // For accommodations, require check-out date
-      if (_selectedCheckOut == null && 
+      if (_selectedCheckOut == null &&
           (widget.serviceType.toLowerCase().contains('hotel') ||
-           widget.serviceType.toLowerCase().contains('accommodation'))) {
+              widget.serviceType.toLowerCase().contains('accommodation'))) {
         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(
+          SnackBar(
             content: Text('Please select a check-out date'.tr()),
             backgroundColor: AppTheme.errorRed,
           ),
@@ -244,10 +250,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                   context.pop();
                 }
               },
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: AppTheme.errorRed),
-              ),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.errorRed)),
             ),
           ],
         ),
@@ -328,7 +331,10 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                     children: [
                       const Row(
                         children: [
-                          Icon(Icons.calendar_today, color: AppTheme.primaryOrange),
+                          Icon(
+                            Icons.calendar_today,
+                            color: AppTheme.primaryOrange,
+                          ),
                           SizedBox(width: 8),
                           Text(
                             'Select Dates',
@@ -362,7 +368,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      DateFormat('MMM dd, yyyy').format(_selectedCheckIn!),
+                                      DateFormat(
+                                        'MMM dd, yyyy',
+                                      ).format(_selectedCheckIn!),
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -371,7 +379,10 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                                   ],
                                 ),
                               ),
-                              const Icon(Icons.arrow_forward, color: AppTheme.gray),
+                              const Icon(
+                                Icons.arrow_forward,
+                                color: AppTheme.gray,
+                              ),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
@@ -387,7 +398,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                                     const SizedBox(height: 4),
                                     Text(
                                       _selectedCheckOut != null
-                                          ? DateFormat('MMM dd, yyyy').format(_selectedCheckOut!)
+                                          ? DateFormat(
+                                              'MMM dd, yyyy',
+                                            ).format(_selectedCheckOut!)
                                           : 'Select date',
                                       style: TextStyle(
                                         fontSize: 16,
@@ -412,7 +425,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                         rangeSelectionMode: _rangeSelectionMode,
                         selectedDayPredicate: (day) {
                           return isSameDay(_selectedCheckIn, day) ||
-                                 isSameDay(_selectedCheckOut, day);
+                              isSameDay(_selectedCheckOut, day);
                         },
                         rangeStartDay: _selectedCheckIn,
                         rangeEndDay: _selectedCheckOut,
@@ -433,7 +446,8 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                             color: AppTheme.primaryOrange.withOpacity(0.3),
                             shape: BoxShape.circle,
                           ),
-                          rangeHighlightColor: AppTheme.primaryOrange.withOpacity(0.2),
+                          rangeHighlightColor: AppTheme.primaryOrange
+                              .withOpacity(0.2),
                           rangeStartDecoration: const BoxDecoration(
                             color: AppTheme.primaryOrange,
                             shape: BoxShape.circle,
@@ -554,27 +568,30 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                       const SizedBox(height: 8),
                       const Text(
                         'Optional - Any special requirements or preferences',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppTheme.gray,
-                        ),
+                        style: TextStyle(fontSize: 12, color: AppTheme.gray),
                       ),
                       const SizedBox(height: 12),
                       TextFormField(
                         controller: _specialRequestsController,
                         maxLines: 3,
                         decoration: InputDecoration(
-                          hintText: 'e.g., Early check-in, specific room location...'.tr(),
+                          hintText:
+                              'e.g., Early check-in, specific room location...'
+                                  .tr(),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppTheme.lightGray),
+                            borderSide: const BorderSide(
+                              color: AppTheme.lightGray,
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppTheme.primaryOrange),
+                            borderSide: const BorderSide(
+                              color: AppTheme.primaryOrange,
+                            ),
                           ),
                         ),
                       ),
@@ -611,10 +628,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                       children: [
                         const Text(
                           'Total',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: AppTheme.gray,
-                          ),
+                          style: TextStyle(fontSize: 14, color: AppTheme.gray),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -687,18 +701,12 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           children: [
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppTheme.gray,
-              ),
+              style: const TextStyle(fontSize: 12, color: AppTheme.gray),
             ),
           ],
         ),
@@ -707,7 +715,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
             IconButton(
               onPressed: isMinDisabled ? null : onDecrement,
               icon: const Icon(Icons.remove_circle_outline),
-              color: isMinDisabled ? AppTheme.lightGray : AppTheme.primaryOrange,
+              color: isMinDisabled
+                  ? AppTheme.lightGray
+                  : AppTheme.primaryOrange,
               iconSize: 32,
             ),
             Container(
@@ -724,7 +734,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
             IconButton(
               onPressed: isMaxDisabled ? null : onIncrement,
               icon: const Icon(Icons.add_circle_outline),
-              color: isMaxDisabled ? AppTheme.lightGray : AppTheme.primaryOrange,
+              color: isMaxDisabled
+                  ? AppTheme.lightGray
+                  : AppTheme.primaryOrange,
               iconSize: 32,
             ),
           ],

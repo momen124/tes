@@ -55,10 +55,7 @@ class CachedImage extends StatelessWidget {
                   SizedBox(height: 8),
                   Text(
                     'Image unavailable',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                 ],
               ),

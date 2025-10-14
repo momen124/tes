@@ -30,4 +30,6 @@ class BusinessNotifier extends StateNotifier<BusinessState> {
   }
 }
 
-final businessProvider = StateNotifierProvider<BusinessNotifier, BusinessState>((ref) => BusinessNotifier());
+final businessProvider = StateNotifierProvider<BusinessNotifier, BusinessState>(
+  (ref) => BusinessNotifier(),
+);

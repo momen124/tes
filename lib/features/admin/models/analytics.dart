@@ -17,6 +17,7 @@ class Analytics {
     required this.generatedAt,
   });
 
-  factory Analytics.fromJson(Map<String, dynamic> json) => _$AnalyticsFromJson(json);
+  factory Analytics.fromJson(Map<String, dynamic> json) =>
+      _$AnalyticsFromJson(json);
   Map<String, dynamic> toJson() => _$AnalyticsToJson(this);
 }

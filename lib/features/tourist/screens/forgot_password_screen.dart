@@ -9,7 +9,8 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
@@ -22,11 +23,17 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       try {
         await MockApiService().resetPassword(_emailOrPhoneController.text);
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Reset link sent!'.tr())));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Reset link sent!'.tr())));
       } catch (e) {
-        offlineNotifier.queueAction('reset_password', {'email_or_phone': _emailOrPhoneController.text});
+        offlineNotifier.queueAction('reset_password', {
+          'email_or_phone': _emailOrPhoneController.text,
+        });
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Request queued offline.'.tr())));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Request queued offline.'.tr())));
       }
     }
   }
@@ -56,8 +63,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 child: TextFormField(
                   controller: _emailOrPhoneController,
                   decoration: InputDecoration(
-                    labelText: 'Enter your email or phone number'.tr(),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+                    labelText: 'auth.email'.tr(),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
                     prefixIcon: Icon(Icons.mail),
                   ),
                   validator: (value) {
@@ -74,9 +83,14 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                   minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-                child: Text('Send Reset Link'.tr(), style: TextStyle(color: Colors.white)),
+                child: Text(
+                  'Send Reset Link'.tr(),
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               const SizedBox(height: 8),
               Center(
@@ -89,7 +103,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
               Center(
                 child: TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text('Back to Login'.tr(), style: TextStyle(color: Colors.orange)),
+                  child: Text(
+                    'auth.login'.tr(),
+                    style: TextStyle(color: Colors.orange),
+                  ),
                 ),
               ),
             ],

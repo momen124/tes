@@ -19,6 +19,7 @@ class AuditLog {
     required this.createdAt,
   });
 
-  factory AuditLog.fromJson(Map<String, dynamic> json) => _$AuditLogFromJson(json);
+  factory AuditLog.fromJson(Map<String, dynamic> json) =>
+      _$AuditLogFromJson(json);
   Map<String, dynamic> toJson() => _$AuditLogToJson(this);
 }

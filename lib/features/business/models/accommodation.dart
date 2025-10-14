@@ -31,6 +31,7 @@ class Accommodation {
     required this.updatedAt,
   });
 
-  factory Accommodation.fromJson(Map<String, dynamic> json) => _$AccommodationFromJson(json);
+  factory Accommodation.fromJson(Map<String, dynamic> json) =>
+      _$AccommodationFromJson(json);
   Map<String, dynamic> toJson() => _$AccommodationToJson(this);
 }

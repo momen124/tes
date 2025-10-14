@@ -4,11 +4,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:siwa/features/auth/models/user.dart';
 
 final dioProvider = Provider<Dio>((ref) {
-  return Dio(BaseOptions(
-    baseUrl: 'http://localhost:3000/api',
-    connectTimeout: const Duration(seconds: 5),
-    receiveTimeout: const Duration(seconds: 3),
-  ));
+  return Dio(
+    BaseOptions(
+      baseUrl: 'http://localhost:3000/api',
+      connectTimeout: const Duration(seconds: 5),
+      receiveTimeout: const Duration(seconds: 3),
+    ),
+  );
 });
 
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
@@ -44,16 +46,16 @@ class AuthNotifier extends StateNotifier<User?> {
 
   Future<void> login(String email, String password) async {
     try {
-      final response = await dio.post('/login', data: {
-        'email': email,
-        'password': password,
-      });
-      
+      final response = await dio.post(
+        '/login',
+        data: {'email': email, 'password': password},
+      );
+
       final token = response.data['token'];
       await storage.write(key: 'auth_token', value: token);
-      
+
       dio.options.headers['Authorization'] = 'Bearer $token';
-      
+
       final userResponse = await dio.get('/user');
       state = User.fromJson(userResponse.data);
     } catch (e) {
@@ -71,19 +73,22 @@ class AuthNotifier extends StateNotifier<User?> {
     bool mfaEnabled,
   ) async {
     try {
-      final response = await dio.post('/register', data: {
-        'email': email,
-        'username': username,
-        'password': password,
-        'phone': phone,
-        'role': role,
-        'gps_consent': gpsConsent,
-        'mfa_enabled': mfaEnabled,
-      });
-      
+      final response = await dio.post(
+        '/register',
+        data: {
+          'email': email,
+          'username': username,
+          'password': password,
+          'phone': phone,
+          'role': role,
+          'gps_consent': gpsConsent,
+          'mfa_enabled': mfaEnabled,
+        },
+      );
+
       final token = response.data['token'];
       await storage.write(key: 'auth_token', value: token);
-      
+
       dio.options.headers['Authorization'] = 'Bearer $token';
       state = User.fromJson(response.data['user']);
     } catch (e) {
