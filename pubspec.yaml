@@ -57,8 +57,8 @@ flutter:
   generate: true
   
   assets:
-    - lib/assets/images/
-    - lib/assets/translations/
+    - assets/images/
+    - assets/translations/
   
   # Optional: Add Arabic font for better text rendering
   # Download Cairo font from Google Fonts and place in fonts/ folder
