@@ -1,3 +1,4 @@
+// lib/app/app.dart
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,14 +34,17 @@ import 'theme.dart';
 // Global navigator key for route management
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-// Router configuration
+// Router configuration - MERGED VERSION
 final GoRouter _router = GoRouter(
   navigatorKey: navigatorKey,
   initialLocation: '/',
   errorBuilder: (context, state) => Scaffold(
-    body: Center(child: Text('Route not found: ${state.uri.toString()}')),
+    body: Center(
+      child: Text('errors.route_not_found'.tr(namedArgs: {'route': state.uri.toString()})),
+    ),
   ),
   routes: [
+    // Auth & Core Routes
     GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(
@@ -50,73 +54,41 @@ final GoRouter _router = GoRouter(
         return RegisterScreen(userType: userType);
       },
     ),
-    GoRoute(
-      path: '/tourist_home',
-      builder: (context, state) => const TouristHomeScreen(),
-    ),
-    GoRoute(
-      path: '/tourist_bookings',
-      builder: (context, state) => const TouristBookingsScreen(),
-    ),
-    GoRoute(
-      path: '/tourist_challenges',
-      builder: (context, state) => const TouristChallengesScreen(),
-    ),
-    GoRoute(
-      path: '/tourist_profile',
-      builder: (context, state) => const TouristProfileScreen(),
-    ),
-    GoRoute(
-      path: '/tourist_search',
-      builder: (context, state) => const TouristSearchScreen(),
-    ),
+    
+    // Tourist Routes
+    GoRoute(path: '/tourist_home', builder: (context, state) => const TouristHomeScreen()),
+    GoRoute(path: '/tourist_bookings', builder: (context, state) => const TouristBookingsScreen()),
+    GoRoute(path: '/tourist_challenges', builder: (context, state) => const TouristChallengesScreen()),
+    GoRoute(path: '/tourist_profile', builder: (context, state) => const TouristProfileScreen()),
+    GoRoute(path: '/tourist_search', builder: (context, state) => const TouristSearchScreen()),
+    
+    // Booking Routes
     GoRoute(
       path: '/booking_form',
       builder: (context, state) {
         final extra = state.extra as Map<String, dynamic>?;
-        final serviceData =
-            extra?['serviceData'] as Map<String, dynamic>? ?? {};
+        final serviceData = extra?['serviceData'] as Map<String, dynamic>? ?? {};
         return BookingFormScreen(
-          serviceName:
-              serviceData['name']?.toString() ?? 'common.no'.tr(),
+          serviceName: serviceData['name']?.toString() ?? 'common.unknown_service'.tr(),
           serviceType: state.uri.queryParameters['type'] ?? 'default',
           basePrice: (serviceData['price'] as num?)?.toDouble() ?? 0.0,
           imageUrl: serviceData['imageUrl']?.toString(),
         );
       },
     ),
-    GoRoute(
-      path: '/debug_navigator',
-      builder: (context, state) => const DebugNavigatorScreen(),
-    ),
-    GoRoute(
-      path: '/product_detail',
-      builder: (context, state) => const ProductDetailScreen(),
-    ),
-    GoRoute(
-      path: '/service_detail',
-      builder: (context, state) => const ServiceDetailScreen(),
-    ),
-    GoRoute(
-      path: '/siwa_info',
-      builder: (context, state) => const SiwaInfoScreen(),
-    ),
-    GoRoute(
-      path: '/transportation',
-      builder: (context, state) => const TransportationListScreen(),
-    ),
-    GoRoute(
-      path: '/attractions',
-      builder: (context, state) => const AttractionsListScreen(),
-    ),
-    GoRoute(
-      path: '/restaurants',
-      builder: (context, state) => const RestaurantsListScreen(),
-    ),
-    GoRoute(
-      path: '/tour_guides',
-      builder: (context, state) => const TourGuidesListScreen(),
-    ),
+    
+    // Detail Pages
+    GoRoute(path: '/product_detail', builder: (context, state) => const ProductDetailScreen()),
+    GoRoute(path: '/service_detail', builder: (context, state) => const ServiceDetailScreen()),
+    GoRoute(path: '/siwa_info', builder: (context, state) => const SiwaInfoScreen()),
+    
+    // List Pages
+    GoRoute(path: '/transportation', builder: (context, state) => const TransportationListScreen()),
+    GoRoute(path: '/attractions', builder: (context, state) => const AttractionsListScreen()),
+    GoRoute(path: '/restaurants', builder: (context, state) => const RestaurantsListScreen()),
+    GoRoute(path: '/tour_guides', builder: (context, state) => const TourGuidesListScreen()),
+    
+    // Business Routes - Main Dashboard
     GoRoute(
       path: '/business_dashboard',
       builder: (context, state) {
@@ -131,18 +103,97 @@ final GoRouter _router = GoRouter(
         );
       },
     ),
+    
+    // Business Routes - Listings
     GoRoute(
-      path: '/admin_dashboard',
-      builder: (context, state) => const AdminDashboardScreen(),
+      path: '/business_listings',
+      builder: (context, state) {
+        final businessType = state.uri.queryParameters['type'] ?? 'hotel';
+        final type = BusinessType.values.firstWhere(
+          (e) => e.name == businessType,
+          orElse: () => BusinessType.hotel,
+        );
+        return BusinessAppMain(
+          businessType: type,
+          onBack: () => context.go('/login'),
+        );
+      },
+    ),
+    
+    // Business Routes - Profile
+    GoRoute(
+      path: '/business_profile',
+      builder: (context, state) {
+        final businessType = state.uri.queryParameters['type'] ?? 'hotel';
+        final type = BusinessType.values.firstWhere(
+          (e) => e.name == businessType,
+          orElse: () => BusinessType.hotel,
+        );
+        return BusinessAppMain(
+          businessType: type,
+          onBack: () => context.go('/login'),
+        );
+      },
+    ),
+    
+    // Business Type Specific Routes
+    GoRoute(
+      path: '/hotel_management',
+      builder: (context, state) => BusinessAppMain(
+        businessType: BusinessType.hotel,
+        onBack: () => context.go('/business_dashboard?type=hotel'),
+      ),
     ),
     GoRoute(
-      path: '/admin_logs',
-      builder: (context, state) => const AdminLogsScreen(),
+      path: '/rental_fleet',
+      builder: (context, state) => BusinessAppMain(
+        businessType: BusinessType.rental,
+        onBack: () => context.go('/business_dashboard?type=rental'),
+      ),
     ),
     GoRoute(
-      path: '/admin_moderation',
-      builder: (context, state) => const AdminModerationScreen(),
+      path: '/route_management',
+      builder: (context, state) => BusinessAppMain(
+        businessType: BusinessType.transportation,
+        onBack: () => context.go('/business_dashboard?type=transportation'),
+      ),
     ),
+    GoRoute(
+      path: '/trip_itinerary',
+      builder: (context, state) => BusinessAppMain(
+        businessType: BusinessType.tripBooking,
+        onBack: () => context.go('/business_dashboard?type=tripBooking'),
+      ),
+    ),
+    GoRoute(
+      path: '/menu_management',
+      builder: (context, state) => BusinessAppMain(
+        businessType: BusinessType.restaurant,
+        onBack: () => context.go('/business_dashboard?type=restaurant'),
+      ),
+    ),
+    GoRoute(
+      path: '/store_inventory',
+      builder: (context, state) => BusinessAppMain(
+        businessType: BusinessType.store,
+        onBack: () => context.go('/business_dashboard?type=store'),
+      ),
+    ),
+    GoRoute(
+      path: '/guide_schedule',
+      builder: (context, state) => BusinessAppMain(
+        businessType: BusinessType.tourGuide,
+        onBack: () => context.go('/business_dashboard?type=tourGuide'),
+      ),
+    ),
+    
+    // Admin Routes
+    GoRoute(path: '/admin_dashboard', builder: (context, state) => const AdminDashboardScreen()),
+    GoRoute(path: '/admin_logs', builder: (context, state) => const AdminLogsScreen()),
+    GoRoute(path: '/admin_moderation', builder: (context, state) => const AdminModerationScreen()),
+    
+    // Debug Route
+    GoRoute(path: '/debug_navigator', builder: (context, state) => const DebugNavigatorScreen()),
   ],
 );
 
@@ -158,27 +209,24 @@ class SiwaApp extends ConsumerWidget {
 
     return MaterialApp.router(
       routerConfig: _router,
-
+      
       // Theming
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
-
+      
       // App metadata
       title: 'app.name'.tr(),
-
+      
       // Localization configuration
       supportedLocales: context.supportedLocales,
       locale: currentLocale,
       localizationsDelegates: [
-        // Material localizations
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
-
-        // Easy Localization delegate
         EasyLocalization.of(context)!.delegate,
       ],
-
+      
       // Text direction based on locale
       builder: (context, child) {
         return Directionality(
