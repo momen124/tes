@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/screens/booking_form_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class PaymentScreen extends StatefulWidget {
   final Booking booking;
@@ -76,17 +77,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Cancel Payment?'),
-        content: const Text('Are you sure you want to cancel this payment? Your booking will not be confirmed.'),
+        title: Text('Cancel Payment?'.tr()),
+        content: Text('Are you sure you want to cancel this payment? Your booking will not be confirmed.'.tr()),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Continue Payment'),
+            child: Text('Continue Payment'.tr()),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: AppTheme.errorRed),
-            child: const Text('Yes, Cancel'),
+            child: Text('Yes, Cancel'.tr()),
           ),
         ],
       ),
@@ -110,7 +111,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     }
                   },
           ),
-          title: const Text('Payment'),
+          title: Text('Payment'.tr()),
           elevation: 0,
           backgroundColor: AppTheme.white,
         ),
@@ -257,8 +258,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         TextFormField(
                           controller: _cardNumberController,
                           decoration: InputDecoration(
-                            labelText: 'Card Number',
-                            hintText: '1234 5678 9012 3456',
+                            labelText: 'Card Number'.tr(),
+                            hintText: '1234 5678 9012 3456'.tr(),
                             prefixIcon: const Icon(Icons.credit_card),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -305,8 +306,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         TextFormField(
                           controller: _nameController,
                           decoration: InputDecoration(
-                            labelText: 'Cardholder Name',
-                            hintText: 'John Doe',
+                            labelText: 'Cardholder Name'.tr(),
+                            hintText: 'John Doe'.tr(),
                             prefixIcon: const Icon(Icons.person),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -337,8 +338,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               child: TextFormField(
                                 controller: _expiryController,
                                 decoration: InputDecoration(
-                                  labelText: 'Expiry Date',
-                                  hintText: 'MM/YY',
+                                  labelText: 'Expiry Date'.tr(),
+                                  hintText: 'MM/YY'.tr(),
                                   prefixIcon: const Icon(Icons.calendar_today),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
@@ -384,8 +385,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               child: TextFormField(
                                 controller: _cvvController,
                                 decoration: InputDecoration(
-                                  labelText: 'CVV',
-                                  hintText: '123',
+                                  labelText: 'CVV'.tr(),
+                                  hintText: '123'.tr(),
                                   prefixIcon: const Icon(Icons.lock),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),

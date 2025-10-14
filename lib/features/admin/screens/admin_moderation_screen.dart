@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AdminModerationScreen extends StatelessWidget {
   const AdminModerationScreen({super.key});
@@ -6,17 +7,17 @@ class AdminModerationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Moderation Queue')),
+      appBar: AppBar(title: Text('Moderation Queue'.tr())),
       body: DataTable(
-        columns: const [
-          DataColumn(label: Text('ID')),
-          DataColumn(label: Text('Type')),
-          DataColumn(label: Text('Actions')),
+        columns:  [
+          DataColumn(label: Text('ID'.tr())),
+          DataColumn(label: Text('Type'.tr())),
+          DataColumn(label: Text('Actions'.tr())),
         ],
         rows: [
           DataRow(cells: [
-            const DataCell(Text('1')),
-            const DataCell(Text('Business')),
+            DataCell(Text('1'.tr())),
+            DataCell(Text('Business'.tr())),
             DataCell(Row(children: [
               IconButton(icon: const Icon(Icons.check), onPressed: () {}),
               IconButton(icon: const Icon(Icons.close), onPressed: () {}),

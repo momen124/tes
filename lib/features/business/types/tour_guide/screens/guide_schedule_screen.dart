@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
 import 'package:confetti/confetti.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class GuideScheduleScreen extends ConsumerStatefulWidget {
   const GuideScheduleScreen({super.key});
@@ -62,12 +63,12 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
-        title: const Text('Guide Schedule'),
+        title: Text('Guide Schedule'.tr()),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: isOffline ? null : _showExpertiseDialog,
-            tooltip: 'Update Expertise',
+            tooltip: 'Update Expertise'.tr(),
           ),
         ],
       ),
@@ -76,7 +77,7 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
               child: Container(
                 decoration: AppTheme.offlineBanner,
                 padding: const EdgeInsets.all(12),
-                child: const Text('You are offline'),
+                child: Text('You are offline'.tr()),
               ),
             )
           : Column(
@@ -88,7 +89,7 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: isOffline || _selectedDay == null ? null : () => _showAddTourDialog(_selectedDay!),
         icon: const Icon(Icons.add),
-        label: const Text('Add Tour'),
+        label: Text('Add Tour'.tr()),
         backgroundColor: _selectedDay != null && !isOffline ? AppTheme.primaryOrange : AppTheme.gray,
       ),
 
@@ -192,8 +193,8 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 4),
-                  Text('Duration: ${tour['duration']}'),
-                  Text('Guests: ${tour['guests']}'),
+                  Text('Duration: ${tour['.tr()duration']}'),
+                  Text('Guests: ${tour['.tr()guests']}'),
                 ],
               ),
               trailing: Column(
@@ -236,7 +237,7 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add Tour - ${_formatDate(day)}'),
+        title: Text('Add Tour - ${_formatDate(day)}'.tr()),
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -245,26 +246,26 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
               children: [
                 TextFormField(
                   controller: titleController,
-                  decoration: const InputDecoration(labelText: 'Tour Title'),
+                  decoration: InputDecoration(labelText: 'Tour Title'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter tour title' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: durationController,
-                  decoration: const InputDecoration(labelText: 'Duration (e.g., 3 hours)'),
+                  decoration: InputDecoration(labelText: 'Duration (e.g., 3 hours)'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter duration' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: guestsController,
-                  decoration: const InputDecoration(labelText: 'Number of Guests'),
+                  decoration: InputDecoration(labelText: 'Number of Guests'.tr()),
                   keyboardType: TextInputType.number,
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter number of guests' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: priceController,
-                  decoration: const InputDecoration(labelText: 'Price'),
+                  decoration: InputDecoration(labelText: 'Price'.tr()),
                   keyboardType: TextInputType.number,
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
                 ),
@@ -275,7 +276,7 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -295,12 +296,12 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Tour added successfully')),
+                  SnackBar(content: Text('Tour added successfully'.tr())),
                 );
                 _confettiController.play();
               }
             },
-            child: const Text('Add'),
+            child: Text('Add'.tr()),
           ),
         ],
       ),
@@ -317,7 +318,7 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Edit Tour'),
+        title: Text('Edit Tour'.tr()),
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -326,26 +327,26 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
               children: [
                 TextFormField(
                   controller: titleController,
-                  decoration: const InputDecoration(labelText: 'Tour Title'),
+                  decoration: InputDecoration(labelText: 'Tour Title'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter tour title' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: durationController,
-                  decoration: const InputDecoration(labelText: 'Duration'),
+                  decoration: InputDecoration(labelText: 'Duration'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter duration' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: guestsController,
-                  decoration: const InputDecoration(labelText: 'Number of Guests'),
+                  decoration: InputDecoration(labelText: 'Number of Guests'.tr()),
                   keyboardType: TextInputType.number,
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter number of guests' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: priceController,
-                  decoration: const InputDecoration(labelText: 'Price'),
+                  decoration: InputDecoration(labelText: 'Price'.tr()),
                   keyboardType: TextInputType.number,
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
                 ),
@@ -359,15 +360,15 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
               setState(() => _tours[day]?.remove(tour));
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Tour deleted')),
+                SnackBar(content: Text('Tour deleted'.tr())),
               );
               _confettiController.play();
             },
-            child: const Text('Delete', style: TextStyle(color: AppTheme.errorRed)),
+            child: Text('Delete'.tr(), style: TextStyle(color: AppTheme.errorRed)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -380,12 +381,12 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Tour updated')),
+                  SnackBar(content: Text('Tour updated'.tr())),
                 );
                 _confettiController.play();
               }
             },
-            child: const Text('Save'),
+            child: Text('Save'.tr()),
           ),
         ],
       ),
@@ -400,7 +401,7 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            title: const Text('Your Expertise'),
+            title: Text('Your Expertise'.tr()),
             content: Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -417,8 +418,8 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
             ),
             actions: [
               TextField(
-                decoration: const InputDecoration(
-                  hintText: 'Add new expertise',
+                decoration: InputDecoration(
+                  hintText: 'Add new expertise'.tr(),
                   border: OutlineInputBorder(),
                 ),
                 onSubmitted: (value) {
@@ -433,11 +434,11 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
                   setState(() => _expertiseTags.addAll(editableTags));
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Expertise updated')),
+                    SnackBar(content: Text('Expertise updated'.tr())),
                   );
                   _confettiController.play();
                 },
-                child: const Text('Save'),
+                child: Text('Save'.tr()),
               ),
             ],
           );

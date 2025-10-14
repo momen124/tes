@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TouristChallengesScreen extends StatefulWidget {
   const TouristChallengesScreen({super.key});
@@ -64,7 +65,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Challenge completed! +${challenge['points']} points'),
+          content: Text('Challenge completed! +${challenge['.tr()points']} points'),
           backgroundColor: AppTheme.successGreen,
         ),
       );
@@ -81,7 +82,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: const Text('Photo Challenges'),
+        title: Text('Photo Challenges'.tr()),
         elevation: 0,
         actions: [
           Center(
@@ -118,7 +119,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Challenge Progress', style: AppTheme.titleMedium),
+                Text('Challenge Progress'.tr(), style: AppTheme.titleMedium),
                 const SizedBox(height: 12),
                 LinearProgressIndicator(
                   value: _challenges.isEmpty ? 0 : _completedCount / _challenges.length,

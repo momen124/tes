@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TransportationListScreen extends StatefulWidget {
   const TransportationListScreen({super.key});
@@ -88,7 +89,7 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: const Text('Transportation'),
+        title: Text('Transportation'.tr()),
         elevation: 0,
       ),
       body: Column(
@@ -370,7 +371,7 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                             vertical: 12,
                           ),
                         ),
-                        child: const Text('Book Now'),
+                        child: Text('Book Now'.tr()),
                       ),
                     ],
                   ),

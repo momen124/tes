@@ -7,6 +7,7 @@ import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:confetti/confetti.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TripItineraryScreen extends ConsumerStatefulWidget {
   const TripItineraryScreen({super.key});
@@ -78,7 +79,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Add New Stop'),
+        title: Text('Add New Stop'.tr()),
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -87,25 +88,25 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
               children: [
                 TextFormField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Stop Name'),
+                  decoration: InputDecoration(labelText: 'Stop Name'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter stop name' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: durationController,
-                  decoration: const InputDecoration(labelText: 'Duration (e.g., 2h 30m)'),
+                  decoration: InputDecoration(labelText: 'Duration (e.g., 2h 30m)'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter duration' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: descriptionController,
-                  decoration: const InputDecoration(labelText: 'Description'),
+                  decoration: InputDecoration(labelText: 'Description'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter description' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: timeController,
-                  decoration: const InputDecoration(labelText: 'Time (e.g., 09:00 AM)'),
+                  decoration: InputDecoration(labelText: 'Time (e.g., 09:00 AM)'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter time' : null,
                 ),
               ],
@@ -115,7 +116,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -138,12 +139,12 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Stop added successfully')),
+                  SnackBar(content: Text('Stop added successfully'.tr())),
                 );
                 _confettiController.play();
               }
             },
-            child: const Text('Add'),
+            child: Text('Add'.tr()),
           ),
         ],
       ),
@@ -160,12 +161,12 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
-        title: const Text('Trip Itinerary'),
+        title: Text('Trip Itinerary'.tr()),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: isOffline ? null : _showAddStopDialog,
-            tooltip: 'Add Stop',
+            tooltip: 'Add Stop'.tr(),
           ),
         ],
       ),
@@ -174,7 +175,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
               child: Container(
                 decoration: AppTheme.offlineBanner,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: const Text(
+                child: Text(
                   'You are offline',
                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                 ),
@@ -187,7 +188,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                   // Booking Statistics
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Text('Booking Statistics', style: AppTheme.titleLarge),
+                    child: Text('Booking Statistics'.tr(), style: AppTheme.titleLarge),
                   ).animate().fadeIn(),
                   SizedBox(
                     height: 200,
@@ -199,21 +200,21 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                             PieChartSectionData(
                               value: _bookings.where((b) => b['status'] == 'confirmed').length.toDouble(),
                               color: AppTheme.successGreen,
-                              title: 'Confirmed',
+                              title: 'Confirmed'.tr(),
                               radius: 50,
                               titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                             PieChartSectionData(
                               value: _bookings.where((b) => b['status'] == 'pending').length.toDouble(),
                               color: AppTheme.warningYellow,
-                              title: 'Pending',
+                              title: 'Pending'.tr(),
                               radius: 50,
                               titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                             PieChartSectionData(
                               value: (10 - _bookings.length).toDouble(),
                               color: AppTheme.lightGray,
-                              title: 'Available',
+                              title: 'Available'.tr(),
                               radius: 50,
                               titleStyle: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
                             ),
@@ -228,7 +229,7 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                   // Itinerary Timeline
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Text('Itinerary', style: AppTheme.titleLarge),
+                    child: Text('Itinerary'.tr(), style: AppTheme.titleLarge),
                   ).animate().fadeIn(),
                   ReorderableListView.builder(
                     shrinkWrap: true,

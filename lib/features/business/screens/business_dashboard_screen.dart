@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/business/models/business_type.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BusinessDashboardScreen extends ConsumerWidget {
   final BusinessType businessType;
@@ -43,7 +44,7 @@ class BusinessDashboardScreen extends ConsumerWidget {
                         ? null
                         : () {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Syncing data...')),
+                              SnackBar(content: Text('Syncing data...'.tr())),
                             );
                           },
                     padding: EdgeInsets.zero,
@@ -65,7 +66,7 @@ class BusinessDashboardScreen extends ConsumerWidget {
                 ElevatedButton.icon(
                   onPressed: isOffline ? null : () {},
                   icon: const Icon(Icons.add, size: 18),
-                  label: const Text('Add'),
+                  label: Text('Add'.tr()),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryOrange,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -75,13 +76,13 @@ class BusinessDashboardScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 16),
-          const Padding(
+           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
                 Expanded(
                   child: _StatCard(
-                    title: 'Total Bookings',
+                    title: 'Total Bookings'.tr(),
                     value: '173',
                     change: '+12%',
                     icon: Icons.trending_up,
@@ -90,7 +91,7 @@ class BusinessDashboardScreen extends ConsumerWidget {
                 SizedBox(width: 12),
                 Expanded(
                   child: _StatCard(
-                    title: 'Total Revenue',
+                    title: 'Total Revenue'.tr(),
                     value: '\$95,000',
                     change: '+18%',
                     icon: Icons.attach_money,

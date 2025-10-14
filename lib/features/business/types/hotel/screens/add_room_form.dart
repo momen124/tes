@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/widgets/dashed_border_container.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AddRoomForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onRoomAdded;
@@ -84,7 +85,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Add New Room', style: AppTheme.titleLarge),
+                  Text('Add New Room'.tr(), style: AppTheme.titleLarge),
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () => Navigator.pop(context),
@@ -96,9 +97,9 @@ class _AddRoomFormState extends State<AddRoomForm> {
               // Room Name
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Room Name',
-                  hintText: 'e.g., Ocean View Suite 101',
+                decoration: InputDecoration(
+                  labelText: 'Room Name'.tr(),
+                  hintText: 'e.g., Ocean View Suite 101'.tr(),
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.label),
                 ),
@@ -114,12 +115,12 @@ class _AddRoomFormState extends State<AddRoomForm> {
               // Room Type Dropdown
               DropdownButtonFormField<String>(
                 initialValue: _selectedRoomType,
-                decoration: const InputDecoration(
-                  labelText: 'Room Type',
+                decoration: InputDecoration(
+                  labelText: 'Room Type'.tr(),
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.hotel),
                 ),
-                hint: const Text('Select room type'),
+                hint: Text('Select room type'.tr()),
                 items: _roomTypes.map((type) {
                   return DropdownMenuItem<String>(
                     value: type['value'],
@@ -157,7 +158,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
                 min: 50,
                 max: 1000,
                 divisions: 95,
-                label: '\$${_price.toInt()}',
+                label: '\$${_price.toInt()}'.tr(),
                 activeColor: AppTheme.primaryOrange,
                 onChanged: (val) => setState(() => _price = val),
               ),
@@ -167,7 +168,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Guest Capacity', style: AppTheme.titleMedium),
+                  Text('Guest Capacity'.tr(), style: AppTheme.titleMedium),
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: AppTheme.gray.withOpacity(0.3)),
@@ -210,7 +211,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
               const SizedBox(height: 20),
 
               // Add-ons Section
-              Text('Add-ons (Optional)', style: AppTheme.titleMedium),
+              Text('Add-ons (Optional)'.tr(), style: AppTheme.titleMedium),
               const SizedBox(height: 12),
               ..._addOns.keys.map((addOn) => _buildAddOnRow(addOn)),
               const SizedBox(height: 20),
@@ -228,7 +229,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Base Price', style: AppTheme.bodyMedium),
+                        Text('Base Price'.tr(), style: AppTheme.bodyMedium),
                         Text(
                           '\$${_price.toInt()}/night',
                           style: AppTheme.bodySmall.copyWith(color: AppTheme.gray),
@@ -238,7 +239,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('Total with Add-ons', style: AppTheme.bodyMedium),
+                        Text('Total with Add-ons'.tr(), style: AppTheme.bodyMedium),
                         Text(
                           '\$${_totalPrice.toInt()}/night',
                           style: AppTheme.titleMedium.copyWith(
@@ -254,7 +255,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
               const SizedBox(height: 20),
 
               // Photo Upload - Now using the reusable widget
-              Text('Room Photo', style: AppTheme.titleMedium),
+              Text('Room Photo'.tr(), style: AppTheme.titleMedium),
               const SizedBox(height: 8),
               DashedBorderContainer(
                 color: AppTheme.gray,
@@ -290,7 +291,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
 
               // Availability Toggle
               SwitchListTile(
-                title: Text('Available for Booking', style: AppTheme.titleMedium),
+                title: Text('Available for Booking'.tr(), style: AppTheme.titleMedium),
                 subtitle: Text(
                   _available ? 'Guests can book this room' : 'Room is unavailable',
                   style: AppTheme.bodySmall,
@@ -305,9 +306,9 @@ class _AddRoomFormState extends State<AddRoomForm> {
               // Description
               TextFormField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  hintText: 'Describe the room amenities and features...',
+                decoration: InputDecoration(
+                  labelText: 'Description'.tr(),
+                  hintText: 'Describe the room amenities and features...'.tr(),
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.description),
                   alignLabelWithHint: true,
@@ -335,7 +336,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         side: const BorderSide(color: AppTheme.gray),
                       ),
-                      child: const Text('Cancel'),
+                      child: Text('Cancel'.tr()),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -347,7 +348,7 @@ class _AddRoomFormState extends State<AddRoomForm> {
                         backgroundColor: AppTheme.primaryOrange,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Add Room',
                         style: TextStyle(
                           fontSize: 16,

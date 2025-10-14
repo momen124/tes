@@ -7,6 +7,7 @@ import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/providers/search_filter_provider.dart';
 import 'package:siwa/features/tourist/widgets/service_card.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TouristSearchScreen extends StatefulWidget {
   final bool? featuredOnly;
@@ -150,7 +151,7 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () => context.go('/tourist_home'),
               ),
-              title: const Text('Search'),
+              title: Text('Search'.tr()),
               elevation: 0,
               actions: [
                 // Filter toggle button
@@ -201,7 +202,7 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
                     controller: _searchController,
                     onChanged: (value) => _onSearchChanged(value, filterProvider),
                     decoration: InputDecoration(
-                      hintText: 'Search by name, location, or tags...',
+                      hintText: 'Search by name, location, or tags...'.tr(),
                       prefixIcon: const Icon(Icons.search, color: AppTheme.primaryOrange),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
@@ -251,7 +252,7 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
                                 minimumSize: const Size(0, 0),
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
-                              child: const Text(
+                              child: Text(
                                 'Clear All',
                                 style: TextStyle(fontSize: 12),
                               ),
@@ -294,11 +295,11 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
                           fontSize: 14,
                           color: AppTheme.darkGray,
                         ),
-                        items: const [
-                          DropdownMenuItem(value: 'recommended', child: Text('Recommended')),
-                          DropdownMenuItem(value: 'price_low', child: Text('Price: Low to High')),
-                          DropdownMenuItem(value: 'price_high', child: Text('Price: High to Low')),
-                          DropdownMenuItem(value: 'rating', child: Text('Highest Rated')),
+                        items: [
+                          DropdownMenuItem(value: 'recommended', child: Text('Recommended'.tr())),
+                          DropdownMenuItem(value: 'price_low', child: Text('Price: Low to High'.tr())),
+                          DropdownMenuItem(value: 'price_high', child: Text('Price: High to Low'.tr())),
+                          DropdownMenuItem(value: 'rating', child: Text('Highest Rated'.tr())),
                         ],
                         onChanged: (value) {
                           if (value != null) {
@@ -568,7 +569,7 @@ class _TouristSearchScreenState extends State<TouristSearchScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryOrange,
             ),
-            child: const Text('Clear All Filters'),
+            child: Text('Clear All Filters'.tr()),
           ),
         ],
       ),

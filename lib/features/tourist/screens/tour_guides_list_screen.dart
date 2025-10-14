@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TourGuidesListScreen extends StatefulWidget {
   const TourGuidesListScreen({super.key});
@@ -161,7 +162,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: const Text('Tour Guides'),
+        title: Text('Tour Guides'.tr()),
         elevation: 0,
       ),
       body: Column(
@@ -258,7 +259,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                               _selectedLanguage = 'all';
                             });
                           },
-                          child: const Text('Clear Filters'),
+                          child: Text('Clear Filters'.tr()),
                         ),
                       ],
                     ),
@@ -506,7 +507,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                               vertical: 8,
                             ),
                           ),
-                          child: const Text('View Profile'),
+                          child: Text('View Profile'.tr()),
                         ),
                       ],
                     ),

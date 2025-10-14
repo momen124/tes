@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RestaurantsListScreen extends StatefulWidget {
   const RestaurantsListScreen({super.key});
@@ -131,14 +132,14 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: const Text('Restaurants'),
+        title: Text('Restaurants'.tr()),
         elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_cart_outlined),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Cart feature coming soon')),
+                SnackBar(content: Text('Cart feature coming soon'.tr())),
               );
             },
           ),
@@ -173,7 +174,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
-                      const Text('Price: ', style: TextStyle(fontSize: 14)),
+                      Text('Price: '.tr(), style: TextStyle(fontSize: 14)),
                       const SizedBox(width: 8),
                       _buildPriceFilter('All', 'all'),
                       _buildPriceFilter('Budget', 'low'),
@@ -322,7 +323,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                         color: AppTheme.errorRed,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Closed',
                         style: TextStyle(
                           color: Colors.white,
@@ -668,7 +669,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                           backgroundColor: AppTheme.primaryOrange,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        child: const Text(
+                        child: Text(
                           'View Menu & Order',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),

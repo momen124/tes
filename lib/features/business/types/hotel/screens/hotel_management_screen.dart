@@ -9,6 +9,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
 import 'package:confetti/confetti.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class HotelManagementScreen extends ConsumerStatefulWidget {
   const HotelManagementScreen({super.key});
@@ -94,12 +95,12 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
           icon: const Icon(Icons.arrow_back),
           onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
-        title: const Text('Hotel Management'),
+        title: Text('Hotel Management'.tr()),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: isOffline ? null : _showAddRoomDialog,
-            tooltip: 'Add Room',
+            tooltip: 'Add Room'.tr(),
           ),
         ],
         bottom: TabBar(
@@ -254,7 +255,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Occupancy Overview', style: AppTheme.titleLarge).animate().fadeIn(),
+          Text('Occupancy Overview'.tr(), style: AppTheme.titleLarge).animate().fadeIn(),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -274,7 +275,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Monthly Occupancy Rate', style: AppTheme.titleMedium).animate().fadeIn(),
+                  Text('Monthly Occupancy Rate'.tr(), style: AppTheme.titleMedium).animate().fadeIn(),
                   const SizedBox(height: 16),
                   SizedBox(
                     height: 200,
@@ -338,7 +339,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
             ),
           ).animate().fadeIn(),
           const SizedBox(height: 24),
-          Text('Revenue Overview', style: AppTheme.titleLarge).animate().fadeIn(),
+          Text('Revenue Overview'.tr(), style: AppTheme.titleLarge).animate().fadeIn(),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -427,14 +428,14 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
                         onPressed: isOffline
                             ? null
                             : () => _handleReservationAction(reservation, false),
-                        child: const Text('Reject'),
+                        child: Text('Reject'.tr()),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: isOffline
                             ? null
                             : () => _handleReservationAction(reservation, true),
-                        child: const Text('Approve'),
+                        child: Text('Approve'.tr()),
                       ),
                     ],
                   ),
@@ -496,7 +497,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
           });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${roomData['name']} added successfully!'),
+              content: Text('${roomData['.tr()name']} added successfully!'),
               backgroundColor: AppTheme.successGreen,
               behavior: SnackBarBehavior.floating,
             ),
@@ -516,7 +517,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Edit Room'),
+        title: Text('Edit Room'.tr()),
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -525,13 +526,13 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
               children: [
                 TextFormField(
                   controller: typeController,
-                  decoration: const InputDecoration(labelText: 'Room Type'),
+                  decoration: InputDecoration(labelText: 'Room Type'.tr()),
                   validator: (value) => value?.isEmpty ?? true ? 'Enter room type' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: priceController,
-                  decoration: const InputDecoration(labelText: 'Price per Night'),
+                  decoration: InputDecoration(labelText: 'Price per Night'.tr()),
                   keyboardType: TextInputType.number,
                   validator: (value) => value?.isEmpty ?? true ? 'Enter price' : null,
                 ),
@@ -542,7 +543,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -553,12 +554,12 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Room updated successfully')),
+                  SnackBar(content: Text('Room updated successfully'.tr())),
                 );
                 _confettiController.play();
               }
             },
-            child: const Text('Save'),
+            child: Text('Save'.tr()),
           ),
         ],
       ),
@@ -574,7 +575,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Block Dates for ${room['type']}', style: AppTheme.titleMedium),
+              Text('Block Dates for ${room['.tr()type']}', style: AppTheme.titleMedium),
               const SizedBox(height: 16),
               TableCalendar(
                 firstDay: DateTime.now(),
@@ -606,7 +607,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen> w
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Done'),
+                child: Text('Done'.tr()),
               ),
             ],
           ),

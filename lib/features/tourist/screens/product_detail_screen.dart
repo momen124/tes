@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   const ProductDetailScreen({super.key});
@@ -12,7 +13,7 @@ class ProductDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(icon: const Icon(Icons.close), onPressed: () => context.pop()),
-        title: const Text('Product Details'),
+        title: Text('Product Details'.tr()),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -30,24 +31,24 @@ class ProductDetailScreen extends StatelessWidget {
                 'https://www.sharm-club.com/assets/images/oasis/tour-white-desert-safari.jpg',
               ].map((url) => Image.network(url, fit: BoxFit.cover)).toList(),
             ),
-            const Padding(
+             Padding(
               padding: EdgeInsets.all(16),
-              child: Text('Siwa Oasis Tour', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              child: Text('Siwa Oasis Tour'.tr(), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             ),
-            const Padding(
+             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Text('Explore the hidden gems of Siwa Oasis with our expert guides. This tour includes visits to the ancient ruins, salt lakes, and traditional villages.'),
+              child: Text('Explore the hidden gems of Siwa Oasis with our expert guides. This tour includes visits to the ancient ruins, salt lakes, and traditional villages.'.tr()),
             ),
             const SizedBox(height: 24),
-            const Padding(
+             Padding(
               padding: EdgeInsets.all(16),
-              child: Text('Checkout', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              child: Text('Checkout'.tr(), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
                 decoration: InputDecoration(
-                  labelText: 'Payment Method',
+                  labelText: 'Payment Method'.tr(),
                   suffixIcon: const Icon(Icons.credit_card),
                   filled: true,
                   fillColor: AppTheme.lightBlueGray,
@@ -62,7 +63,7 @@ class ProductDetailScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
                 decoration: InputDecoration(
-                  labelText: 'Total',
+                  labelText: 'Total'.tr(),
                   filled: true,
                   fillColor: AppTheme.lightBlueGray,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -84,7 +85,7 @@ class ProductDetailScreen extends StatelessWidget {
                     backgroundColor: AppTheme.primaryOrange,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Pay Now'),
+                  child: Text('Pay Now'.tr()),
                 ),
               ),
             ),
@@ -95,11 +96,11 @@ class ProductDetailScreen extends StatelessWidget {
         currentIndex: 2,
         selectedItemColor: AppTheme.primaryOrange,
         unselectedItemColor: AppTheme.gray,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.bookmark_border), label: 'Bookings'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
+        items:  [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'.tr()),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'.tr()),
+          BottomNavigationBarItem(icon: Icon(Icons.bookmark_border), label: 'Bookings'.tr()),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'.tr()),
         ],
         onTap: (index) {
           if (index == 0) context.go('/tourist_home');

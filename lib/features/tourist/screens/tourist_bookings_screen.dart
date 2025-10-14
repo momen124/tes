@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TouristBookingsScreen extends ConsumerStatefulWidget {
   const TouristBookingsScreen({super.key});
@@ -66,13 +67,13 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: const Text('Bookings'),
+        title: Text('Bookings'.tr()),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Booking settings')),
+                SnackBar(content: Text('Booking settings'.tr())),
               );
             },
           ),

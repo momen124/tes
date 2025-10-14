@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AttractionsListScreen extends StatefulWidget {
   const AttractionsListScreen({super.key});
@@ -153,7 +154,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: const Text('Attractions & Tours'),
+        title: Text('Attractions & Tours'.tr()),
         elevation: 0,
       ),
       body: Column(

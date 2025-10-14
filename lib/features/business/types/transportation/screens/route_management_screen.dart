@@ -8,6 +8,7 @@ import 'package:siwa/features/tourist/providers/offline_provider.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:confetti/confetti.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RouteManagementScreen extends ConsumerStatefulWidget {
   const RouteManagementScreen({super.key});
@@ -125,12 +126,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
           icon: const Icon(Icons.arrow_back),
           onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
-        title: const Text('Route Management'),
+        title: Text('Route Management'.tr()),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: isOffline ? null : _showAddRouteDialog,
-            tooltip: 'Add Route',
+            tooltip: 'Add Route'.tr(),
           ),
         ],
         bottom: TabBar(
@@ -150,7 +151,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
               child: Container(
                 decoration: AppTheme.offlineBanner,
                 padding: const EdgeInsets.all(16),
-                child: const Text(
+                child: Text(
                   'You are currently offline',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white),
@@ -315,7 +316,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                       backgroundColor: AppTheme.primaryOrange,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     ),
-                    child: const Text('Approve'),
+                    child: Text('Approve'.tr()),
                   )
                 : Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -345,7 +346,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Add New Route'),
+        title: Text('Add New Route'.tr()),
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -354,31 +355,31 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
               children: [
                 TextFormField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Route Name'),
+                  decoration: InputDecoration(labelText: 'Route Name'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter route name' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: distanceController,
-                  decoration: const InputDecoration(labelText: 'Distance (e.g., 25 km)'),
+                  decoration: InputDecoration(labelText: 'Distance (e.g., 25 km)'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter distance' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: durationController,
-                  decoration: const InputDecoration(labelText: 'Duration (e.g., 1.5 hours)'),
+                  decoration: InputDecoration(labelText: 'Duration (e.g., 1.5 hours)'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter duration' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: scheduleController,
-                  decoration: const InputDecoration(labelText: 'Schedule (e.g., Daily 8AM-8PM)'),
+                  decoration: InputDecoration(labelText: 'Schedule (e.g., Daily 8AM-8PM)'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter schedule' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: rateController,
-                  decoration: const InputDecoration(labelText: 'Rate per km'),
+                  decoration: InputDecoration(labelText: 'Rate per km'.tr()),
                   keyboardType: TextInputType.number,
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter rate' : null,
                 ),
@@ -389,7 +390,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -407,12 +408,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Route added successfully')),
+                  SnackBar(content: Text('Route added successfully'.tr())),
                 );
                 _confettiController.play();
               }
             },
-            child: const Text('Add'),
+            child: Text('Add'.tr()),
           ),
         ],
       ),
@@ -428,7 +429,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Edit Route'),
+        title: Text('Edit Route'.tr()),
         content: Form(
           key: formKey,
           child: Column(
@@ -436,19 +437,19 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
             children: [
               TextFormField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: 'Route Name'),
+                decoration: InputDecoration(labelText: 'Route Name'.tr()),
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter route name' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: scheduleController,
-                decoration: const InputDecoration(labelText: 'Schedule'),
+                decoration: InputDecoration(labelText: 'Schedule'.tr()),
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter schedule' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: rateController,
-                decoration: const InputDecoration(labelText: 'Rate per km'),
+                decoration: InputDecoration(labelText: 'Rate per km'.tr()),
                 keyboardType: TextInputType.number,
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter rate' : null,
               ),
@@ -458,7 +459,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -470,12 +471,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Route updated')),
+                  SnackBar(content: Text('Route updated'.tr())),
                 );
                 _confettiController.play();
               }
             },
-            child: const Text('Save'),
+            child: Text('Save'.tr()),
           ),
         ],
       ),
@@ -491,7 +492,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Edit Vehicle'),
+        title: Text('Edit Vehicle'.tr()),
         content: Form(
           key: formKey,
           child: Column(
@@ -499,19 +500,19 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
             children: [
               TextFormField(
                 controller: typeController,
-                decoration: const InputDecoration(labelText: 'Vehicle Type'),
+                decoration: InputDecoration(labelText: 'Vehicle Type'.tr()),
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter vehicle type' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: plateController,
-                decoration: const InputDecoration(labelText: 'Plate Number'),
+                decoration: InputDecoration(labelText: 'Plate Number'.tr()),
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter plate number' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: capacityController,
-                decoration: const InputDecoration(labelText: 'Capacity'),
+                decoration: InputDecoration(labelText: 'Capacity'.tr()),
                 keyboardType: TextInputType.number,
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter capacity' : null,
               ),
@@ -521,7 +522,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -533,12 +534,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Vehicle updated')),
+                  SnackBar(content: Text('Vehicle updated'.tr())),
                 );
                 _confettiController.play();
               }
             },
-            child: const Text('Save'),
+            child: Text('Save'.tr()),
           ),
         ],
       ),
@@ -549,12 +550,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Route'),
-        content: Text('Are you sure you want to delete "${route['name']}"?'),
+        title: Text('Delete Route'.tr()),
+  content: Text('Are you sure you want to delete ${route['name']}?'.tr()),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -563,12 +564,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
               });
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Route deleted')),
+                SnackBar(content: Text('Route deleted'.tr())),
               );
               _confettiController.play();
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppTheme.errorRed),
-            child: const Text('Delete'),
+            child: Text('Delete'.tr()),
           ),
         ],
       ),
@@ -580,8 +581,8 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
       trip['status'] = 'confirmed';
     });
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Trip approved successfully!'),
+      SnackBar(
+        content: Text('Trip approved successfully!'.tr()),
         backgroundColor: AppTheme.successGreen,
       ),
     );

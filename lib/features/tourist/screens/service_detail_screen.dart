@@ -5,6 +5,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ServiceDetailScreen extends StatelessWidget {
   const ServiceDetailScreen({super.key});
@@ -14,7 +15,7 @@ class ServiceDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.go('/tourist_search')),
-        title: const Text('Siwa Shali Lodge'),
+        title: Text('Siwa Shali Lodge'.tr()),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -40,7 +41,7 @@ class ServiceDetailScreen extends StatelessWidget {
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Text('Siwa Shali Lodge offers a unique stay in the heart of Siwa Oasis, blending traditional architecture with modern comforts. Experience authentic Siwan hospitality in our eco-friendly lodge, surrounded by the oasis\'s natural beauty.'),
+              child: Text('Siwa Shali Lodge offers a unique stay in the heart of Siwa Oasis, blending traditional architecture with modern comforts. Experience authentic Siwan hospitality in our eco-friendly lodge, surrounded by the oasis\'.tr()s natural beauty.'),
             ),
             const SizedBox(height: 24),
             const Padding(
@@ -54,7 +55,7 @@ class ServiceDetailScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  const Text('4.7', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                  Text('4.7'.tr(), style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
                   const SizedBox(width: 8),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +76,7 @@ class ServiceDetailScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Text('125 reviews'),
+                      Text('125 reviews'.tr()),
                     ],
                   ),
                 ],
@@ -84,17 +85,17 @@ class ServiceDetailScreen extends StatelessWidget {
             ListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              children: const [
+              children:  [
                 ListTile(
                   leading: CircleAvatar(),
-                  title: Text('Amira Hassan'),
-                  subtitle: Text('2 weeks ago\nAbsolutely loved my stay at Siwa Shali Lodge! The staff were incredibly welcoming, the rooms were beautifully decorated, and the location was perfect for exploring the oasis. Highly recommend!'),
+                  title: Text('Amira Hassan'.tr()),
+                  subtitle: Text('2 weeks ago\nAbsolutely loved my stay at Siwa Shali Lodge! The staff were incredibly welcoming, the rooms were beautifully decorated, and the location was perfect for exploring the oasis. Highly recommend!'.tr()),
                   trailing: Icon(Icons.thumb_up_off_alt),
                 ),
                 ListTile(
                   leading: CircleAvatar(),
-                  title: Text('Omar Khaled'),
-                  subtitle: Text('1 month ago\nSiwa Shali Lodge is a great choice for a comfortable and authentic experience in Siwa. The lodge is well-maintained, and the staff are friendly. The only minor issue was the limited Wi-Fi, but that\'s expected in such a remote location.'),
+                  title: Text('Omar Khaled'.tr()),
+                  subtitle: Text('1 month ago\nSiwa Shali Lodge is a great choice for a comfortable and authentic experience in Siwa. The lodge is well-maintained, and the staff are friendly. The only minor issue was the limited Wi-Fi, but that\'.tr()s expected in such a remote location.'),
                   trailing: Icon(Icons.thumb_up_off_alt),
                 ),
               ],
@@ -139,7 +140,7 @@ class ServiceDetailScreen extends StatelessWidget {
                     backgroundColor: AppTheme.primaryOrange,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Book'),
+                  child: Text('Book'.tr()),
                 ),
               ),
             ),
@@ -150,11 +151,11 @@ class ServiceDetailScreen extends StatelessWidget {
         currentIndex: 1,
         selectedItemColor: AppTheme.primaryOrange,
         unselectedItemColor: AppTheme.gray,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.bookmark_border), label: 'Bookings'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
+        items:  [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'.tr()),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'.tr()),
+          BottomNavigationBarItem(icon: Icon(Icons.bookmark_border), label: 'Bookings'.tr()),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'.tr()),
         ],
         onTap: (index) {
           if (index == 0) context.go('/tourist_home');

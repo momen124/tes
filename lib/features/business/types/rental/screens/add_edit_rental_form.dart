@@ -1,6 +1,7 @@
 // lib/features/business/types/rental/screens/add_edit_rental_form.dart
 import 'package:flutter/material.dart';
 import 'package:siwa/widgets/dashed_border_container.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 // Vehicle Type Categories
 enum VehicleCategory {
@@ -97,8 +98,8 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
                     ),
                   Expanded(
                     child: TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Rental Name',
+                      decoration: InputDecoration(
+                        labelText: 'Rental Name'.tr(),
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
@@ -115,13 +116,13 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
               
               // Vehicle Type Dropdown
               DropdownButtonFormField<VehicleType>(
-                decoration: const InputDecoration(
-                  labelText: 'Vehicle Type',
+                decoration: InputDecoration(
+                  labelText: 'Vehicle Type'.tr(),
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.category),
                 ),
                 initialValue: _selectedVehicleType,
-                hint: const Text('Select vehicle type'),
+                hint: Text('Select vehicle type'.tr()),
                 isExpanded: true,
                 validator: (value) {
                   if (value == null) {
@@ -139,13 +140,13 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
               const SizedBox(height: 16),
               
               // Price Slider
-              Text('Price: \$${_price.toInt()}'),
+              Text('Price: \$${_price.toInt()}'.tr()),
               Slider(
                 value: _price,
                 min: 0,
                 max: 200,
                 divisions: 40,
-                label: '\$${_price.toInt()}',
+                label: '\$${_price.toInt()}'.tr(),
                 onChanged: (val) => setState(() => _price = val),
               ),
               
@@ -153,7 +154,7 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Capacity', style: TextStyle(fontSize: 16)),
+                  Text('Capacity'.tr(), style: TextStyle(fontSize: 16)),
                   Row(
                     children: [
                       IconButton(
@@ -184,9 +185,9 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
               const SizedBox(height: 16),
               
               // Photo Upload
-              const Align(
+               Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Photo', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                child: Text('Photo'.tr(), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
               ),
               const SizedBox(height: 8),
             const DashedBorderContainer(
@@ -221,7 +222,7 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
               
               // Availability Switch
               SwitchListTile(
-                title: const Text('Available'),
+                title: Text('Available'.tr()),
                 subtitle: Text(_available ? 'Currently available for rent' : 'Not available'),
                 value: _available,
                 activeThumbColor: Colors.orange,
@@ -231,8 +232,8 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
               
               // Description
               TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Description',
+                decoration: InputDecoration(
+                  labelText: 'Description'.tr(),
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                 ),
@@ -256,7 +257,7 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text('Cancel'),
+                      child: Text('Cancel'.tr()),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -272,7 +273,7 @@ class _AddEditRentalFormState extends State<AddEditRentalForm> {
                         backgroundColor: Colors.orange,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Save',
                         style: TextStyle(color: Colors.white),
                       ),

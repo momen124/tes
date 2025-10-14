@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siwa/features/auth/providers/auth_provider.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/utils/validators.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -93,7 +94,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       children: [
                         const Icon(Icons.park, color: AppTheme.primaryOrange, size: 36),
                         const SizedBox(width: 12),
-                        Text('Siwa Oasis', style: AppTheme.headlineLarge),
+                        Text('Siwa Oasis'.tr(), style: AppTheme.headlineLarge),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -111,8 +112,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         children: [
                           TextFormField(
                             controller: _emailController,
-                            decoration: const InputDecoration(
-                              labelText: 'Email',
+                            decoration: InputDecoration(
+                              labelText: 'Email'.tr(),
                               prefixIcon: Icon(Icons.email_outlined),
                             ),
                             keyboardType: TextInputType.emailAddress,
@@ -122,8 +123,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           
                           TextFormField(
                             controller: _passwordController,
-                            decoration: const InputDecoration(
-                              labelText: 'Password',
+                            decoration: InputDecoration(
+                              labelText: 'Password'.tr(),
                               prefixIcon: Icon(Icons.lock_outline),
                             ),
                             obscureText: true,
@@ -144,7 +145,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       strokeWidth: 2,
                                     ),
                                   )
-                                : Text('Login', style: AppTheme.buttonText),
+                                : Text('Login'.tr(), style: AppTheme.buttonText),
                             ),
                           ),
                         ],

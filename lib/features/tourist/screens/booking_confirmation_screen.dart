@@ -46,7 +46,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
         backgroundColor: AppTheme.lightBlueGray,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text('Booking Confirmed'),
+          title: Text('Booking Confirmed'.tr()),
           elevation: 0,
           backgroundColor: AppTheme.white,
         ),

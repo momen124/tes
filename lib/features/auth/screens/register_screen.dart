@@ -4,6 +4,7 @@ import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/auth/providers/auth_provider.dart';
 import 'package:siwa/utils/validators.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   final String userType;
@@ -76,7 +77,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Registration failed: ${e.toString()}'),
+            content: Text('Registration failed: ${e.toString()}'.tr()),
             backgroundColor: AppTheme.errorRed,
           ),
         );
@@ -105,7 +106,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       children: [
                         const Icon(Icons.park, color: AppTheme.primaryOrange, size: 36),
                         const SizedBox(width: 12),
-                        Text('Siwa Oasis', style: AppTheme.headlineLarge),
+                        Text('Siwa Oasis'.tr(), style: AppTheme.headlineLarge),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -124,8 +125,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           // Email
                           TextFormField(
                             controller: _emailController,
-                            decoration: const InputDecoration(
-                              labelText: 'Email',
+                            decoration: InputDecoration(
+                              labelText: 'Email'.tr(),
                               prefixIcon: Icon(Icons.email_outlined),
                             ),
                             keyboardType: TextInputType.emailAddress,
@@ -136,8 +137,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           // Username
                           TextFormField(
                             controller: _usernameController,
-                            decoration: const InputDecoration(
-                              labelText: 'Username',
+                            decoration: InputDecoration(
+                              labelText: 'Username'.tr(),
                               prefixIcon: Icon(Icons.person_outline),
                             ),
                             validator: (v) => Validators.validateRequired(v, 'Username'),
@@ -147,9 +148,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           // Phone
                           TextFormField(
                             controller: _phoneController,
-                            decoration: const InputDecoration(
-                              labelText: 'Phone',
-                              hintText: '+20 123 456 7890',
+                            decoration: InputDecoration(
+                              labelText: 'Phone'.tr(),
+                              hintText: '+20 123 456 7890'.tr(),
                               prefixIcon: Icon(Icons.phone_outlined),
                             ),
                             keyboardType: TextInputType.phone,
@@ -160,8 +161,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           // Password
                           TextFormField(
                             controller: _passwordController,
-                            decoration: const InputDecoration(
-                              labelText: 'Password',
+                            decoration: InputDecoration(
+                              labelText: 'Password'.tr(),
                               prefixIcon: Icon(Icons.lock_outline),
                             ),
                             obscureText: true,
@@ -176,7 +177,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: SwitchListTile(
-                              title: Text('Enable GPS', style: AppTheme.bodyMedium),
+                              title: Text('Enable GPS'.tr(), style: AppTheme.bodyMedium),
                               subtitle: Text(
                                 'Required for location features',
                                 style: AppTheme.bodySmall,
@@ -191,8 +192,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           // MFA (Optional)
                           TextFormField(
                             controller: _mfaController,
-                            decoration: const InputDecoration(
-                              labelText: 'MFA Code (Optional)',
+                            decoration: InputDecoration(
+                              labelText: 'MFA Code (Optional)'.tr(),
                               prefixIcon: Icon(Icons.security_outlined),
                             ),
                           ),
@@ -212,7 +213,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                       strokeWidth: 2,
                                     ),
                                   )
-                                : Text('Register', style: AppTheme.buttonText),
+                                : Text('Register'.tr(), style: AppTheme.buttonText),
                             ),
                           ),
                         ],

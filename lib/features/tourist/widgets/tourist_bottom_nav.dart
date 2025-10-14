@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TouristBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -33,31 +34,31 @@ class TouristBottomNav extends StatelessWidget {
           elevation: 0,
           selectedFontSize: 12,
           unselectedFontSize: 12,
-          items: const [
+          items:  [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
               activeIcon: Icon(Icons.home),
-              label: 'Home',
+              label: 'Home'.tr(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.search_outlined),
               activeIcon: Icon(Icons.search),
-              label: 'Discover',
+              label: 'Discover'.tr(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.camera_alt_outlined),
               activeIcon: Icon(Icons.camera_alt),
-              label: 'Challenges',
+              label: 'Challenges'.tr(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.bookmark_outline),
               activeIcon: Icon(Icons.bookmark),
-              label: 'Bookings',
+              label: 'Bookings'.tr(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),
               activeIcon: Icon(Icons.person),
-              label: 'Profile',
+              label: 'Profile'.tr(),
             ),
           ],
           onTap: (index) {

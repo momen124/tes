@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RentalBookingForm extends StatefulWidget {
   final Map<String, dynamic> rental;
@@ -66,7 +67,7 @@ class _RentalBookingFormState extends State<RentalBookingForm> {
           onPressed: () {
             // Show rental details
           },
-          child: const Text('View Details'),
+          child: Text('View Details'.tr()),
         ),
       ],
     );

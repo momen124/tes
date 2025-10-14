@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/business/models/business_type.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BusinessProfileScreen extends ConsumerStatefulWidget {
   final BusinessType businessType;
@@ -171,7 +172,7 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
           children: [
             Icon(_getBusinessIcon(), color: businessColor),
             const SizedBox(width: 8),
-            Text('${widget.businessType.displayName} Profile'),
+            Text('${widget.businessType.displayName} Profile'.tr()),
           ],
         ),
         elevation: 0,
@@ -257,7 +258,7 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
               TextFormField(
                 controller: _businessNameController,
                 decoration: InputDecoration(
-                  labelText: 'Business Name',
+                  labelText: 'Business Name'.tr(),
                   hintText: _getBusinessNameHint(),
                   prefixIcon: Icon(Icons.business, color: businessColor),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -283,7 +284,7 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
-                  labelText: 'Description',
+                  labelText: 'Description'.tr(),
                   hintText: _getDescriptionHint(),
                   prefixIcon: Icon(Icons.description, color: businessColor),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -317,7 +318,7 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(
-                  labelText: 'Contact Email',
+                  labelText: 'Contact Email'.tr(),
                   hintText: _getEmailHint(),
                   prefixIcon: Icon(Icons.email, color: businessColor),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -347,8 +348,8 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
               TextFormField(
                 controller: _phoneController,
                 decoration: InputDecoration(
-                  labelText: 'Contact Phone',
-                  hintText: '+20 123 456 7890',
+                  labelText: 'Contact Phone'.tr(),
+                  hintText: '+20 123 456 7890'.tr(),
                   prefixIcon: Icon(Icons.phone, color: businessColor),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   enabledBorder: OutlineInputBorder(
@@ -386,7 +387,7 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
               TextFormField(
                 controller: _addressController,
                 decoration: InputDecoration(
-                  labelText: 'Address',
+                  labelText: 'Address'.tr(),
                   hintText: _getAddressHint(),
                   prefixIcon: Icon(Icons.location_on, color: businessColor),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -477,7 +478,7 @@ class _BusinessProfileScreenState extends ConsumerState<BusinessProfileScreen> {
                           if (_formKey.currentState!.validate()) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('${widget.businessType.displayName} profile updated successfully!'),
+                                content: Text('${widget.businessType.displayName} profile updated successfully!'.tr()),
                                 backgroundColor: AppTheme.successGreen,
                               ),
                             );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SiwaInfoScreen extends StatefulWidget {
   const SiwaInfoScreen({super.key});
@@ -101,7 +102,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Siwa Oasis'),
+        title: Text('Siwa Oasis'.tr()),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -145,7 +146,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
 
                   // History Section
                   _buildExpandableSection(
-                    title: 'History',
+                    title: 'History'.tr(),
                     isExpanded: _historyExpanded,
                     onTap: () => setState(() => _historyExpanded = !_historyExpanded),
                     content: 'Siwa\'s history dates back to ancient Egypt, serving as a crucial trade route and home to the Oracle of Amun. Its isolation preserved its unique Berber culture and traditions.',
@@ -154,7 +155,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
 
                   // Best Time to Visit
                   _buildExpandableSection(
-                    title: 'Best Time to Visit',
+                    title: 'Best Time to Visit'.tr(),
                     isExpanded: _bestTimeExpanded,
                     onTap: () => setState(() => _bestTimeExpanded = !_bestTimeExpanded),
                     content: 'The best time to visit Siwa is between October and April when temperatures are mild. Avoid summer months (June-August) when it can get extremely hot.',
@@ -163,7 +164,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
 
                   // Travel Tips
                   _buildExpandableSection(
-                    title: 'Travel Tips',
+                    title: 'Travel Tips'.tr(),
                     isExpanded: _travelTipsExpanded,
                     onTap: () => setState(() => _travelTipsExpanded = !_travelTipsExpanded),
                     content: '• Bring cash as ATMs are limited\n• Respect local customs and dress modestly\n• Stay hydrated in the desert climate\n• Book accommodations in advance during peak season\n• Try the local dates and olive oil',
@@ -185,13 +186,13 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                             color: Colors.blue[50],
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: const Center(
+                          child:  Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.map, size: 60, color: Colors.blue),
                                 SizedBox(height: 8),
-                                Text('Interactive Map'),
+                                Text('Interactive Map'.tr()),
                               ],
                             ),
                           ),
@@ -301,7 +302,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                         backgroundColor: AppTheme.primaryOrange,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Plan Your Visit',
                         style: TextStyle(
                           fontSize: 16,

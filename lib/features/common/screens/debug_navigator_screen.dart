@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DebugNavigatorScreen extends StatelessWidget {
   const DebugNavigatorScreen({super.key});
@@ -8,7 +9,7 @@ class DebugNavigatorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Debug Navigator'),
+        title: Text('Debug Navigator'.tr()),
         backgroundColor: Colors.orange,
       ),
       body: ListView(

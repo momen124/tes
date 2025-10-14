@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 enum NavBarType { tourist, business, admin }
 
@@ -18,77 +19,77 @@ class UnifiedBottomNav extends StatelessWidget {
   List<BottomNavigationBarItem> get _items {
     switch (type) {
       case NavBarType.tourist:
-        return const [
+        return  [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Home'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search_outlined),
             activeIcon: Icon(Icons.search),
-            label: 'Search',
+            label: 'Search'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today_outlined),
             activeIcon: Icon(Icons.calendar_today),
-            label: 'Bookings',
+            label: 'Bookings'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.emoji_events_outlined),
             activeIcon: Icon(Icons.emoji_events),
-            label: 'Challenges',
+            label: 'Challenges'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
-            label: 'Profile',
+            label: 'Profile'.tr(),
           ),
         ];
       case NavBarType.business:
-        return const [
+        return  [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard_outlined),
             activeIcon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+            label: 'Dashboard'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt_outlined),
             activeIcon: Icon(Icons.list_alt),
-            label: 'Listings',
+            label: 'Listings'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today_outlined),
             activeIcon: Icon(Icons.calendar_today),
-            label: 'Bookings',
+            label: 'Bookings'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
-            label: 'Profile',
+            label: 'Profile'.tr(),
           ),
         ];
       case NavBarType.admin:
-        return const [
+        return  [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard_outlined),
             activeIcon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+            label: 'Dashboard'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people_outline),
             activeIcon: Icon(Icons.people),
-            label: 'Users',
+            label: 'Users'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.verified_user_outlined),
             activeIcon: Icon(Icons.verified_user),
-            label: 'Moderation',
+            label: 'Moderation'.tr(),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history_outlined),
             activeIcon: Icon(Icons.history),
-            label: 'Logs',
+            label: 'Logs'.tr(),
           ),
         ];
     }

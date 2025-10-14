@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/business/models/business_type.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BusinessBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -42,21 +43,21 @@ class BusinessBottomNav extends StatelessWidget {
           unselectedFontSize: 11,
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
           items: [
-            const BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(Icons.dashboard_outlined),
               activeIcon: Icon(Icons.dashboard),
-              label: 'Dashboard',
+              label: 'Dashboard'.tr(),
             ),
-            const BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(Icons.list_alt_outlined),
               activeIcon: Icon(Icons.list_alt),
-              label: 'Listings',
+              label: 'Listings'.tr(),
             ),
             _getBusinessSpecificNavItem(),
-            const BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),
               activeIcon: Icon(Icons.person),
-              label: 'Profile',
+              label: 'Profile'.tr(),
             ),
           ],
         ),
@@ -68,46 +69,46 @@ class BusinessBottomNav extends StatelessWidget {
   BottomNavigationBarItem _getBusinessSpecificNavItem() {
     switch (businessType) {
       case BusinessType.hotel:
-        return const BottomNavigationBarItem(
+        return BottomNavigationBarItem(
           icon: Icon(Icons.hotel_outlined),
           activeIcon: Icon(Icons.hotel),
-          label: 'Rooms',
+          label: 'Rooms'.tr(),
         );
       case BusinessType.rental:
-        return const BottomNavigationBarItem(
+        return BottomNavigationBarItem(
           icon: Icon(Icons.directions_car_outlined),
           activeIcon: Icon(Icons.directions_car),
-          label: 'Fleet',
+          label: 'Fleet'.tr(),
         );
       case BusinessType.restaurant:
-        return const BottomNavigationBarItem(
+        return BottomNavigationBarItem(
           icon: Icon(Icons.restaurant_menu_outlined),
           activeIcon: Icon(Icons.restaurant_menu),
-          label: 'Menu',
+          label: 'Menu'.tr(),
         );
       case BusinessType.store:
-        return const BottomNavigationBarItem(
+        return BottomNavigationBarItem(
           icon: Icon(Icons.inventory_outlined),
           activeIcon: Icon(Icons.inventory),
-          label: 'Inventory',
+          label: 'Inventory'.tr(),
         );
       case BusinessType.tourGuide:
-        return const BottomNavigationBarItem(
+        return BottomNavigationBarItem(
           icon: Icon(Icons.calendar_month_outlined),
           activeIcon: Icon(Icons.calendar_month),
-          label: 'Schedule',
+          label: 'Schedule'.tr(),
         );
       case BusinessType.transportation:
-        return const BottomNavigationBarItem(
+        return BottomNavigationBarItem(
           icon: Icon(Icons.route_outlined),
           activeIcon: Icon(Icons.route),
-          label: 'Routes',
+          label: 'Routes'.tr(),
         );
       case BusinessType.tripBooking:
-        return const BottomNavigationBarItem(
+        return BottomNavigationBarItem(
           icon: Icon(Icons.map_outlined),
           activeIcon: Icon(Icons.map),
-          label: 'Trips',
+          label: 'Trips'.tr(),
         );
     }
   }

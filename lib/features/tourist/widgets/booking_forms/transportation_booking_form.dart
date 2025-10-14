@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TransportationBookingForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onFormDataChanged;
@@ -90,7 +91,7 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Seats'),
+            Text('Seats'.tr()),
             Row(
               children: [
                 IconButton(
@@ -133,18 +134,18 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _selectedRoute,
-          items: const [
-            DropdownMenuItem(value: 'route1', child: Text('Siwa to Cairo')),
-            DropdownMenuItem(value: 'route2', child: Text('Siwa to Alexandria')),
-            DropdownMenuItem(value: 'route3', child: Text('City Tour')),
+          items:  [
+            DropdownMenuItem(value: 'route1', child: Text('Siwa to Cairo'.tr())),
+            DropdownMenuItem(value: 'route2', child: Text('Siwa to Alexandria'.tr())),
+            DropdownMenuItem(value: 'route3', child: Text('City Tour'.tr())),
           ],
           onChanged: (value) => setState(() {
             _selectedRoute = value;
             _updateFormData();
           }),
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
-            hintText: 'Select Route',
+            hintText: 'Select Route'.tr(),
           ),
         ),
       ],
@@ -173,12 +174,12 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
             ),
             child: _photoIdPath != null
                 ? Image.network(_photoIdPath!, fit: BoxFit.cover)
-                : const Column(
+                :  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.cloud_upload, size: 40, color: Colors.grey),
                       SizedBox(height: 8),
-                      Text('Click to upload or drag and drop'),
+                      Text('Click to upload or drag and drop'.tr()),
                       SizedBox(height: 4),
                       Text(
                         'PNG, JPG or PDF (MAX.800x400px)',
