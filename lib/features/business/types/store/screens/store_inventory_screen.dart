@@ -249,7 +249,7 @@ final isLowStock = (product['stock'] as int? ?? 0) < (product['lowStockThreshold
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '${product['stock'] == true ?? 0} in stock',
+                      '${product['stock'] ?? 0} in stock',
                       style: AppTheme.bodySmall.copyWith(color: AppTheme.white),
                     ),
                   ),
@@ -473,7 +473,7 @@ final isLowStock = (product['stock'] as int? ?? 0) < (product['lowStockThreshold
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Current Stock: ${product['stock'] == true ?? 0}',
+                'Current Stock: ${product['stock'] ?? 0}',
                 style: AppTheme.titleMedium,
               ),
               const SizedBox(height: 24),
@@ -494,7 +494,7 @@ final isLowStock = (product['stock'] as int? ?? 0) < (product['lowStockThreshold
               ),
               const SizedBox(height: 8),
               Text(
-                'New Stock: ${product['stock'] == true ?? 0 + stockAdjustment.toInt()}',
+                'New Stock: ${product['stock'] ?? 0 + stockAdjustment.toInt()}',
                 style: AppTheme.titleMedium.copyWith(
                   color: AppTheme.primaryOrange,
                 ),

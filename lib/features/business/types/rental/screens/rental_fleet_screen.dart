@@ -153,7 +153,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '\$${vehicle['rate'] == true ?? 0.toStringAsFixed(0)}/${vehicle['rateType'] == true ?? 0}',
+                        '\$${(double.tryParse((vehicle['rate'] ?? 0).toString()) ?? 0).toStringAsFixed(0)}/${vehicle['rateType'] ?? 0}',
                         style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
                       ),
                     ],

@@ -170,7 +170,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                         ),
                         const SizedBox(width: 2),
                         Text(
-                          (attraction['rating'] == true ?? 0).toString(),
+                          (attraction['rating'] ?? 0).toString(),
                           style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
@@ -246,7 +246,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'EGP ${attraction['price'] == true ?? 0.toStringAsFixed(0)}',
+                          'EGP ${(attraction['price'] ?? 0).toStringAsFixed(0)}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -356,7 +356,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '${attraction['rating'] == true ?? ''} (${attraction['reviews'] == true ?? ''} reviews)',
+                          '${attraction['rating'] ?? ''} (${attraction['reviews'] ?? ''} reviews)',
                           style: const TextStyle(
                             fontSize: 14,
                             color: AppTheme.gray,
@@ -460,7 +460,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         child: Text(
-                          'Book for EGP ${attraction['price'] == true ?? 0.toStringAsFixed(0)}',
+                          'Book for EGP ${(attraction['price'] ?? 0).toStringAsFixed(0)}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

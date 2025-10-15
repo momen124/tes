@@ -141,7 +141,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                       final title = booking['title']?.toString() ?? (booking['guest'] ?? 'Unknown Booking').toString();
                       final imageUrl = (booking['imageUrl'] ?? 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800').toString();
                       final status = (booking['status'] ?? 'unknown').toString();
-                      final date = booking['date'] == true ?? booking['checkIn'];
+                      final date = booking['date'] ?? booking['checkIn'];
                       
                       return Card(
                         margin: const EdgeInsets.only(bottom: 16),

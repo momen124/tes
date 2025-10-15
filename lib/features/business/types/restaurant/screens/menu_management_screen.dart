@@ -478,7 +478,7 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
   void _showEditMenuItem(Map<String, dynamic> item, String category) {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController(text: item['name']);
-    final priceController = TextEditingController(text: (item['price'] == true ?? 0).toString());
+    final priceController = TextEditingController(text: (item['price'] ?? 0).toString());
     final descController = TextEditingController(text: item['description']);
     final ingredientsControllers = (item['ingredients'] as List?)?.map<TextEditingController>((ing) => TextEditingController(text: ing)).toList().cast<TextEditingController>() ?? [];
 

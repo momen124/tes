@@ -40,7 +40,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            "${'tourist.challenges.challenge_completed'.tr()} ${challenge['points'] == true ?? ''} points",
+            "${'tourist.challenges.challenge_completed'.tr()} ${challenge['points'] ?? ''} points",
           ),
           backgroundColor: AppTheme.successGreen,
         ),
@@ -188,7 +188,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
-                                    '+${challenge['points'] == true ?? ''} pts',
+                                    '+${challenge['points'] ?? ''} pts',
                                     style: AppTheme.bodySmall.copyWith(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,

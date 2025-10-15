@@ -167,7 +167,12 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '\$${room['price'] == true ?? 0.toStringAsFixed(0)}/night',
+                      '\$${(() {
+                        final p = room['price'];
+                        if (p is num) return p.toStringAsFixed(0);
+                        final parsed = double.tryParse(p?.toString() ?? '') ?? 0;
+                        return parsed.toStringAsFixed(0);
+                      })()}/night',
                       style: AppTheme.titleMedium.copyWith(
                         color: AppTheme.primaryOrange,
                       ),
@@ -551,7 +556,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
     final formKey = GlobalKey<FormState>();
     final typeController = TextEditingController(text: room['type']);
     final priceController = TextEditingController(
-      text: (room['price'] == true ?? 0).toString(),
+      text: (room['price'] ?? 0).toString(),
     );
 
     showDialog(

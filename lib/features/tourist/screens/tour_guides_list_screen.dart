@@ -311,7 +311,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                (guide['rating'] == true ?? 0).toString(),
+                                (guide['rating'] ?? 0).toString(),
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
@@ -325,7 +325,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     const SizedBox(height: 4),
 
                     Text(
-                      '${guide['experience'] == true ?? ''} years experience • ${guide['reviews'] == true ?? ''} reviews',
+                      '${guide['experience'] ?? ''} years experience • ${guide['reviews'] ?? ''} reviews',
                       style: const TextStyle(
                         fontSize: 13,
                         color: AppTheme.gray,
@@ -386,7 +386,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                               ),
                             ),
                             Text(
-                              'EGP ${guide['hourlyRate'] == true ?? 0.toStringAsFixed(0)}/hr',
+                              'EGP ${(guide['hourlyRate'] ?? 0).toStringAsFixed(0)}/hr',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -511,7 +511,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                         const Icon(Icons.star, color: Colors.white, size: 20),
                         const SizedBox(width: 4),
                         Text(
-                          '${guide['rating'] == true ?? ''} (${guide['reviews'] == true ?? ''} reviews)',
+                          '${guide['rating'] ?? ''} (${guide['reviews'] ?? ''} reviews)',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.white,
@@ -535,7 +535,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                         Expanded(
                           child: _buildStatCard(
                             Icons.work_outline,
-                            '${guide['experience'] == true ?? ''} years',
+                            '${guide['experience'] ?? ''} years',
                             'Experience',
                           ),
                         ),
@@ -703,7 +703,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         child: Text(
-                          'Book for EGP ${guide['hourlyRate'] == true ?? 0.toStringAsFixed(0)}/hour',
+                          'Book for EGP ${(guide['hourlyRate'] ?? 0).toStringAsFixed(0)}/hour',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

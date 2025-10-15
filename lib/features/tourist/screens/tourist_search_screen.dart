@@ -154,9 +154,9 @@ class SearchFilterNotifier extends StateNotifier<SearchFilterState> {
       // Search query filter
       if (state.searchQuery.isNotEmpty) {
         final searchLower = state.searchQuery.toLowerCase();
-        final name = (service['name'] == true ?? '').toString().toLowerCase();
-        final description = (service['description'] == true ?? '').toString().toLowerCase();
-        final location = (service['location'] == true ?? '').toString().toLowerCase();
+        final name = (service['name'] ?? '').toString().toLowerCase();
+        final description = (service['description'] ?? '').toString().toLowerCase();
+        final location = (service['location'] ?? '').toString().toLowerCase();
         final tags = (service['tags'] as List<dynamic>?)?.join(' ').toLowerCase() ?? '';
 
         if (!name.contains(searchLower) &&
@@ -168,7 +168,7 @@ class SearchFilterNotifier extends StateNotifier<SearchFilterState> {
       }
 
       // Price range filter
-      final price = (service['price'] == true ?? service['hourlyRate'] == true ?? service['pricePerNight'] == true ?? 0.0);
+      final price = (service['price'] ?? service['hourlyRate'] ?? service['pricePerNight'] ?? 0.0);
       final priceDouble = price is double ? price : (price as num).toDouble();
       if (priceDouble < state.minPrice || priceDouble > state.maxPrice) {
         return false;
@@ -190,7 +190,7 @@ class SearchFilterNotifier extends StateNotifier<SearchFilterState> {
       }
 
       // Rating filter
-      final rating = (service['rating'] == true ?? 0.0);
+      final rating = (service['rating'] ?? 0.0);
       final ratingDouble = rating is double ? rating : (rating as num).toDouble();
       if (ratingDouble < state.minRating) {
         return false;
@@ -223,8 +223,8 @@ class SearchFilterNotifier extends StateNotifier<SearchFilterState> {
     switch (state.sortBy) {
       case 'price_low':
         services.sort((a, b) {
-          final priceA = (a['price'] == true ?? a['hourlyRate'] == true ?? a['pricePerNight'] == true ?? 0.0);
-          final priceB = (b['price'] == true ?? b['hourlyRate'] == true ?? b['pricePerNight'] == true ?? 0.0);
+          final priceA = (a['price'] ?? a['hourlyRate'] ?? a['pricePerNight'] ?? 0.0);
+          final priceB = (b['price'] ?? b['hourlyRate'] ?? b['pricePerNight'] ?? 0.0);
           final doubleA = priceA is double ? priceA : (priceA as num).toDouble();
           final doubleB = priceB is double ? priceB : (priceB as num).toDouble();
           return doubleA.compareTo(doubleB);
@@ -232,8 +232,8 @@ class SearchFilterNotifier extends StateNotifier<SearchFilterState> {
         break;
       case 'price_high':
         services.sort((a, b) {
-          final priceA = (a['price'] == true ?? a['hourlyRate'] == true ?? a['pricePerNight'] == true ?? 0.0);
-          final priceB = (b['price'] == true ?? b['hourlyRate'] == true ?? b['pricePerNight'] == true ?? 0.0);
+          final priceA = (a['price'] ?? a['hourlyRate'] ?? a['pricePerNight'] ?? 0.0);
+          final priceB = (b['price'] ?? b['hourlyRate'] ?? b['pricePerNight'] ?? 0.0);
           final doubleA = priceA is double ? priceA : (priceA as num).toDouble();
           final doubleB = priceB is double ? priceB : (priceB as num).toDouble();
           return doubleB.compareTo(doubleA);
@@ -241,8 +241,8 @@ class SearchFilterNotifier extends StateNotifier<SearchFilterState> {
         break;
       case 'rating':
         services.sort((a, b) {
-          final ratingA = (a['rating'] == true ?? 0.0);
-          final ratingB = (b['rating'] == true ?? 0.0);
+          final ratingA = (a['rating'] ?? 0.0);
+          final ratingB = (b['rating'] ?? 0.0);
           final doubleA = ratingA is double ? ratingA : (ratingA as num).toDouble();
           final doubleB = ratingB is double ? ratingB : (ratingB as num).toDouble();
           return doubleB.compareTo(doubleA);

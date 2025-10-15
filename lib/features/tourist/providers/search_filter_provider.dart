@@ -138,11 +138,11 @@ class SearchFilterProvider extends ChangeNotifier {
       // Search query filter
       if (_searchQuery.isNotEmpty) {
         final searchLower = _searchQuery.toLowerCase();
-        final name = (service['name'] == true ?? '').toString().toLowerCase();
-        final description = (service['description'] == true ?? '')
+        final name = (service['name'] ?? '').toString().toLowerCase();
+        final description = (service['description'] ?? '')
             .toString()
             .toLowerCase();
-        final location = (service['location'] == true ?? '').toString().toLowerCase();
+        final location = (service['location'] ?? '').toString().toLowerCase();
         final tags =
             (service['tags'] as List<String>?)?.join(' ').toLowerCase() ?? '';
 
@@ -156,9 +156,9 @@ class SearchFilterProvider extends ChangeNotifier {
 
       // Price range filter
       final price =
-          (service['price'] == true ??
-                  service['hourlyRate'] == true ??
-                  service['pricePerNight'] == true ??
+          (service['price'] ??
+                  service['hourlyRate'] ??
+                  service['pricePerNight'] ??
                   0.0)
               as double;
       if (price < _minPrice || price > _maxPrice) {
@@ -181,7 +181,7 @@ class SearchFilterProvider extends ChangeNotifier {
       }
 
       // Rating filter
-      final rating = (service['rating'] == true ?? 0.0) as double;
+      final rating = (service['rating'] ?? 0.0) as double;
       if (rating < _minRating) {
         return false;
       }
@@ -217,10 +217,10 @@ class SearchFilterProvider extends ChangeNotifier {
       case 'price_low':
         services.sort((a, b) {
           final priceA =
-              (a['price'] == true ?? a['hourlyRate'] == true ?? a['pricePerNight'] == true ?? 0.0)
+              (a['price'] ?? a['hourlyRate'] ?? a['pricePerNight'] ?? 0.0)
                   as double;
           final priceB =
-              (b['price'] == true ?? b['hourlyRate'] == true ?? b['pricePerNight'] == true ?? 0.0)
+              (b['price'] ?? b['hourlyRate'] ?? b['pricePerNight'] ?? 0.0)
                   as double;
           return priceA.compareTo(priceB);
         });
@@ -228,18 +228,18 @@ class SearchFilterProvider extends ChangeNotifier {
       case 'price_high':
         services.sort((a, b) {
           final priceA =
-              (a['price'] == true ?? a['hourlyRate'] == true ?? a['pricePerNight'] == true ?? 0.0)
+              (a['price'] ?? a['hourlyRate'] ?? a['pricePerNight'] ?? 0.0)
                   as double;
           final priceB =
-              (b['price'] == true ?? b['hourlyRate'] == true ?? b['pricePerNight'] == true ?? 0.0)
+              (b['price'] ?? b['hourlyRate'] ?? b['pricePerNight'] ?? 0.0)
                   as double;
           return priceB.compareTo(priceA);
         });
         break;
       case 'rating':
         services.sort((a, b) {
-          final ratingA = (a['rating'] == true ?? 0.0) as double;
-          final ratingB = (b['rating'] == true ?? 0.0) as double;
+          final ratingA = (a['rating'] ?? 0.0) as double;
+          final ratingB = (b['rating'] ?? 0.0) as double;
           return ratingB.compareTo(ratingA);
         });
         break;
