@@ -1,152 +1,33 @@
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class TourGuidesListScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
+class TourGuidesListScreen extends ConsumerStatefulWidget {
   const TourGuidesListScreen({super.key});
 
   @override
-  State<TourGuidesListScreen> createState() => _TourGuidesListScreenState();
+  ConsumerState<TourGuidesListScreen> createState() => _TourGuidesListScreenState();
 }
 
-class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
+class _TourGuidesListScreenState extends ConsumerState<TourGuidesListScreen> {
   String _selectedSpecialty = 'all';
   String _selectedLanguage = 'all';
-  
-  final List<Map<String, dynamic>> _tourGuides = [
-    {
-      'id': 1,
-      'name': 'Ahmed Hassan',
-      'specialty': 'history',
-      'experience': 15,
-      'rating': 4.9,
-      'reviews': 234,
-      'hourlyRate': 150.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
-      'bio': 'Expert in Siwan history and ancient Egyptian archaeology with over 15 years of experience',
-      'languages': ['Arabic', 'English', 'German'],
-      'certifications': ['Licensed Tour Guide', 'First Aid Certified', 'History Degree'],
-      'specialties': ['Ancient Egypt', 'Archaeology', 'Temple Tours'],
-      'availability': {
-        'Mon': true,
-        'Tue': true,
-        'Wed': false,
-        'Thu': true,
-        'Fri': true,
-        'Sat': true,
-        'Sun': true,
-      },
-      'verified': true,
-      'responseTime': '< 1 hour',
-    },
-    {
-      'id': 2,
-      'name': 'Fatima Al-Siwy',
-      'specialty': 'culture',
-      'experience': 10,
-      'rating': 4.8,
-      'reviews': 189,
-      'hourlyRate': 120.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400',
-      'bio': 'Native Siwan guide specializing in local culture, traditions, and handicrafts',
-      'languages': ['Arabic', 'English', 'French'],
-      'certifications': ['Licensed Tour Guide', 'Cultural Heritage Specialist'],
-      'specialties': ['Siwan Culture', 'Handicrafts', 'Traditional Cooking'],
-      'availability': {
-        'Mon': true,
-        'Tue': true,
-        'Wed': true,
-        'Thu': true,
-        'Fri': false,
-        'Sat': true,
-        'Sun': true,
-      },
-      'verified': true,
-      'responseTime': '< 2 hours',
-    },
-    {
-      'id': 3,
-      'name': 'Mohamed Saeed',
-      'specialty': 'adventure',
-      'experience': 8,
-      'rating': 4.9,
-      'reviews': 312,
-      'hourlyRate': 180.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400',
-      'bio': 'Adventure specialist for desert safaris, sandboarding, and extreme sports',
-      'languages': ['Arabic', 'English', 'Italian'],
-      'certifications': ['Licensed Tour Guide', 'Wilderness First Responder', '4x4 Driver'],
-      'specialties': ['Desert Safari', 'Sandboarding', 'Camping'],
-      'availability': {
-        'Mon': true,
-        'Tue': true,
-        'Wed': true,
-        'Thu': true,
-        'Fri': true,
-        'Sat': true,
-        'Sun': false,
-      },
-      'verified': true,
-      'responseTime': '< 30 min',
-    },
-    {
-      'id': 4,
-      'name': 'Sara Ibrahim',
-      'specialty': 'nature',
-      'experience': 6,
-      'rating': 4.7,
-      'reviews': 156,
-      'hourlyRate': 100.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400',
-      'bio': 'Eco-tourism specialist focusing on Siwa\'s natural springs, lakes, and wildlife',
-      'languages': ['Arabic', 'English', 'Spanish'],
-      'certifications': ['Licensed Tour Guide', 'Environmental Science Degree'],
-      'specialties': ['Bird Watching', 'Nature Walks', 'Photography Tours'],
-      'availability': {
-        'Mon': true,
-        'Tue': false,
-        'Wed': true,
-        'Thu': true,
-        'Fri': true,
-        'Sat': true,
-        'Sun': true,
-      },
-      'verified': true,
-      'responseTime': '< 3 hours',
-    },
-    {
-      'id': 5,
-      'name': 'Khaled Mustafa',
-      'specialty': 'photography',
-      'experience': 12,
-      'rating': 4.8,
-      'reviews': 267,
-      'hourlyRate': 200.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400',
-      'bio': 'Professional photographer and guide specializing in landscape and cultural photography',
-      'languages': ['Arabic', 'English', 'Japanese'],
-      'certifications': ['Licensed Tour Guide', 'Professional Photographer'],
-      'specialties': ['Landscape Photography', 'Sunset Tours', 'Astro-photography'],
-      'availability': {
-        'Mon': true,
-        'Tue': true,
-        'Wed': true,
-        'Thu': false,
-        'Fri': true,
-        'Sat': true,
-        'Sun': true,
-      },
-      'verified': true,
-      'responseTime': '< 1 hour',
-    },
-  ];
 
   List<Map<String, dynamic>> get _filteredGuides {
-    return _tourGuides.where((guide) {
-      final specialtyMatch = _selectedSpecialty == 'all' || guide['specialty'] == _selectedSpecialty;
-      final languageMatch = _selectedLanguage == 'all' || 
-          (guide['languages'] as List<String>).any((lang) => lang.toLowerCase() == _selectedLanguage.toLowerCase());
+    return (ref.watch(mockDataProvider).getAllTourGuides() ?? []).where((guide) {
+      final specialtyMatch =
+          _selectedSpecialty == 'all' ||
+          (guide['specialty']?.toString() ?? '').toLowerCase() == _selectedSpecialty.toLowerCase();
+      final languageMatch =
+          _selectedLanguage == 'all' ||
+          (((guide['languages'] as List?)?.cast<String>() ?? <String>[]).any(
+            (lang) => lang.toLowerCase() == _selectedLanguage.toLowerCase(),
+          ));
       return specialtyMatch && languageMatch;
     }).toList();
   }
@@ -161,7 +42,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: const Text('Tour Guides'),
+        title: Text('tour_guides.title'.tr()),
         elevation: 0,
       ),
       body: Column(
@@ -230,9 +111,9 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Tour Guides List
           Expanded(
             child: _filteredGuides.isEmpty
@@ -248,7 +129,9 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                         const SizedBox(height: 16),
                         Text(
                           'No guides found',
-                          style: AppTheme.titleMedium.copyWith(color: AppTheme.gray),
+                          style: AppTheme.titleMedium.copyWith(
+                            color: AppTheme.gray,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         TextButton(
@@ -258,7 +141,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                               _selectedLanguage = 'all';
                             });
                           },
-                          child: const Text('Clear Filters'),
+                          child: Text('tourist.search.clear_filters'.tr()),
                         ),
                       ],
                     ),
@@ -331,12 +214,21 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
   }
 
   Widget _buildGuideCard(Map<String, dynamic> guide) {
+    // Null-safe defaults
+    final imageUrl = guide['imageUrl']?.toString() ?? 'https://via.placeholder.com/80';
+    final name = guide['name']?.toString() ?? 'Unknown Guide';
+    final rating = guide['rating'] as num? ?? 0;
+    final reviews = guide['reviews']?.toString() ?? '0';
+    final experience = guide['experience'] as num? ?? 0;
+    final bio = guide['bio']?.toString() ?? 'No bio available';
+    final languages = (guide['languages'] as List?)?.cast<String>() ?? <String>[];
+    final hourlyRate = guide['hourlyRate'] as num? ?? 0;
+    final verified = guide['verified'] as bool? ?? false;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () {
           _showGuideProfile(guide);
@@ -356,12 +248,13 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       image: DecorationImage(
-                        image: NetworkImage(guide['imageUrl']),
+                        image: NetworkImage(imageUrl),
                         fit: BoxFit.cover,
+                        onError: (exception, stackTrace) => const AssetImage('assets/placeholder.png'),
                       ),
                     ),
                   ),
-                  if (guide['verified'])
+                  if (verified)
                     Positioned(
                       bottom: 0,
                       right: 0,
@@ -381,7 +274,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                 ],
               ),
               const SizedBox(width: 16),
-              
+
               // Guide Info
               Expanded(
                 child: Column(
@@ -392,7 +285,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            guide['name'],
+                            name,
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -400,7 +293,10 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: AppTheme.lightBlueGray,
                             borderRadius: BorderRadius.circular(12),
@@ -408,10 +304,14 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.star, color: AppTheme.primaryOrange, size: 14),
+                              const Icon(
+                                Icons.star,
+                                color: AppTheme.primaryOrange,
+                                size: 14,
+                              ),
                               const SizedBox(width: 4),
                               Text(
-                                guide['rating'].toString(),
+                                rating.toString(),
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
@@ -423,55 +323,46 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    
                     Text(
-                      '${guide['experience']} years experience • ${guide['reviews']} reviews',
+                      '$experience years experience • $reviews reviews',
                       style: const TextStyle(
                         fontSize: 13,
                         color: AppTheme.gray,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    
                     Text(
-                      guide['bio'],
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
+                      bio,
+                      style: const TextStyle(fontSize: 14),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
-                    
-                    // Languages
                     Wrap(
                       spacing: 6,
                       runSpacing: 6,
-                      children: (guide['languages'] as List<String>)
-                          .take(3)
-                          .map((lang) => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
+                      children: languages.take(3).map(
+                            (lang) => Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: AppTheme.primaryGradient,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                lang,
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                decoration: BoxDecoration(
-                                  gradient: AppTheme.primaryGradient,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  lang,
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ))
-                          .toList(),
+                              ),
+                            ),
+                          ).toList(),
                     ),
                     const SizedBox(height: 12),
-                    
-                    // Rate and Book Button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -486,7 +377,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                               ),
                             ),
                             Text(
-                              'EGP ${guide['hourlyRate'].toStringAsFixed(0)}/hr',
+                              'EGP ${hourlyRate.toStringAsFixed(0)}/hr',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -506,7 +397,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                               vertical: 8,
                             ),
                           ),
-                          child: const Text('View Profile'),
+                          child: Text('tour_guides.view_profile'.tr()),
                         ),
                       ],
                     ),
@@ -521,6 +412,21 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
   }
 
   void _showGuideProfile(Map<String, dynamic> guide) {
+    // Null-safe defaults
+    final imageUrl = guide['imageUrl']?.toString() ?? 'https://via.placeholder.com/100';
+    final name = guide['name']?.toString() ?? 'Unknown Guide';
+    final rating = guide['rating'] as num? ?? 0;
+    final reviews = guide['reviews']?.toString() ?? '0';
+    final experience = guide['experience'] as num? ?? 0;
+    final bio = guide['bio']?.toString() ?? 'No bio available';
+    final languages = (guide['languages'] as List?)?.cast<String>() ?? <String>[];
+    final certifications = (guide['certifications'] as List?)?.cast<String>() ?? <String>[];
+    final specialties = (guide['specialties'] as List?)?.cast<String>() ?? <String>[];
+    final hourlyRate = guide['hourlyRate'] as num? ?? 0;
+    final verified = guide['verified'] as bool? ?? false;
+    final responseTime = guide['responseTime']?.toString() ?? 'N/A';
+    final availability = (guide['availability'] as Map<String, bool>?) ?? {};
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -543,7 +449,9 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   gradient: AppTheme.primaryGradient,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -558,14 +466,18 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                               height: 100,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white, width: 3),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 3,
+                                ),
                                 image: DecorationImage(
-                                  image: NetworkImage(guide['imageUrl']),
+                                  image: NetworkImage(imageUrl),
                                   fit: BoxFit.cover,
+                                  onError: (exception, stackTrace) => const AssetImage('assets/placeholder.png'),
                                 ),
                               ),
                             ),
-                            if (guide['verified'])
+                            if (verified)
                               Positioned(
                                 bottom: 0,
                                 right: 0,
@@ -592,7 +504,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      guide['name'],
+                      name,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -606,7 +518,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                         const Icon(Icons.star, color: Colors.white, size: 20),
                         const SizedBox(width: 4),
                         Text(
-                          '${guide['rating']} (${guide['reviews']} reviews)',
+                          '$rating ($reviews reviews)',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.white,
@@ -617,7 +529,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                   ],
                 ),
               ),
-              
+
               // Content
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -630,7 +542,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                         Expanded(
                           child: _buildStatCard(
                             Icons.work_outline,
-                            '${guide['experience']} years',
+                            '$experience years',
                             'Experience',
                           ),
                         ),
@@ -638,14 +550,14 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                         Expanded(
                           child: _buildStatCard(
                             Icons.timer_outlined,
-                            guide['responseTime'],
+                            responseTime,
                             'Response',
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Bio
                     const Text(
                       'About',
@@ -656,11 +568,11 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      guide['bio'],
+                      bio,
                       style: const TextStyle(fontSize: 15, height: 1.5),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Languages
                     const Text(
                       'Languages',
@@ -673,32 +585,38 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     Wrap(
                       spacing: 12,
                       runSpacing: 12,
-                      children: (guide['languages'] as List<String>)
-                          .map((lang) => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppTheme.lightBlueGray,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(Icons.language, size: 16, color: AppTheme.primaryOrange),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      lang,
-                                      style: const TextStyle(fontWeight: FontWeight.w600),
+                      children: languages.map(
+                            (lang) => Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppTheme.lightBlueGray,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.language,
+                                    size: 16,
+                                    color: AppTheme.primaryOrange,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    lang,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                  ],
-                                ),
-                              ))
-                          .toList(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ).toList(),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Certifications
                     const Text(
                       'Certifications',
@@ -708,12 +626,16 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    ...(guide['certifications'] as List<String>).map(
+                    ...certifications.map(
                       (cert) => Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Row(
                           children: [
-                            const Icon(Icons.verified, color: AppTheme.successGreen, size: 20),
+                            const Icon(
+                              Icons.verified,
+                              color: AppTheme.successGreen,
+                              size: 20,
+                            ),
                             const SizedBox(width: 8),
                             Text(cert, style: const TextStyle(fontSize: 15)),
                           ],
@@ -721,7 +643,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Specialties
                     const Text(
                       'Specialties',
@@ -734,28 +656,28 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     Wrap(
                       spacing: 12,
                       runSpacing: 12,
-                      children: (guide['specialties'] as List<String>)
-                          .map((specialty) => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 8,
+                      children: specialties.map(
+                            (specialty) => Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: AppTheme.primaryGradient,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                specialty,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                decoration: BoxDecoration(
-                                  gradient: AppTheme.primaryGradient,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  specialty,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ))
-                          .toList(),
+                              ),
+                            ),
+                          ).toList(),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Availability
                     const Text(
                       'Weekly Availability',
@@ -765,9 +687,9 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    _buildAvailabilityCalendar(guide['availability']),
+                    _buildAvailabilityCalendar(availability),
                     const SizedBox(height: 24),
-                    
+
                     // Book Button
                     SizedBox(
                       width: double.infinity,
@@ -784,8 +706,11 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         child: Text(
-                          'Book for EGP ${guide['hourlyRate'].toStringAsFixed(0)}/hour',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          'Book for EGP ${hourlyRate.toStringAsFixed(0)}/hour',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -812,19 +737,13 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: AppTheme.gray,
-            ),
+            style: const TextStyle(fontSize: 12, color: AppTheme.gray),
           ),
         ],
       ),
@@ -843,7 +762,9 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: isAvailable ? AppTheme.successGreen : AppTheme.lightBlueGray,
+                color: isAvailable
+                    ? AppTheme.successGreen
+                    : AppTheme.lightBlueGray,
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -857,10 +778,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
               ),
             ),
             const SizedBox(height: 4),
-            Text(
-              day,
-              style: const TextStyle(fontSize: 10),
-            ),
+            Text(day, style: const TextStyle(fontSize: 10)),
           ],
         );
       }).toList(),

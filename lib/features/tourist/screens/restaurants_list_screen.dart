@@ -1,120 +1,27 @@
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class RestaurantsListScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
+class RestaurantsListScreen extends ConsumerStatefulWidget {
   const RestaurantsListScreen({super.key});
 
   @override
-  State<RestaurantsListScreen> createState() => _RestaurantsListScreenState();
+  ConsumerState<RestaurantsListScreen> createState() => _RestaurantsListScreenState();
 }
 
-class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
+class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
   String _selectedCuisine = 'all';
   String _priceRange = 'all';
   
-  final List<Map<String, dynamic>> _restaurants = [
-    {
-      'id': 1,
-      'name': 'Aghurmi Restaurant',
-      'cuisine': 'egyptian',
-      'description': 'Authentic Siwan and Egyptian cuisine',
-      'priceRange': 'medium',
-      'rating': 4.7,
-      'reviews': 234,
-      'deliveryTime': '30-45 min',
-      'minOrder': 50.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
-      'specialties': ['Siwan Dates', 'Tagine', 'Fresh Bread'],
-      'openNow': true,
-      'openingHours': '8:00 AM - 11:00 PM',
-      'deliveryFee': 15.0,
-    },
-    {
-      'id': 2,
-      'name': 'Abdu\'s Kitchen',
-      'cuisine': 'traditional',
-      'description': 'Traditional Siwan home-cooked meals',
-      'priceRange': 'low',
-      'rating': 4.9,
-      'reviews': 456,
-      'deliveryTime': '20-30 min',
-      'minOrder': 30.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800',
-      'specialties': ['Siwan Pizza', 'Local Olives', 'Honey'],
-      'openNow': true,
-      'openingHours': '7:00 AM - 10:00 PM',
-      'deliveryFee': 10.0,
-    },
-    {
-      'id': 3,
-      'name': 'Oasis Bistro',
-      'cuisine': 'international',
-      'description': 'International fusion with local ingredients',
-      'priceRange': 'high',
-      'rating': 4.6,
-      'reviews': 189,
-      'deliveryTime': '40-60 min',
-      'minOrder': 100.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800',
-      'specialties': ['Gourmet Burgers', 'Pasta', 'Steaks'],
-      'openNow': true,
-      'openingHours': '12:00 PM - 12:00 AM',
-      'deliveryFee': 25.0,
-    },
-    {
-      'id': 4,
-      'name': 'Siwa Dates Café',
-      'cuisine': 'cafe',
-      'description': 'Specialty coffee and local date desserts',
-      'priceRange': 'low',
-      'rating': 4.8,
-      'reviews': 345,
-      'deliveryTime': '15-25 min',
-      'minOrder': 25.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800',
-      'specialties': ['Date Coffee', 'Pastries', 'Fresh Juice'],
-      'openNow': true,
-      'openingHours': '6:00 AM - 9:00 PM',
-      'deliveryFee': 10.0,
-    },
-    {
-      'id': 5,
-      'name': 'Desert Grill House',
-      'cuisine': 'grill',
-      'description': 'Grilled meats and BBQ specialties',
-      'priceRange': 'medium',
-      'rating': 4.5,
-      'reviews': 278,
-      'deliveryTime': '35-50 min',
-      'minOrder': 80.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800',
-      'specialties': ['Kebab', 'Kofta', 'Grilled Chicken'],
-      'openNow': false,
-      'openingHours': '5:00 PM - 12:00 AM',
-      'deliveryFee': 20.0,
-    },
-    {
-      'id': 6,
-      'name': 'Palm Tree Restaurant',
-      'cuisine': 'mediterranean',
-      'description': 'Mediterranean flavors with Egyptian touch',
-      'priceRange': 'medium',
-      'rating': 4.7,
-      'reviews': 312,
-      'deliveryTime': '30-40 min',
-      'minOrder': 60.0,
-      'imageUrl': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800',
-      'specialties': ['Mezze Platter', 'Seafood', 'Salads'],
-      'openNow': true,
-      'openingHours': '11:00 AM - 11:00 PM',
-      'deliveryFee': 15.0,
-    },
-  ];
+  
 
   List<Map<String, dynamic>> get _filteredRestaurants {
-    return _restaurants.where((restaurant) {
+    return ref.watch(mockDataProvider).getAllRestaurants().where((restaurant) {
       final cuisineMatch = _selectedCuisine == 'all' || restaurant['cuisine'] == _selectedCuisine;
       final priceMatch = _priceRange == 'all' || restaurant['priceRange'] == _priceRange;
       return cuisineMatch && priceMatch;
@@ -131,14 +38,14 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: const Text('Restaurants'),
+        title: Text('Restaurants'.tr()),
         elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_cart_outlined),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Cart feature coming soon')),
+                SnackBar(content: Text('Cart feature coming soon'.tr())),
               );
             },
           ),
@@ -173,7 +80,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
-                      const Text('Price: ', style: TextStyle(fontSize: 14)),
+                      Text('Price: '.tr(), style: const TextStyle(fontSize: 14)),
                       const SizedBox(width: 8),
                       _buildPriceFilter('All', 'all'),
                       _buildPriceFilter('Budget', 'low'),
@@ -285,7 +192,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                     ),
                   ),
                 ),
-                if (restaurant['openNow'])
+                if (restaurant['openNow'] == true)
                   Positioned(
                     top: 12,
                     left: 12,
@@ -347,7 +254,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                         const Icon(Icons.star, color: AppTheme.primaryOrange, size: 14),
                         const SizedBox(width: 4),
                         Text(
-                          restaurant['rating'].toString(),
+                          '${restaurant['rating'] ?? 0}',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -398,13 +305,13 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                       const Icon(Icons.delivery_dining, size: 16, color: AppTheme.gray),
                       const SizedBox(width: 4),
                       Text(
-                        '${restaurant['deliveryTime']} • ',
+                        '${restaurant['deliveryTime'] ?? ''} • ',
                         style: const TextStyle(fontSize: 13, color: AppTheme.gray),
                       ),
                       const Icon(Icons.payments, size: 16, color: AppTheme.gray),
                       const SizedBox(width: 4),
                       Text(
-                        'Min EGP ${restaurant['minOrder'].toStringAsFixed(0)}',
+                        'Min EGP ${restaurant['minOrder'] ?? 0}',
                         style: const TextStyle(fontSize: 13, color: AppTheme.gray),
                       ),
                     ],
@@ -415,7 +322,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: (restaurant['specialties'] as List<String>)
+                    children: ((restaurant['specialties'] as List?)?.cast<String>() ?? <String>[])
                         .take(3)
                         .map((specialty) => Container(
                               padding: const EdgeInsets.symmetric(
@@ -543,11 +450,11 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: restaurant['openNow'] ? AppTheme.successGreen : AppTheme.errorRed,
+                            color: restaurant['openNow'] == true ? AppTheme.successGreen : AppTheme.errorRed,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            restaurant['openNow'] ? 'Open' : 'Closed',
+                            restaurant['openNow'] == true ? 'Open' : 'Closed',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -562,7 +469,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                         const Icon(Icons.star, color: AppTheme.primaryOrange, size: 20),
                         const SizedBox(width: 4),
                         Text(
-                          '${restaurant['rating']} (${restaurant['reviews']} reviews)',
+                          '${restaurant['rating'] ?? ''} (${restaurant['reviews'] ?? 0} reviews)',
                           style: const TextStyle(fontSize: 14, color: AppTheme.gray),
                         ),
                       ],
@@ -588,10 +495,10 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: _buildInfoBox(
-                            Icons.payments,
-                            'Min Order',
-                            'EGP ${restaurant['minOrder'].toStringAsFixed(0)}',
-                          ),
+                              Icons.payments,
+                              'Min Order',
+                              'EGP ${restaurant['minOrder'] ?? 0}',
+                            ),
                         ),
                       ],
                     ),
@@ -600,10 +507,10 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                       children: [
                         Expanded(
                           child: _buildInfoBox(
-                            Icons.local_shipping,
-                            'Delivery Fee',
-                            'EGP ${restaurant['deliveryFee'].toStringAsFixed(0)}',
-                          ),
+                              Icons.local_shipping,
+                              'Delivery Fee',
+                              'EGP ${restaurant['deliveryFee'] ?? 0}',
+                            ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -629,7 +536,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                     Wrap(
                       spacing: 12,
                       runSpacing: 12,
-                      children: (restaurant['specialties'] as List<String>)
+                      children: ((restaurant['specialties'] as List?)?.cast<String>() ?? <String>[])
                           .map((specialty) => Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 16,

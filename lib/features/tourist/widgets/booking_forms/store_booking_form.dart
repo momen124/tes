@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class StoreBookingForm extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -172,9 +173,9 @@ class _StoreBookingFormState extends State<StoreBookingForm> {
         TextFormField(
           controller: _notesController,
           maxLines: 3,
-          decoration: const InputDecoration(
-            hintText: 'Add notes (e.g., gift wrap instructions)',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            hintText: 'Add notes (e.g., gift wrap instructions)'.tr(),
+            border: const OutlineInputBorder(),
           ),
         ),
       ],

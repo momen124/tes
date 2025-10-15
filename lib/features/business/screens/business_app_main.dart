@@ -16,6 +16,7 @@ import 'package:siwa/features/business/types/transportation/screens/route_manage
 import 'package:siwa/features/business/widgets/navigation/business_bottom_nav.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
 import 'package:confetti/confetti.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BusinessAppMain extends ConsumerStatefulWidget {
   final BusinessType businessType;
@@ -38,7 +39,9 @@ class _BusinessAppMainState extends ConsumerState<BusinessAppMain> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 1),
+    );
   }
 
   @override
@@ -152,11 +155,7 @@ class _BusinessAppMainState extends ConsumerState<BusinessAppMain> {
                 ),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                _getBusinessIcon(),
-                color: Colors.white,
-                size: 18,
-              ),
+              child: Icon(_getBusinessIcon(), color: Colors.white, size: 18),
             ).animate().fadeIn(duration: 500.ms),
             const SizedBox(width: 12),
             Text(
@@ -175,7 +174,7 @@ class _BusinessAppMainState extends ConsumerState<BusinessAppMain> {
                 ? null
                 : () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Toggling connectivity...')),
+                      SnackBar(content: Text('Toggling connectivity...'.tr())),
                     );
                     ref.read(offlineProvider.notifier).state = !isOffline;
                     if (!isOffline) _confettiController.play();

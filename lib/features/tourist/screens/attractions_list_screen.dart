@@ -1,146 +1,31 @@
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class AttractionsListScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
+class AttractionsListScreen extends ConsumerStatefulWidget {
   const AttractionsListScreen({super.key});
 
   @override
-  State<AttractionsListScreen> createState() => _AttractionsListScreenState();
+  ConsumerState<AttractionsListScreen> createState() => _AttractionsListScreenState();
 }
 
-class _AttractionsListScreenState extends State<AttractionsListScreen> {
+class _AttractionsListScreenState extends ConsumerState<AttractionsListScreen> {
   String _selectedCategory = 'all';
+
   
-  final List<Map<String, dynamic>> _attractions = [
-    {
-      'id': 1,
-      'name': 'Temple of the Oracle',
-      'category': 'historical',
-      'description': 'Ancient temple where Alexander the Great consulted the oracle',
-      'price': 50.0,
-      'duration': '2 hours',
-      'rating': 4.8,
-      'reviews': 456,
-      'imageUrl': 'https://images.unsplash.com/photo-1553913861-c0fddf2619ee?w=800',
-      'location': 'Aghurmi Village',
-      'highlights': ['Ancient ruins', 'Historical significance', 'Photo opportunity'],
-      'openingHours': '8:00 AM - 5:00 PM',
-      'difficulty': 'Easy',
-    },
-    {
-      'id': 2,
-      'name': 'Siwa Salt Lakes',
-      'category': 'nature',
-      'description': 'Crystal-clear salt lakes with therapeutic properties',
-      'price': 30.0,
-      'duration': '3 hours',
-      'rating': 4.9,
-      'reviews': 789,
-      'imageUrl': 'https://visitegypt.com/wp-content/uploads/2025/07/the-salt-lake-siwa-oasis.webp',
-      'location': 'Birket Siwa',
-      'highlights': ['Swimming', 'Floating experience', 'Sunset views'],
-      'openingHours': '24/7',
-      'difficulty': 'Easy',
-    },
-    {
-      'id': 3,
-      'name': 'Shali Fortress',
-      'category': 'historical',
-      'description': 'Ancient mud-brick fortress with panoramic oasis views',
-      'price': 25.0,
-      'duration': '1.5 hours',
-      'rating': 4.6,
-      'reviews': 324,
-      'imageUrl': 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800',
-      'location': 'Siwa Town Center',
-      'highlights': ['Architecture', 'City views', 'Sunset spot'],
-      'openingHours': '8:00 AM - 6:00 PM',
-      'difficulty': 'Moderate',
-    },
-    {
-      'id': 4,
-      'name': 'Cleopatra\'s Bath',
-      'category': 'nature',
-      'description': 'Natural spring pool with crystal-clear water',
-      'price': 20.0,
-      'duration': '2 hours',
-      'rating': 4.7,
-      'reviews': 612,
-      'imageUrl': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
-      'location': 'Near Siwa Town',
-      'highlights': ['Swimming', 'Natural spring', 'Relaxation'],
-      'openingHours': '7:00 AM - 7:00 PM',
-      'difficulty': 'Easy',
-    },
-    {
-      'id': 5,
-      'name': 'Great Sand Sea Safari',
-      'category': 'adventure',
-      'description': 'Thrilling 4x4 desert adventure through massive dunes',
-      'price': 200.0,
-      'duration': '6 hours',
-      'rating': 4.9,
-      'reviews': 234,
-      'imageUrl': 'https://www.kemetexperience.com/wp-content/uploads/2019/09/incredible-white-desert-960x636.jpg',
-      'location': 'Western Desert',
-      'highlights': ['Sandboarding', 'Dune bashing', 'Desert camping'],
-      'openingHours': 'By appointment',
-      'difficulty': 'Challenging',
-    },
-    {
-      'id': 6,
-      'name': 'Fatnas Island Sunset',
-      'category': 'nature',
-      'description': 'Peaceful palm-covered island perfect for sunset viewing',
-      'price': 15.0,
-      'duration': '2 hours',
-      'rating': 4.8,
-      'reviews': 445,
-      'imageUrl': 'https://www.heatheronhertravels.com/wp-content/uploads/2011/09/Sunset-at-Fatnas-Island-in-Siwa-in-Egypt-2.jpg.webp',
-      'location': 'Birket Siwa',
-      'highlights': ['Sunset views', 'Picnic spot', 'Bird watching'],
-      'openingHours': '4:00 PM - 7:00 PM',
-      'difficulty': 'Easy',
-    },
-    {
-      'id': 7,
-      'name': 'Mountain of the Dead',
-      'category': 'historical',
-      'description': 'Ancient necropolis with well-preserved tomb paintings',
-      'price': 40.0,
-      'duration': '1.5 hours',
-      'rating': 4.5,
-      'reviews': 267,
-      'imageUrl': 'https://images.unsplash.com/photo-1503756234508-e32369269deb?w=800',
-      'location': 'Gebel al-Mawta',
-      'highlights': ['Ancient tombs', 'Wall paintings', 'History'],
-      'openingHours': '8:00 AM - 5:00 PM',
-      'difficulty': 'Moderate',
-    },
-    {
-      'id': 8,
-      'name': 'Siwa House Museum',
-      'category': 'culture',
-      'description': 'Traditional Siwan house showcasing local culture and crafts',
-      'price': 35.0,
-      'duration': '1 hour',
-      'rating': 4.4,
-      'reviews': 189,
-      'imageUrl': 'https://images.unsplash.com/photo-1565711561500-691d9ec04506?w=800',
-      'location': 'Siwa Town',
-      'highlights': ['Traditional architecture', 'Local crafts', 'Cultural insight'],
-      'openingHours': '9:00 AM - 4:00 PM',
-      'difficulty': 'Easy',
-    },
-  ];
 
   List<Map<String, dynamic>> get _filteredAttractions {
     if (_selectedCategory == 'all') {
-      return _attractions;
+      return ref.watch(mockDataProvider).getAllAttractions();
     }
-    return _attractions.where((attraction) => attraction['category'] == _selectedCategory).toList();
+    return ref.watch(mockDataProvider).getAllAttractions()
+        .where((attraction) => attraction['category'] == _selectedCategory)
+        .toList();
   }
 
   @override
@@ -153,7 +38,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: const Text('Attractions & Tours'),
+        title: Text('attractions.title'.tr()),
         elevation: 0,
       ),
       body: Column(
@@ -168,7 +53,11 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
               child: Row(
                 children: [
                   _buildCategoryChip('All', 'all', Icons.explore),
-                  _buildCategoryChip('Historical', 'historical', Icons.account_balance),
+                  _buildCategoryChip(
+                    'Historical',
+                    'historical',
+                    Icons.account_balance,
+                  ),
                   _buildCategoryChip('Nature', 'nature', Icons.nature),
                   _buildCategoryChip('Adventure', 'adventure', Icons.terrain),
                   _buildCategoryChip('Culture', 'culture', Icons.museum),
@@ -176,9 +65,9 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Attractions Grid
           Expanded(
             child: GridView.builder(
@@ -236,9 +125,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
   Widget _buildAttractionCard(Map<String, dynamic> attraction) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () {
           _showAttractionDetails(attraction);
@@ -254,7 +141,9 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                   height: 140,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
                     image: DecorationImage(
                       image: NetworkImage(attraction['imageUrl']),
                       fit: BoxFit.cover,
@@ -265,7 +154,10 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                   top: 8,
                   right: 8,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
@@ -273,10 +165,14 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.star, color: AppTheme.primaryOrange, size: 12),
+                        const Icon(
+                          Icons.star,
+                          color: AppTheme.primaryOrange,
+                          size: 12,
+                        ),
                         const SizedBox(width: 2),
                         Text(
-                          attraction['rating'].toString(),
+                          (attraction['rating'] ?? 0).toString(),
                           style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
@@ -290,7 +186,10 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                   bottom: 8,
                   left: 8,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: _getCategoryColor(attraction['category']),
                       borderRadius: BorderRadius.circular(12),
@@ -307,7 +206,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                 ),
               ],
             ),
-            
+
             // Content
             Expanded(
               child: Padding(
@@ -327,7 +226,11 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.access_time, size: 12, color: AppTheme.gray),
+                        const Icon(
+                          Icons.access_time,
+                          size: 12,
+                          color: AppTheme.gray,
+                        ),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
@@ -345,7 +248,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'EGP ${attraction['price'].toStringAsFixed(0)}',
+                          'EGP ${(attraction['price'] ?? 0).toStringAsFixed(0)}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -409,7 +312,9 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                     height: 250,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
                       image: DecorationImage(
                         image: NetworkImage(attraction['imageUrl']),
                         fit: BoxFit.cover,
@@ -429,7 +334,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                   ),
                 ],
               ),
-              
+
               // Content
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -446,31 +351,46 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.star, color: AppTheme.primaryOrange, size: 20),
+                        const Icon(
+                          Icons.star,
+                          color: AppTheme.primaryOrange,
+                          size: 20,
+                        ),
                         const SizedBox(width: 4),
                         Text(
-                          '${attraction['rating']} (${attraction['reviews']} reviews)',
-                          style: const TextStyle(fontSize: 14, color: AppTheme.gray),
+                          '${attraction['rating'] ?? ''} (${attraction['reviews'] ?? ''} reviews)',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: AppTheme.gray,
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
+
                     Text(
                       attraction['description'],
                       style: const TextStyle(fontSize: 16, height: 1.5),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Info Cards
                     Row(
                       children: [
                         Expanded(
-                          child: _buildInfoCard(Icons.access_time, 'Duration', attraction['duration']),
+                          child: _buildInfoCard(
+                            Icons.access_time,
+                            'Duration',
+                            attraction['duration'],
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: _buildInfoCard(Icons.fitness_center, 'Difficulty', attraction['difficulty']),
+                          child: _buildInfoCard(
+                            Icons.fitness_center,
+                            'Difficulty',
+                            attraction['difficulty'],
+                          ),
                         ),
                       ],
                     ),
@@ -478,16 +398,24 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: _buildInfoCard(Icons.location_on, 'Location', attraction['location']),
+                          child: _buildInfoCard(
+                            Icons.location_on,
+                            'Location',
+                            attraction['location'],
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: _buildInfoCard(Icons.schedule, 'Hours', attraction['openingHours']),
+                          child: _buildInfoCard(
+                            Icons.schedule,
+                            'Hours',
+                            attraction['openingHours'],
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Highlights
                     const Text(
                       'Highlights',
@@ -497,20 +425,27 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    ...(attraction['highlights'] as List<String>).map(
+                    ...((attraction['highlights'] as List?)?.cast<String>() ?? <String>[]).map(
                       (highlight) => Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Row(
                           children: [
-                            const Icon(Icons.check_circle, color: AppTheme.successGreen, size: 20),
+                            const Icon(
+                              Icons.check_circle,
+                              color: AppTheme.successGreen,
+                              size: 20,
+                            ),
                             const SizedBox(width: 8),
-                            Text(highlight, style: const TextStyle(fontSize: 15)),
+                            Text(
+                              highlight,
+                              style: const TextStyle(fontSize: 15),
+                            ),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Book Button
                     SizedBox(
                       width: double.infinity,
@@ -527,8 +462,11 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         child: Text(
-                          'Book for EGP ${attraction['price'].toStringAsFixed(0)}',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          'Book for EGP ${(attraction['price'] ?? 0).toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -555,18 +493,12 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: AppTheme.gray,
-            ),
+            style: const TextStyle(fontSize: 12, color: AppTheme.gray),
           ),
           const SizedBox(height: 4),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,

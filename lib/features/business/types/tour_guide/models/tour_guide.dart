@@ -24,7 +24,8 @@ class TourGuide extends Business {
     this.schedules = const [],
   }) : super(type: BusinessType.tourGuide);
 
-  factory TourGuide.fromJson(Map<String, dynamic> json) => _$TourGuideFromJson(json);
+  factory TourGuide.fromJson(Map<String, dynamic> json) =>
+      _$TourGuideFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$TourGuideToJson(this);
 }
@@ -45,6 +46,7 @@ class Schedule {
     this.booked = false,
   });
 
-  factory Schedule.fromJson(Map<String, dynamic> json) => _$ScheduleFromJson(json);
+  factory Schedule.fromJson(Map<String, dynamic> json) =>
+      _$ScheduleFromJson(json);
   Map<String, dynamic> toJson() => _$ScheduleToJson(this);
 }

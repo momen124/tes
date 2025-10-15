@@ -29,6 +29,7 @@ class Transportation {
     required this.updatedAt,
   });
 
-  factory Transportation.fromJson(Map<String, dynamic> json) => _$TransportationFromJson(json);
+  factory Transportation.fromJson(Map<String, dynamic> json) =>
+      _$TransportationFromJson(json);
   Map<String, dynamic> toJson() => _$TransportationToJson(this);
 }

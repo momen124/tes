@@ -1,31 +1,22 @@
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class SiwaInfoScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
+class SiwaInfoScreen extends ConsumerStatefulWidget {
   const SiwaInfoScreen({super.key});
 
   @override
-  State<SiwaInfoScreen> createState() => _SiwaInfoScreenState();
+  ConsumerState<SiwaInfoScreen> createState() => _SiwaInfoScreenState();
 }
 
-class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
+class _SiwaInfoScreenState extends ConsumerState<SiwaInfoScreen> {
   bool _historyExpanded = true;
   bool _bestTimeExpanded = false;
   bool _travelTipsExpanded = false;
-
-  final List<Map<String, dynamic>> _relatedServices = [
-    {
-      'title': 'Desert Safari',
-      'subtitle': 'Explore the dunes',
-      'image': Icons.terrain,
-    },
-    {
-      'title': 'Hot Air Balloon Ride',
-      'subtitle': 'Sunrise views',
-      'image': Icons.air,
-    },
-  ];
 
   Widget _buildMapPin(String label, Color color) {
     return Column(
@@ -101,7 +92,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Siwa Oasis'),
+        title: Text('Siwa Oasis'.tr()),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -145,7 +136,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
 
                   // History Section
                   _buildExpandableSection(
-                    title: 'History',
+                    title: 'History'.tr(),
                     isExpanded: _historyExpanded,
                     onTap: () => setState(() => _historyExpanded = !_historyExpanded),
                     content: 'Siwa\'s history dates back to ancient Egypt, serving as a crucial trade route and home to the Oracle of Amun. Its isolation preserved its unique Berber culture and traditions.',
@@ -154,7 +145,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
 
                   // Best Time to Visit
                   _buildExpandableSection(
-                    title: 'Best Time to Visit',
+                    title: 'Best Time to Visit'.tr(),
                     isExpanded: _bestTimeExpanded,
                     onTap: () => setState(() => _bestTimeExpanded = !_bestTimeExpanded),
                     content: 'The best time to visit Siwa is between October and April when temperatures are mild. Avoid summer months (June-August) when it can get extremely hot.',
@@ -163,7 +154,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
 
                   // Travel Tips
                   _buildExpandableSection(
-                    title: 'Travel Tips',
+                    title: 'Travel Tips'.tr(),
                     isExpanded: _travelTipsExpanded,
                     onTap: () => setState(() => _travelTipsExpanded = !_travelTipsExpanded),
                     content: '• Bring cash as ATMs are limited\n• Respect local customs and dress modestly\n• Stay hydrated in the desert climate\n• Book accommodations in advance during peak season\n• Try the local dates and olive oil',
@@ -185,13 +176,13 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                             color: Colors.blue[50],
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.map, size: 60, color: Colors.blue),
-                                SizedBox(height: 8),
-                                Text('Interactive Map'),
+                                const Icon(Icons.map, size: 60, color: Colors.blue),
+                                const SizedBox(height: 8),
+                                Text('Interactive Map'.tr()),
                               ],
                             ),
                           ),
@@ -232,9 +223,19 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                       crossAxisSpacing: 16,
                       childAspectRatio: 0.85,
                     ),
-                    itemCount: _relatedServices.length,
+                    itemCount: ref.watch(mockDataProvider).getAllOther().length,
                     itemBuilder: (context, index) {
-                      final service = _relatedServices[index];
+                      final service = ref.watch(mockDataProvider).getAllOther()[index];
+                      // Ensure service is a Map and handle null cases
+                      if (service == null || service is! Map<String, dynamic>) {
+                        return const SizedBox.shrink(); // Skip invalid items
+                      }
+                      final icon = service['image'] is IconData
+                          ? service['image'] as IconData
+                          : Icons.help; // Default icon if invalid
+                      final title = service['title']?.toString() ?? 'Unknown Service';
+                      final subtitle = service['subtitle']?.toString() ?? 'No Description';
+
                       return Card(
                         elevation: 2,
                         shape: RoundedRectangleBorder(
@@ -253,7 +254,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                                 ),
                                 child: Center(
                                   child: Icon(
-                                    service['image'],
+                                    icon,
                                     size: 60,
                                     color: AppTheme.primaryOrange,
                                   ),
@@ -266,7 +267,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    service['title'],
+                                    title,
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -274,7 +275,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    service['subtitle'],
+                                    subtitle,
                                     style: const TextStyle(
                                       fontSize: 14,
                                       color: AppTheme.gray,

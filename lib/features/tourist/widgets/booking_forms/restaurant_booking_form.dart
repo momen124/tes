@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RestaurantBookingForm extends StatefulWidget {
   final Map<String, dynamic> restaurant;
@@ -120,9 +121,9 @@ class _RestaurantBookingFormState extends State<RestaurantBookingForm> {
         TextFormField(
           controller: _specialRequestsController,
           maxLines: 3,
-          decoration: const InputDecoration(
-            hintText: 'Any dietary restrictions or preferences?',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            hintText: 'Any dietary restrictions or preferences?'.tr(),
+            border: const OutlineInputBorder(),
           ),
         ),
       ],
@@ -147,5 +148,6 @@ class _RestaurantBookingFormState extends State<RestaurantBookingForm> {
       'deliveryTime': _deliveryTime?.format(context),
       'specialRequests': _specialRequestsController.text,
     });
+ 
   }
 }

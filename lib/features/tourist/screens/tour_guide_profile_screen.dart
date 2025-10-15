@@ -1,5 +1,6 @@
 // lib/features/tourist/screens/tour_guide_profile_screen.dart
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TourGuideProfileScreen extends StatelessWidget {
   const TourGuideProfileScreen({super.key}); // Can take guide ID as argument
@@ -113,7 +114,7 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Bio/Description
                 _buildSection(
-                  title: 'About',
+                  title: 'About'.tr(),
                   icon: Icons.info_outline,
                   child: const Text(
                     'Experienced tour guide specializing in Siwa Oasis adventures. '
@@ -126,7 +127,7 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Languages Spoken
                 _buildSection(
-                  title: 'Languages',
+                  title: 'Languages'.tr(),
                   icon: Icons.language,
                   child: Wrap(
                     spacing: 8,
@@ -142,7 +143,7 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Certifications
                 _buildSection(
-                  title: 'Certifications',
+                  title: 'Certifications'.tr(),
                   icon: Icons.verified,
                   child: Column(
                     children: [
@@ -172,7 +173,7 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Specializations
                 _buildSection(
-                  title: 'Specializations',
+                  title: 'Specializations'.tr(),
                   icon: Icons.star_outline,
                   child: Wrap(
                     spacing: 8,
@@ -190,7 +191,7 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Photo Gallery
                 _buildSection(
-                  title: 'Photo Gallery',
+                  title: 'Photo Gallery'.tr(),
                   icon: Icons.photo_library,
                   child: SizedBox(
                     height: 120,
@@ -214,13 +215,13 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Reviews Section
                 _buildSection(
-                  title: 'Reviews',
+                  title: 'Reviews'.tr(),
                   icon: Icons.rate_review,
                   trailing: TextButton(
                     onPressed: () {
                       // Navigate to all reviews
                     },
-                    child: const Text('See All'),
+                    child: Text('See All'.tr()),
                   ),
                   child: Column(
                     children: [
@@ -248,7 +249,7 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Available Tours
                 _buildSection(
-                  title: 'Available Tours',
+                  title: 'Available Tours'.tr(),
                   icon: Icons.explore,
                   child: Column(
                     children: [
@@ -276,7 +277,7 @@ class TourGuideProfileScreen extends StatelessWidget {
 
                 // Schedule/Availability
                 _buildSection(
-                  title: 'Schedule',
+                  title: 'Schedule'.tr(),
                   icon: Icons.calendar_month,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +324,7 @@ class TourGuideProfileScreen extends StatelessWidget {
                 _showContactDialog(context);
               },
               icon: const Icon(Icons.message),
-              label: const Text('Contact'),
+              label: Text('Contact'.tr()),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 side: const BorderSide(color: Colors.orange),
@@ -337,7 +338,7 @@ class TourGuideProfileScreen extends StatelessWidget {
                   Navigator.pushNamed(context, '/booking_form', arguments: 'tour_guide');
                 },
                 icon: const Icon(Icons.book_online),
-                label: const Text('Book Now'),
+                label: Text('Book Now'.tr()),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                   foregroundColor: Colors.white,
@@ -537,27 +538,27 @@ class TourGuideProfileScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Contact Guide'),
+        title: Text('Contact Guide'.tr()),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               leading: const Icon(Icons.phone, color: Colors.orange),
-              title: const Text('+20 123 456 7890'),
+              title: Text('+20 123 456 7890'.tr()),
               onTap: () {
                 // Launch phone dialer
               },
             ),
             ListTile(
               leading: const Icon(Icons.email, color: Colors.orange),
-              title: const Text('ahmed@siwatourscom'),
+              title: Text('ahmed@siwatourscom'.tr()),
               onTap: () {
                 // Launch email
               },
             ),
             ListTile(
               leading: const Icon(Icons.chat, color: Colors.orange),
-              title: const Text('Send Message'),
+              title: Text('Send Message'.tr()),
               onTap: () {
                 // Open chat
               },
@@ -567,10 +568,11 @@ class TourGuideProfileScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: Text('Close'.tr()),
           ),
         ],
       ),
     );
+ 
   }
 }

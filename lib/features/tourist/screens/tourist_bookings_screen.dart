@@ -1,62 +1,57 @@
-// Your provided code for this screen already closely matches the screenshot. Add image URLs for cards.
+// lib/features/tourist/screens/tourist_bookings_screen.dart
+import 'package:siwa/providers/mock_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TouristBookingsScreen extends ConsumerStatefulWidget {
   const TouristBookingsScreen({super.key});
 
   @override
-  ConsumerState<TouristBookingsScreen> createState() => _TouristBookingsScreenState();
+  ConsumerState<TouristBookingsScreen> createState() =>
+      _TouristBookingsScreenState();
 }
 
 class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
-  final List<Map<String, dynamic>> _bookings = [
-    {
-      'id': 1001,
-      'title': 'Siwa Shali Resort',
-      'date': '2024-07-20',
-      'status': 'Confirmed',
-      'imageUrl': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
-      'amount': '\$150',
-    },
-    {
-      'id': 1002,
-      'title': 'Mountain Bike Rental',
-      'date': '2024-08-15',
-      'status': 'Pending',
-      'imageUrl': 'https://www.quitandgotravel.com/wp-content/uploads/sites/8/2022/04/Cycling-Across-Siwa-Oasis-Lake.jpg',
-      'amount': '\$85',
-    },
-    {
-      'id': 1003,
-      'title': 'Siwa Oasis Tour',
-      'date': '2024-09-05',
-      'status': 'Cancelled',
-      'imageUrl': 'https://www.kemetexperience.com/wp-content/uploads/2019/09/incredible-white-desert-960x636.jpg',
-      'amount': '\$65',
-    },
-  ];
-
   Color _getStatusColor(String status) {
-    switch (status) {
-      case 'Confirmed':
-        return AppTheme.successGreen;
-      case 'Pending':
-        return AppTheme.warningYellow;
-      case 'Cancelled':
-        return AppTheme.errorRed;
-      default:
-        return AppTheme.gray;
+    final statusLower = status.toLowerCase();
+    if (statusLower.contains('confirm')) {
+      return AppTheme.successGreen;
+    } else if (statusLower.contains('pend')) {
+      return AppTheme.warningYellow;
+    } else if (statusLower.contains('cancel')) {
+      return AppTheme.errorRed;
+    }
+    return AppTheme.gray;
+  }
+
+  String _formatDate(dynamic date) {
+    if (date == null) return 'Date unavailable';
+    
+    try {
+      if (date is DateTime) {
+        return DateFormat('MMM dd, yyyy').format(date);
+      } else if (date is String) {
+        final parsed = DateTime.tryParse(date);
+        if (parsed != null) {
+          return DateFormat('MMM dd, yyyy').format(parsed);
+        }
+        return date;
+      }
+      return date.toString();
+    } catch (e) {
+      return 'Date unavailable';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final isOffline = ref.watch(offlineProvider);
+    final bookings = ref.watch(mockDataProvider).getAllBookings();
 
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,
@@ -66,13 +61,13 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: const Text('Bookings'),
+        title: Text('navigation.bookings'.tr()),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Booking settings')),
+                SnackBar(content: Text('common.settings'.tr())),
               );
             },
           ),
@@ -85,7 +80,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              // color: AppTheme.offlineBanner,
+              color: AppTheme.lightGray,
               child: const Row(
                 children: [
                   Icon(
@@ -97,19 +92,16 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                   Expanded(
                     child: Text(
                       'You are offline. Data might be outdated.',
-                      style: TextStyle(
-                        color: AppTheme.black,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: AppTheme.black, fontSize: 14),
                     ),
                   ),
                 ],
               ),
             ),
-          
+
           // Bookings List
           Expanded(
-            child: _bookings.isEmpty
+            child: bookings.isEmpty
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -141,9 +133,16 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.all(16),
-                    itemCount: _bookings.length,
+                    itemCount: bookings.length,
                     itemBuilder: (context, index) {
-                      final booking = _bookings[index];
+                      final booking = bookings[index];
+                      
+                      // Extract booking details with null safety
+                      final title = booking['title']?.toString() ?? (booking['guest'] ?? 'Unknown Booking').toString();
+                      final imageUrl = (booking['imageUrl'] ?? 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800').toString();
+                      final status = (booking['status'] ?? 'unknown').toString();
+                      final date = booking['date'] ?? booking['checkIn'];
+                      
                       return Card(
                         margin: const EdgeInsets.only(bottom: 16),
                         elevation: 2,
@@ -157,14 +156,40 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                             padding: const EdgeInsets.all(16),
                             child: Row(
                               children: [
+                                // Booking Image
                                 Container(
                                   width: 80,
                                   height: 80,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    image: DecorationImage(
-                                      image: NetworkImage(booking['imageUrl']),
+                                    color: AppTheme.lightBlueGray,
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      imageUrl,
                                       fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Container(
+                                          color: AppTheme.lightBlueGray,
+                                          child: const Icon(
+                                            Icons.hotel,
+                                            size: 40,
+                                            color: AppTheme.primaryOrange,
+                                          ),
+                                        );
+                                      },
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) return child;
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress.expectedTotalBytes != null
+                                                ? loadingProgress.cumulativeBytesLoaded /
+                                                    loadingProgress.expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
@@ -174,11 +199,13 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        booking['title'],
+                                        title,
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                       const SizedBox(height: 6),
                                       Row(
@@ -189,11 +216,15 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                                             color: AppTheme.gray,
                                           ),
                                           const SizedBox(width: 4),
-                                          Text(
-                                            'Booking Date: ${booking['date']}',
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              color: AppTheme.gray,
+                                          Expanded(
+                                            child: Text(
+                                              _formatDate(date),
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                color: AppTheme.gray,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ],
@@ -205,16 +236,15 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                                           vertical: 4,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: _getStatusColor(booking['status'])
-                                              .withOpacity(0.15),
+                                          color: _getStatusColor(status).withOpacity(0.15),
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                         child: Text(
-                                          booking['status'],
+                                          status,
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600,
-                                            color: _getStatusColor(booking['status']),
+                                            color: _getStatusColor(status),
                                           ),
                                         ),
                                       ),

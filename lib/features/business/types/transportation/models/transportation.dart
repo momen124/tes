@@ -1,5 +1,7 @@
 // lib/features/business/types/transportation/models/transportation.dart
 
+// lib/features/business/types/transportation/models/transportation.dart
+
 class TransportationService {
   final String id;
   final String businessId;
@@ -22,15 +24,15 @@ class TransportationService {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'businessId': businessId,
-        'name': name,
-        'type': type,
-        'vehicles': vehicles.map((v) => v.toJson()).toList(),
-        'routes': routes.map((r) => r.toJson()).toList(),
-        'rating': rating,
-        'reviewCount': reviewCount,
-      };
+    'id': id,
+    'businessId': businessId,
+    'name': name,
+    'type': type,
+    'vehicles': vehicles.map((v) => v.toJson()).toList(),
+    'routes': routes.map((r) => r.toJson()).toList(),
+    'rating': rating,
+    'reviewCount': reviewCount,
+  };
 
   factory TransportationService.fromJson(Map<String, dynamic> json) =>
       TransportationService(
@@ -41,10 +43,9 @@ class TransportationService {
         vehicles: (json['vehicles'] as List)
             .map((v) => Vehicle.fromJson(v))
             .toList(),
-        routes:
-            (json['routes'] as List).map((r) => Route.fromJson(r)).toList(),
-        rating: json['rating'] ?? 0.0,
-        reviewCount: json['reviewCount'] ?? 0,
+        routes: (json['routes'] as List).map((r) => Route.fromJson(r)).toList(),
+        rating: json['rating'] as double? ?? 0.0,
+        reviewCount: json['reviewCount'] as int? ?? 0,
       );
 }
 
@@ -74,30 +75,30 @@ class Vehicle {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'type': type,
-        'licensePlate': licensePlate,
-        'driver': driver,
-        'driverVerified': driverVerified,
-        'rate': rate,
-        'routes': routes,
-        'capacity': capacity,
-        'amenities': amenities,
-        'available': available,
-      };
+    'id': id,
+    'type': type,
+    'licensePlate': licensePlate,
+    'driver': driver,
+    'driverVerified': driverVerified,
+    'rate': rate,
+    'routes': routes,
+    'capacity': capacity,
+    'amenities': amenities,
+    'available': available,
+  };
 
   factory Vehicle.fromJson(Map<String, dynamic> json) => Vehicle(
-        id: json['id'],
-        type: json['type'],
-        licensePlate: json['licensePlate'],
-        driver: json['driver'],
-        driverVerified: json['driverVerified'] ?? false,
-        rate: json['rate'],
-        routes: json['routes'],
-        capacity: json['capacity'] ?? 4,
-        amenities: List<String>.from(json['amenities'] ?? []),
-        available: json['available'] ?? true,
-      );
+    id: json['id'],
+    type: json['type'],
+    licensePlate: json['licensePlate'],
+    driver: json['driver'],
+    driverVerified: json['driverVerified'] as bool? ?? false,
+    rate: json['rate'] as double? ?? 0.0,
+    routes: json['routes'],
+    capacity: json['capacity'] as int? ?? 4,
+    amenities: List<String>.from(json['amenities'] as List<dynamic>? ?? []),
+    available: json['available'] as bool? ?? true,
+  );
 }
 
 class Route {
@@ -122,26 +123,26 @@ class Route {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'startLocation': startLocation,
-        'endLocation': endLocation,
-        'stops': stops.map((s) => s.toJson()).toList(),
-        'distance': distance,
-        'duration': duration,
-        'price': price,
-      };
+    'id': id,
+    'name': name,
+    'startLocation': startLocation,
+    'endLocation': endLocation,
+    'stops': stops.map((s) => s.toJson()).toList(),
+    'distance': distance,
+    'duration': duration,
+    'price': price,
+  };
 
   factory Route.fromJson(Map<String, dynamic> json) => Route(
-        id: json['id'],
-        name: json['name'],
-        startLocation: json['startLocation'],
-        endLocation: json['endLocation'],
-        stops: (json['stops'] as List).map((s) => RouteStop.fromJson(s)).toList(),
-        distance: json['distance'],
-        duration: json['duration'],
-        price: json['price'],
-      );
+    id: json['id'],
+    name: json['name'],
+    startLocation: json['startLocation'],
+    endLocation: json['endLocation'],
+    stops: (json['stops'] as List).map((s) => RouteStop.fromJson(s)).toList(),
+    distance: json['distance'],
+    duration: json['duration'],
+    price: json['price'],
+  );
 }
 
 class RouteStop {
@@ -158,18 +159,18 @@ class RouteStop {
   });
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'latitude': latitude,
-        'longitude': longitude,
-        'order': order,
-      };
+    'name': name,
+    'latitude': latitude,
+    'longitude': longitude,
+    'order': order,
+  };
 
   factory RouteStop.fromJson(Map<String, dynamic> json) => RouteStop(
-        name: json['name'],
-        latitude: json['latitude'],
-        longitude: json['longitude'],
-        order: json['order'],
-      );
+    name: json['name'],
+    latitude: json['latitude'],
+    longitude: json['longitude'],
+    order: json['order'],
+  );
 }
 
 class TransportationBooking {
@@ -200,18 +201,18 @@ class TransportationBooking {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'vehicleId': vehicleId,
-        'userId': userId,
-        'userName': userName,
-        'routeId': routeId,
-        'pickupTime': pickupTime.toIso8601String(),
-        'pickupLocation': pickupLocation,
-        'dropoffLocation': dropoffLocation,
-        'passengers': passengers,
-        'totalPrice': totalPrice,
-        'status': status,
-      };
+    'id': id,
+    'vehicleId': vehicleId,
+    'userId': userId,
+    'userName': userName,
+    'routeId': routeId,
+    'pickupTime': pickupTime.toIso8601String(),
+    'pickupLocation': pickupLocation,
+    'dropoffLocation': dropoffLocation,
+    'passengers': passengers,
+    'totalPrice': totalPrice,
+    'status': status,
+  };
 
   factory TransportationBooking.fromJson(Map<String, dynamic> json) =>
       TransportationBooking(

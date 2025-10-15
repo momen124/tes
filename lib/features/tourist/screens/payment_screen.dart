@@ -4,14 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/screens/booking_form_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class PaymentScreen extends StatefulWidget {
   final Booking booking;
-  
-  const PaymentScreen({
-    super.key,
-    required this.booking,
-  });
+
+  const PaymentScreen({super.key, required this.booking});
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -23,7 +21,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final _expiryController = TextEditingController();
   final _cvvController = TextEditingController();
   final _nameController = TextEditingController();
-  
+
   bool _isProcessing = false;
   String _selectedPaymentMethod = 'card';
 
@@ -72,25 +70,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Future<bool> _onWillPop() async {
     if (_isProcessing) return false;
-    
+
     return await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Cancel Payment?'),
-        content: const Text('Are you sure you want to cancel this payment? Your booking will not be confirmed.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Continue Payment'),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('common.cancel'.tr()),
+            content: Text(
+              'Are you sure you want to cancel this payment? Your booking will not be confirmed.'
+                  .tr(),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text('auth.or_continue_with'.tr()),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context, true),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.errorRed,
+                ),
+                child: Text('common.cancel'.tr()),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.errorRed),
-            child: const Text('Yes, Cancel'),
-          ),
-        ],
-      ),
-    ) ?? false;
+        ) ??
+        false;
   }
 
   @override
@@ -110,7 +114,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     }
                   },
           ),
-          title: const Text('Payment'),
+          title: Text('tourist.booking.payment_method'.tr()),
           elevation: 0,
           backgroundColor: AppTheme.white,
         ),
@@ -253,23 +257,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
+
                         TextFormField(
                           controller: _cardNumberController,
                           decoration: InputDecoration(
-                            labelText: 'Card Number',
-                            hintText: '1234 5678 9012 3456',
+                            labelText: 'Card Number'.tr(),
+                            hintText: '1234 5678 9012 3456'.tr(),
                             prefixIcon: const Icon(Icons.credit_card),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: AppTheme.lightGray),
+                              borderSide: const BorderSide(
+                                color: AppTheme.lightGray,
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: AppTheme.primaryOrange),
+                              borderSide: const BorderSide(
+                                color: AppTheme.primaryOrange,
+                              ),
                             ),
                           ),
                           keyboardType: TextInputType.number,
@@ -299,25 +307,29 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             return null;
                           },
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         TextFormField(
                           controller: _nameController,
                           decoration: InputDecoration(
-                            labelText: 'Cardholder Name',
-                            hintText: 'John Doe',
+                            labelText: 'auth.username'.tr(),
+                            hintText: 'common.done'.tr(),
                             prefixIcon: const Icon(Icons.person),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: AppTheme.lightGray),
+                              borderSide: const BorderSide(
+                                color: AppTheme.lightGray,
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: AppTheme.primaryOrange),
+                              borderSide: const BorderSide(
+                                color: AppTheme.primaryOrange,
+                              ),
                             ),
                           ),
                           textCapitalization: TextCapitalization.words,
@@ -328,28 +340,32 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             return null;
                           },
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         Row(
                           children: [
                             Expanded(
                               child: TextFormField(
                                 controller: _expiryController,
                                 decoration: InputDecoration(
-                                  labelText: 'Expiry Date',
-                                  hintText: 'MM/YY',
+                                  labelText: 'Expiry Date'.tr(),
+                                  hintText: 'MM/YY'.tr(),
                                   prefixIcon: const Icon(Icons.calendar_today),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(color: AppTheme.lightGray),
+                                    borderSide: const BorderSide(
+                                      color: AppTheme.lightGray,
+                                    ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(color: AppTheme.primaryOrange),
+                                    borderSide: const BorderSide(
+                                      color: AppTheme.primaryOrange,
+                                    ),
                                   ),
                                 ),
                                 keyboardType: TextInputType.number,
@@ -372,7 +388,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   if (value == null || value.isEmpty) {
                                     return 'Required';
                                   }
-                                  if (!value.contains('/') || value.length != 5) {
+                                  if (!value.contains('/') ||
+                                      value.length != 5) {
                                     return 'Invalid format';
                                   }
                                   return null;
@@ -384,19 +401,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               child: TextFormField(
                                 controller: _cvvController,
                                 decoration: InputDecoration(
-                                  labelText: 'CVV',
-                                  hintText: '123',
+                                  labelText: 'CVV'.tr(),
+                                  hintText: '123'.tr(),
                                   prefixIcon: const Icon(Icons.lock),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(color: AppTheme.lightGray),
+                                    borderSide: const BorderSide(
+                                      color: AppTheme.lightGray,
+                                    ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(color: AppTheme.primaryOrange),
+                                    borderSide: const BorderSide(
+                                      color: AppTheme.primaryOrange,
+                                    ),
                                   ),
                                 ),
                                 keyboardType: TextInputType.number,
@@ -493,34 +514,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            color: AppTheme.gray,
-          ),
-        ),
+        Text(label, style: const TextStyle(fontSize: 14, color: AppTheme.gray)),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
       ],
     );
   }
 
-  Widget _buildPaymentMethodOption(
-    String value,
-    String label,
-    IconData icon,
-  ) {
+  Widget _buildPaymentMethodOption(String value, String label, IconData icon) {
     final isSelected = _selectedPaymentMethod == value;
     return InkWell(
-      onTap: _isProcessing ? null : () {
-        setState(() => _selectedPaymentMethod = value);
-      },
+      onTap: _isProcessing
+          ? null
+          : () {
+              setState(() => _selectedPaymentMethod = value);
+            },
       borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -547,15 +557,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected ? AppTheme.primaryOrange : AppTheme.darkGray,
+                  color: isSelected
+                      ? AppTheme.primaryOrange
+                      : AppTheme.darkGray,
                 ),
               ),
             ),
             if (isSelected)
-              const Icon(
-                Icons.check_circle,
-                color: AppTheme.primaryOrange,
-              ),
+              const Icon(Icons.check_circle, color: AppTheme.primaryOrange),
           ],
         ),
       ),

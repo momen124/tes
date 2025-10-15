@@ -12,7 +12,8 @@ class BookingConfirmationScreen extends StatefulWidget {
   const BookingConfirmationScreen({super.key, required this.booking});
 
   @override
-  State<BookingConfirmationScreen> createState() => _BookingConfirmationScreenState();
+  State<BookingConfirmationScreen> createState() =>
+      _BookingConfirmationScreenState();
 }
 
 class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
@@ -21,7 +22,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 3),
+    );
     // Start confetti automatically
     Future.delayed(const Duration(milliseconds: 500), () {
       _confettiController.play();
@@ -46,7 +49,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
         backgroundColor: AppTheme.lightBlueGray,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text('Booking Confirmed'),
+          title: Text('tourist.booking.booking_confirmed'.tr()),
           elevation: 0,
           backgroundColor: AppTheme.white,
         ),
@@ -72,9 +75,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                         size: 80,
                       ),
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     Text(
                       'tourist.booking.booking_confirmed'.tr(),
                       style: const TextStyle(
@@ -83,9 +86,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    
+
                     const SizedBox(height: 12),
-                    
+
                     Text(
                       'tourist.booking.booking_details_sent'.tr(),
                       style: const TextStyle(
@@ -94,9 +97,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // Booking details card
                     Container(
                       width: double.infinity,
@@ -134,50 +137,54 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                               ),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 24),
-                          
+
                           _buildDetailRow(
                             Icons.hotel,
                             'tourist.booking.service'.tr(),
                             widget.booking.serviceType,
                           ),
-                          
+
                           const Divider(height: 24),
-                          
+
                           _buildDetailRow(
                             Icons.calendar_today,
                             'tourist.booking.date'.tr(),
-                            DateFormat('MMM dd, yyyy').format(widget.booking.date),
+                            DateFormat(
+                              'MMM dd, yyyy',
+                            ).format(widget.booking.date),
                           ),
-                          
+
                           if (widget.booking.checkOutDate != null) ...[
                             const SizedBox(height: 12),
                             _buildDetailRow(
                               Icons.event,
                               'Check-out',
-                              DateFormat('MMM dd, yyyy').format(widget.booking.checkOutDate!),
+                              DateFormat(
+                                'MMM dd, yyyy',
+                              ).format(widget.booking.checkOutDate!),
                             ),
                           ],
-                          
+
                           const Divider(height: 24),
-                          
+
                           _buildDetailRow(
                             Icons.people,
                             'tourist.booking.adults'.tr(),
                             '${widget.booking.adultCount}',
                           ),
-                          
+
                           const SizedBox(height: 12),
-                          
+
                           _buildDetailRow(
                             Icons.child_care,
                             'tourist.booking.children'.tr(),
                             '${widget.booking.childCount}',
                           ),
-                          
+
                           const Divider(height: 24),
-                          
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -201,9 +208,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                         ],
                       ),
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     // What's next section
                     Container(
                       width: double.infinity,
@@ -243,9 +250,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                         ],
                       ),
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // Action buttons
                     Column(
                       children: [
@@ -278,9 +285,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                             ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 12),
-                        
+
                         SizedBox(
                           width: double.infinity,
                           height: 50,
@@ -289,7 +296,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                               context.go('/tourist_home');
                             },
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: AppTheme.primaryOrange),
+                              side: const BorderSide(
+                                color: AppTheme.primaryOrange,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -310,7 +319,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                 ),
               ),
             ),
-            
+
             // Confetti overlay
             Align(
               alignment: Alignment.topCenter,
@@ -355,10 +364,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
             children: [
               Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.gray,
-                ),
+                style: const TextStyle(fontSize: 12, color: AppTheme.gray),
               ),
               const SizedBox(height: 4),
               Text(
@@ -402,10 +408,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
               const SizedBox(height: 2),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.gray,
-                ),
+                style: const TextStyle(fontSize: 12, color: AppTheme.gray),
               ),
             ],
           ),

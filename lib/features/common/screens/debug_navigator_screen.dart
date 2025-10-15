@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DebugNavigatorScreen extends StatelessWidget {
   const DebugNavigatorScreen({super.key});
@@ -8,7 +9,7 @@ class DebugNavigatorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Debug Navigator'),
+        title: Text('navigation.search'.tr()),
         backgroundColor: Colors.orange,
       ),
       body: ListView(
@@ -24,7 +25,11 @@ class DebugNavigatorScreen extends StatelessWidget {
           _buildNavButton(context, 'Tourist Challenges', '/tourist_challenges'),
           _buildNavButton(context, 'Tourist Profile', '/tourist_profile'),
           _buildNavButton(context, 'Tourist Search', '/tourist_search'),
-          _buildNavButton(context, 'Booking Form (default)', '/booking_form?type=default'),
+          _buildNavButton(
+            context,
+            'Booking Form (default)',
+            '/booking_form?type=default',
+          ),
           _buildNavButton(context, 'Product Detail', '/product_detail'),
           _buildNavButton(context, 'Service Detail', '/service_detail'),
           _buildNavButton(context, 'Siwa Info', '/siwa_info'),
@@ -32,9 +37,21 @@ class DebugNavigatorScreen extends StatelessWidget {
           _buildNavButton(context, 'Restaurants List', '/restaurants'),
           _buildNavButton(context, 'Tour Guides List', '/tour_guides'),
           _buildNavButton(context, 'Transportation List', '/transportation'),
-          _buildNavButton(context, 'Forgot Password', '/forgot_password'), // Assuming this exists
-          _buildNavButton(context, 'Payment', '/payment'), // Assuming this exists
-          _buildNavButton(context, 'Tour Guide Profile', '/tour_guide_profile'), // Assuming this exists
+          _buildNavButton(
+            context,
+            'Forgot Password',
+            '/forgot_password',
+          ), // Assuming this exists
+          _buildNavButton(
+            context,
+            'Payment',
+            '/payment',
+          ), // Assuming this exists
+          _buildNavButton(
+            context,
+            'Tour Guide Profile',
+            '/tour_guide_profile',
+          ), // Assuming this exists
 
           const SizedBox(height: 24),
           const Text(
@@ -42,9 +59,21 @@ class DebugNavigatorScreen extends StatelessWidget {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          _buildNavButton(context, 'Business Dashboard (Hotel)', '/business_dashboard?type=hotel'),
-          _buildNavButton(context, 'Business Listings (Hotel)', '/business_listings?type=hotel'),
-          _buildNavButton(context, 'Business Profile (Hotel)', '/business_profile?type=hotel'),
+          _buildNavButton(
+            context,
+            'Business Dashboard (Hotel)',
+            '/business_dashboard?type=hotel',
+          ),
+          _buildNavButton(
+            context,
+            'Business Listings (Hotel)',
+            '/business_listings?type=hotel',
+          ),
+          _buildNavButton(
+            context,
+            'Business Profile (Hotel)',
+            '/business_profile?type=hotel',
+          ),
           _buildNavButton(context, 'Hotel Management', '/hotel_management'),
           _buildNavButton(context, 'Rental Fleet', '/rental_fleet'),
           _buildNavButton(context, 'Route Management', '/route_management'),
@@ -70,8 +99,16 @@ class DebugNavigatorScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           _buildNavButton(context, 'Login', '/login'),
-          _buildNavButton(context, 'Register (Tourist)', '/register?type=tourist'),
-          _buildNavButton(context, 'Register (Business)', '/register?type=business'),
+          _buildNavButton(
+            context,
+            'Register (Tourist)',
+            '/register?type=tourist',
+          ),
+          _buildNavButton(
+            context,
+            'Register (Business)',
+            '/register?type=business',
+          ),
         ],
       ),
     );

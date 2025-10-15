@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TripBookingForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onFormDataChanged;
@@ -131,7 +132,7 @@ class _TripBookingFormState extends State<TripBookingForm> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Number of Guests'),
+            Text('Number of Guests'.tr()),
             Row(
               children: [
                 IconButton(
@@ -174,10 +175,10 @@ class _TripBookingFormState extends State<TripBookingForm> {
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
           initialValue: _mealPreference,
-          items: const [
-            DropdownMenuItem(value: 'vegetarian', child: Text('Vegetarian')),
-            DropdownMenuItem(value: 'non-vegetarian', child: Text('Non-Vegetarian')),
-            DropdownMenuItem(value: 'vegan', child: Text('Vegan')),
+          items: [
+            DropdownMenuItem(value: 'vegetarian', child: Text('Vegetarian'.tr())),
+            DropdownMenuItem(value: 'non-vegetarian', child: Text('Non-Vegetarian'.tr())),
+            DropdownMenuItem(value: 'vegan', child: Text('Vegan'.tr())),
           ],
           onChanged: (value) => setState(() {
             _mealPreference = value!;
@@ -206,7 +207,7 @@ class _TripBookingFormState extends State<TripBookingForm> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Deposit Percentage'),
+            Text('Deposit Percentage'.tr()),
             Text(
               '${_depositPercentage.toInt()}%',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

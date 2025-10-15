@@ -28,7 +28,8 @@ class Restaurant extends Business {
     this.categories = const [],
   }) : super(type: BusinessType.restaurant);
 
-  factory Restaurant.fromJson(Map<String, dynamic> json) => _$RestaurantFromJson(json);
+  factory Restaurant.fromJson(Map<String, dynamic> json) =>
+      _$RestaurantFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$RestaurantToJson(this);
 }
@@ -51,6 +52,7 @@ class MenuItem {
     required this.photos,
   });
 
-  factory MenuItem.fromJson(Map<String, dynamic> json) => _$MenuItemFromJson(json);
+  factory MenuItem.fromJson(Map<String, dynamic> json) =>
+      _$MenuItemFromJson(json);
   Map<String, dynamic> toJson() => _$MenuItemToJson(this);
 }

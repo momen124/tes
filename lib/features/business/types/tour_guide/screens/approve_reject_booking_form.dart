@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ApproveRejectBookingForm extends StatelessWidget {
   const ApproveRejectBookingForm({super.key});
@@ -10,7 +11,7 @@ class ApproveRejectBookingForm extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('Approve or Reject Booking', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text('Approve or Reject Booking'.tr(), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -18,11 +19,11 @@ class ApproveRejectBookingForm extends StatelessWidget {
               ElevatedButton(onPressed: () {
                 // Approve logic
                 Navigator.pop(context);
-              }, style: ElevatedButton.styleFrom(backgroundColor: Colors.green), child: const Text('Approve')),
+              }, style: ElevatedButton.styleFrom(backgroundColor: Colors.green), child: Text('Approve'.tr())),
               ElevatedButton(onPressed: () {
                 // Reject logic
                 Navigator.pop(context);
-              }, style: ElevatedButton.styleFrom(backgroundColor: Colors.red), child: const Text('Reject')),
+              }, style: ElevatedButton.styleFrom(backgroundColor: Colors.red), child: Text('Reject'.tr())),
             ],
           ),
         ],

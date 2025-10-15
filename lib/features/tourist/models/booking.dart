@@ -3,19 +3,9 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'booking.g.dart';
 
-enum ServiceType {
-  accommodation,
-  transportation,
-  attraction,
-  product,
-}
+enum ServiceType { accommodation, transportation, attraction, product }
 
-enum BookingStatus {
-  pending,
-  confirmed,
-  cancelled,
-  completed,
-}
+enum BookingStatus { pending, confirmed, cancelled, completed }
 
 @JsonSerializable()
 class Booking {
@@ -47,6 +37,7 @@ class Booking {
     required this.updatedAt,
   });
 
-  factory Booking.fromJson(Map<String, dynamic> json) => _$BookingFromJson(json);
+  factory Booking.fromJson(Map<String, dynamic> json) =>
+      _$BookingFromJson(json);
   Map<String, dynamic> toJson() => _$BookingToJson(this);
 }

@@ -83,10 +83,10 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!_isDateSelectable(selectedDay)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Cannot select past dates'),
+         SnackBar(
+          content: Text('Cannot select past dates'.tr()),
           backgroundColor: AppTheme.errorRed,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
       return;
@@ -158,17 +158,17 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
       return await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Cancel Booking?'),
-          content: const Text('Are you sure you want to cancel this booking? All entered information will be lost.'),
+          title: Text('Cancel Booking?'.tr()),
+          content: Text('Are you sure you want to cancel this booking? All entered information will be lost.'.tr()),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Continue Booking'),
+              child: Text('Continue Booking'.tr()),
             ),
             ElevatedButton(
               onPressed: () => Navigator.pop(context, true),
               style: ElevatedButton.styleFrom(backgroundColor: AppTheme.errorRed),
-              child: const Text('Yes, Cancel'),
+              child: Text('Yes, Cancel'.tr()),
             ),
           ],
         ),
@@ -181,8 +181,8 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
     if (_formKey.currentState!.validate()) {
       if (_selectedCheckIn == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select a check-in date'),
+           SnackBar(
+            content: Text('Please select a check-in date'.tr()),
             backgroundColor: AppTheme.errorRed,
           ),
         );
@@ -194,8 +194,8 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           (widget.serviceType.toLowerCase().contains('hotel') ||
            widget.serviceType.toLowerCase().contains('accommodation'))) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select a check-out date'),
+           SnackBar(
+            content: Text('Please select a check-out date'.tr()),
             backgroundColor: AppTheme.errorRed,
           ),
         );
@@ -564,7 +564,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                         controller: _specialRequestsController,
                         maxLines: 3,
                         decoration: InputDecoration(
-                          hintText: 'e.g., Early check-in, specific room location...',
+                          hintText: 'e.g., Early check-in, specific room location...'.tr(),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),

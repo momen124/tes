@@ -7,14 +7,13 @@ class User {
   final String email;
   final String? username;
 
-  User({
-    required this.email,
-    this.username,
-  });
+  User({required this.email, this.username});
 }
 
 final dioProvider = Provider<Dio>((ref) {
-  return Dio(BaseOptions(baseUrl: 'http://localhost:3000/api')); // Replace with your actual API base URL
+  return Dio(
+    BaseOptions(baseUrl: 'http://localhost:3000/api'),
+  ); // Replace with your actual API base URL
 });
 
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
@@ -40,12 +39,11 @@ class AuthNotifier extends StateNotifier<User?> {
     if (token != null) {
       try {
         dio.options.headers['Authorization'] = 'Bearer $token';
-        final response = await dio.get('/user'); // Assume an endpoint to fetch user profile
+        final response = await dio.get(
+          '/user',
+        ); // Assume an endpoint to fetch user profile
         final data = response.data;
-        state = User(
-          email: data['email'],
-          username: data['username'],
-        );
+        state = User(email: data['email'], username: data['username']);
       } catch (e) {
         await logout();
       }
@@ -54,19 +52,16 @@ class AuthNotifier extends StateNotifier<User?> {
 
   Future<void> login(String email, String password) async {
     try {
-      final response = await dio.post('/login', data: {
-        'email': email,
-        'password': password,
-      });
+      final response = await dio.post(
+        '/login',
+        data: {'email': email, 'password': password},
+      );
       final token = response.data['token'];
       await storage.write(key: 'auth_token', value: token);
       dio.options.headers['Authorization'] = 'Bearer $token';
       final userResponse = await dio.get('/user');
       final data = userResponse.data;
-      state = User(
-        email: data['email'],
-        username: data['username'],
-      );
+      state = User(email: data['email'], username: data['username']);
     } catch (e) {
       throw Exception('Login failed: ${e.toString()}');
     }
@@ -81,21 +76,21 @@ class AuthNotifier extends StateNotifier<User?> {
     bool mfaEnabled,
   ) async {
     try {
-      final response = await dio.post('/register', data: {
-        'email': email,
-        'username': username,
-        'password': password,
-        'role': role,
-        'gps_consent': gpsConsent,
-        'mfa_enabled': mfaEnabled,
-      });
+      final response = await dio.post(
+        '/register',
+        data: {
+          'email': email,
+          'username': username,
+          'password': password,
+          'role': role,
+          'gps_consent': gpsConsent,
+          'mfa_enabled': mfaEnabled,
+        },
+      );
       final token = response.data['token'];
       await storage.write(key: 'auth_token', value: token);
       dio.options.headers['Authorization'] = 'Bearer $token';
-      state = User(
-        email: email,
-        username: username,
-      );
+      state = User(email: email, username: username);
     } catch (e) {
       throw Exception('Registration failed: ${e.toString()}');
     }

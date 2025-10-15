@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AdminLogsScreen extends StatelessWidget {
   const AdminLogsScreen({super.key});
@@ -6,19 +7,21 @@ class AdminLogsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Logs')),
+      appBar: AppBar(title: Text('auth.login'.tr())),
       body: DataTable(
-        columns: const [
-          DataColumn(label: Text('ID')),
-          DataColumn(label: Text('Type')),
-          DataColumn(label: Text('Details')),
+        columns: [
+          DataColumn(label: Text('tourist.search.mid'.tr())),
+          DataColumn(label: Text('business.rental.room_type'.tr())),
+          DataColumn(label: Text('common.details'.tr())),
         ],
-        rows: const [
-          DataRow(cells: [
-            DataCell(Text('1')),
-            DataCell(Text('Audit')),
-            DataCell(Text('Mock details')),
-          ]), // Added closing bracket
+        rows: [
+          DataRow(
+            cells: [
+              DataCell(Text('1'.tr())),
+              DataCell(Text('common.edit'.tr())),
+              DataCell(Text('common.details'.tr())),
+            ],
+          ), // Added closing bracket
           // Add mock rows
         ],
       ),

@@ -1,6 +1,14 @@
 // lib/features/business/models/business_type.dart
 
-enum BusinessType { tourGuide, hotel, rental, restaurant, store, transportation, tripBooking }
+enum BusinessType {
+  tourGuide,
+  hotel,
+  rental,
+  restaurant,
+  store,
+  transportation,
+  tripBooking,
+}
 
 extension BusinessTypeExtension on BusinessType {
   String get displayName {

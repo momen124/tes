@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AdminModerationScreen extends StatelessWidget {
   const AdminModerationScreen({super.key});
@@ -6,22 +7,28 @@ class AdminModerationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Moderation Queue')),
+      appBar: AppBar(title: Text('attractions.duration'.tr())),
       body: DataTable(
-        columns: const [
-          DataColumn(label: Text('ID')),
-          DataColumn(label: Text('Type')),
-          DataColumn(label: Text('Actions')),
+        columns: [
+          DataColumn(label: Text('tourist.search.mid'.tr())),
+          DataColumn(label: Text('business.rental.room_type'.tr())),
+          DataColumn(label: Text('tourist.categories.attractions'.tr())),
         ],
         rows: [
-          DataRow(cells: [
-            const DataCell(Text('1')),
-            const DataCell(Text('Business')),
-            DataCell(Row(children: [
-              IconButton(icon: const Icon(Icons.check), onPressed: () {}),
-              IconButton(icon: const Icon(Icons.close), onPressed: () {}),
-            ])),
-          ]),
+          DataRow(
+            cells: [
+              DataCell(Text('1'.tr())),
+              DataCell(Text('business.profile.business_name'.tr())),
+              DataCell(
+                Row(
+                  children: [
+                    IconButton(icon: const Icon(Icons.check), onPressed: () {}),
+                    IconButton(icon: const Icon(Icons.close), onPressed: () {}),
+                  ],
+                ),
+              ),
+            ],
+          ),
           // Add mock rows as needed
         ],
       ),

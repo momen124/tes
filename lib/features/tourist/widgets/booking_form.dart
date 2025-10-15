@@ -1,5 +1,6 @@
 // lib/widgets/booking_form.dart
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BookingForm extends StatelessWidget {
   const BookingForm({super.key});
@@ -9,9 +10,9 @@ class BookingForm extends StatelessWidget {
     return Form(
       child: Column(
         children: [
-          TextFormField(decoration: const InputDecoration(labelText: 'Date')),
-          TextFormField(decoration: const InputDecoration(labelText: 'Guests')),
-          ElevatedButton(onPressed: () {}, child: const Text('Book')),
+          TextFormField(decoration: InputDecoration(labelText: 'tourist.booking.date'.tr())),
+          TextFormField(decoration: InputDecoration(labelText: 'tourist.booking.guests'.tr())),
+          ElevatedButton(onPressed: () {}, child: Text('navigation.bookings'.tr())),
         ],
       ),
     );

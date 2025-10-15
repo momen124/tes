@@ -1,70 +1,47 @@
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class TouristChallengesScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
+class TouristChallengesScreen extends ConsumerStatefulWidget {
   const TouristChallengesScreen({super.key});
 
   @override
-  State<TouristChallengesScreen> createState() => _TouristChallengesScreenState();
+  ConsumerState<TouristChallengesScreen> createState() =>
+      _TouristChallengesScreenState();
 }
 
-class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
-  final List<Map<String, dynamic>> _challenges = [
-    {
-      'id': 1,
-      'title': 'Capture the Sunset',
-      'description': 'Find the perfect spot to photograph the sunset over the desert dunes.',
-      'imageUrl': 'https://www.heatheronhertravels.com/wp-content/uploads/2011/09/Sunset-at-Fatnas-Island-in-Siwa-in-Egypt-2.jpg.webp',
-      'completed': false,
-      'points': 50,
-      'proof': null,
-    },
-    {
-      'id': 2,
-      'title': 'Hidden Oasis',
-      'description': 'Discover and photograph a hidden oasis within the Siwa desert.',
-      'imageUrl': 'https://thedaydreamdrifters.com/wp-content/uploads/2018/09/Siwa-Oasis-.jpg',
-      'completed': false,
-      'points': 75,
-      'proof': null,
-    },
-    {
-      'id': 3,
-      'title': 'Salt Lake Reflection',
-      'description': 'Capture the stunning reflections on the surface of the salt lakes.',
-      'imageUrl': 'https://visitegypt.com/wp-content/uploads/2025/07/the-salt-lake-siwa-oasis.webp',
-      'completed': false,
-      'points': 60,
-      'proof': null,
-    },
-  ];
-
+class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScreen> {
   int get _totalPoints {
-    return _challenges
-      .where((c) => c['completed'] == true)
-      .fold(0, (sum, c) => sum + (c['points'] as int? ?? 0));
+    return ref.watch(mockDataProvider).getAllOther()
+        .where((c) => c['completed'] == true)
+        .fold(0, (sum, c) => sum + (c['points'] as int? ?? 0));
   }
 
   int get _completedCount {
-    return _challenges.where((c) => c['completed'] == true).length;
+    return ref.watch(mockDataProvider).getAllOther().where((c) => c['completed'] == true).length;
   }
 
   Future<void> _uploadPhoto(Map<String, dynamic> challenge) async {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.camera);
-    
+
     if (image != null) {
       setState(() {
         challenge['proof'] = image.path;
         challenge['completed'] = true;
       });
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Challenge completed! +${challenge['points']} points'),
+          content: Text(
+            "${'tourist.challenges.challenge_completed'.tr()} ${challenge['points'] ?? 0} points",
+          ),
           backgroundColor: AppTheme.successGreen,
         ),
       );
@@ -81,7 +58,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: const Text('Photo Challenges'),
+        title: Text('tourist.challenges.photo_challenges'.tr()),
         elevation: 0,
         actions: [
           Center(
@@ -118,32 +95,36 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Challenge Progress', style: AppTheme.titleMedium),
+                Text('tourist.challenges.challenge_progress'.tr(), style: AppTheme.titleMedium),
                 const SizedBox(height: 12),
                 LinearProgressIndicator(
-                  value: _challenges.isEmpty ? 0 : _completedCount / _challenges.length,
+                  value: ref.watch(mockDataProvider).getAllOther().isEmpty
+                      ? 0
+                      : _completedCount / ref.watch(mockDataProvider).getAllOther().length,
                   backgroundColor: AppTheme.gray.withOpacity(0.2),
-                  valueColor: const AlwaysStoppedAnimation(AppTheme.primaryOrange),
+                  valueColor: const AlwaysStoppedAnimation(
+                    AppTheme.primaryOrange,
+                  ),
                   minHeight: 8,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '$_completedCount/${_challenges.length} Completed',
+                  '$_completedCount/${ref.watch(mockDataProvider).getAllOther().length} Completed',
                   style: AppTheme.bodySmall.copyWith(color: AppTheme.gray),
                 ),
               ],
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Challenge Cards
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: _challenges.length,
+              itemCount: ref.watch(mockDataProvider).getAllOther().length,
               itemBuilder: (context, index) {
-                final challenge = _challenges[index];
+                final challenge = ref.watch(mockDataProvider).getAllOther()[index];
                 return Card(
                   margin: const EdgeInsets.only(bottom: 16),
                   child: Column(
@@ -157,29 +138,31 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                             top: Radius.circular(16),
                           ),
                           image: DecorationImage(
-                            image: NetworkImage(challenge['imageUrl']),
+                            image: challenge['imageUrl'] != null
+                                ? NetworkImage(challenge['imageUrl'] as String)
+                                : const AssetImage('assets/placeholder.png') as ImageProvider, // Fallback placeholder
                             fit: BoxFit.cover,
                           ),
                         ),
-                        child: challenge['completed']
-                          ? Container(
-                              decoration: BoxDecoration(
-                                color: AppTheme.successGreen.withOpacity(0.8),
-                                borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(16),
+                        child: challenge['completed'] == true
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  color: AppTheme.successGreen.withOpacity(0.8),
+                                  borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(16),
+                                  ),
                                 ),
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.check_circle,
-                                  size: 64,
-                                  color: Colors.white,
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.check_circle,
+                                    size: 64,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                            )
-                          : null,
+                              )
+                            : null,
                       ),
-                      
+
                       // Challenge Details
                       Padding(
                         padding: const EdgeInsets.all(16),
@@ -191,7 +174,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    challenge['title'],
+                                    challenge['title']?.toString() ?? 'No Title',
                                     style: AppTheme.titleMedium,
                                   ),
                                 ),
@@ -201,13 +184,13 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                                     vertical: 6,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: challenge['completed']
-                                      ? AppTheme.successGreen
-                                      : AppTheme.primaryOrange,
+                                    color: challenge['completed'] == true
+                                        ? AppTheme.successGreen
+                                        : AppTheme.primaryOrange,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
-                                    '+${challenge['points']} pts',
+                                    '+${challenge['points']?.toString() ?? '0'} pts',
                                     style: AppTheme.bodySmall.copyWith(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -218,7 +201,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              challenge['description'],
+                              challenge['description']?.toString() ?? 'No Description',
                               style: AppTheme.bodyMedium.copyWith(
                                 color: AppTheme.gray,
                               ),
@@ -227,23 +210,23 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton.icon(
-                                onPressed: challenge['completed']
-                                  ? null
-                                  : () => _uploadPhoto(challenge),
+                                onPressed: challenge['completed'] == true
+                                    ? null
+                                    : () => _uploadPhoto(challenge),
                                 icon: Icon(
-                                  challenge['completed']
-                                    ? Icons.check_circle
-                                    : Icons.camera_alt,
+                                  challenge['completed'] == true
+                                      ? Icons.check_circle
+                                      : Icons.camera_alt,
                                 ),
                                 label: Text(
-                                  challenge['completed']
-                                    ? 'Completed'
-                                    : 'Upload Photo',
+                                  challenge['completed'] == true
+                                      ? 'Completed'.tr()
+                                      : 'Upload Photo'.tr(),
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: challenge['completed']
-                                    ? AppTheme.successGreen
-                                    : AppTheme.primaryOrange,
+                                  backgroundColor: challenge['completed'] == true
+                                      ? AppTheme.successGreen
+                                      : AppTheme.primaryOrange,
                                 ),
                               ),
                             ),

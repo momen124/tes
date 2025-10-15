@@ -51,7 +51,8 @@ class FleetItem {
     required this.terms,
   });
 
-  factory FleetItem.fromJson(Map<String, dynamic> json) => _$FleetItemFromJson(json);
+  factory FleetItem.fromJson(Map<String, dynamic> json) =>
+      _$FleetItemFromJson(json);
   Map<String, dynamic> toJson() => _$FleetItemToJson(this);
 }
 
@@ -73,6 +74,7 @@ class RentalHistory {
     required this.totalCost,
   });
 
-  factory RentalHistory.fromJson(Map<String, dynamic> json) => _$RentalHistoryFromJson(json);
+  factory RentalHistory.fromJson(Map<String, dynamic> json) =>
+      _$RentalHistoryFromJson(json);
   Map<String, dynamic> toJson() => _$RentalHistoryToJson(this);
 }

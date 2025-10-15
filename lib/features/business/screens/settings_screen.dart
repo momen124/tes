@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/business/providers/business_provider.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -16,7 +17,7 @@ class SettingsScreen extends ConsumerWidget {
     final isOffline = ref.watch(offlineProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text('Settings'.tr())),
       body: ListView(
         children: [
           if (isOffline)
@@ -29,17 +30,17 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
           SwitchListTile(
-            title: const Text('Language (English/Arabic)'),
+            title: Text('Language (English/Arabic)'.tr()),
             value: business.language == 'en',
             onChanged: isOffline ? null : (val) => businessNotifier.setLanguage(val ? 'en' : 'ar'),
           ),
           SwitchListTile(
-            title: const Text('Enable GPS'),
+            title: Text('Enable GPS'.tr()),
             value: business.gpsEnabled,
             onChanged: isOffline ? null : (val) => businessNotifier.toggleGps(val),
           ),
           ListTile(
-            title: const Text('Logout'),
+            title: Text('Logout'.tr()),
             trailing: const Icon(Icons.logout),
             onTap: isOffline
                 ? null

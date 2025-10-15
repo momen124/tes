@@ -21,13 +21,19 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Future<void> _checkAuthAndNavigate() async {
     // Wait for splash duration
     await Future.delayed(const Duration(seconds: 2));
-    
+
     if (!mounted) return;
-    
+
     final auth = ref.read(authProvider);
     if (auth != null) {
       // Navigate based on role; support different user models by reading common fields via dynamic
-      final String role = ((auth as dynamic).role ?? (auth as dynamic).type ?? (auth as dynamic).userType ?? (auth as dynamic).roles ?? 'unknown').toString();
+      final String role =
+          ((auth as dynamic).role ??
+                  (auth as dynamic).type ??
+                  (auth as dynamic).userType ??
+                  (auth as dynamic).roles ??
+                  'unknown')
+              .toString();
       switch (role) {
         case 'tourist':
           context.go('/tourist_home');
@@ -55,11 +61,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.park,
-                size: 100,
-                color: AppTheme.primaryOrange,
-              ),
+              const Icon(Icons.park, size: 100, color: AppTheme.primaryOrange),
               const SizedBox(height: 24),
               Text(
                 'Siwa Oasis',
@@ -71,9 +73,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 style: AppTheme.bodyLarge.copyWith(color: AppTheme.gray),
               ),
               const SizedBox(height: 40),
-              const CircularProgressIndicator(
-                color: AppTheme.primaryOrange,
-              ),
+              const CircularProgressIndicator(color: AppTheme.primaryOrange),
             ],
           ),
         ),

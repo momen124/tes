@@ -40,12 +40,12 @@ class Validators {
 
   static String sanitizeInput(String input) {
     return input
-      .trim()
-      .replaceAll('&', '')
-      .replaceAll('<', '')
-      .replaceAll('>', '')
-      .replaceAll('"', '')
-      .replaceAll("'", '')
-      .replaceAll(RegExp(r'\s+'), ' ');
+        .trim()
+        .replaceAll('&', '')
+        .replaceAll('<', '')
+        .replaceAll('>', '')
+        .replaceAll('"', '')
+        .replaceAll("'", '')
+        .replaceAll(RegExp(r'\s+'), ' ');
   }
 }

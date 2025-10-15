@@ -8,6 +8,7 @@ import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/business/models/business_type.dart';
 import 'package:siwa/features/tourist/providers/offline_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BusinessListingsScreen extends ConsumerStatefulWidget {
   final BusinessType businessType;
@@ -103,18 +104,18 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                 Container(
                   decoration: AppTheme.offlineBanner,
                   padding: const EdgeInsets.all(8),
-                  child: const Row(
+                  child:  Row(
                     children: [
-                      Icon(Icons.wifi_off, color: Colors.white),
-                      SizedBox(width: 8),
-                      Text('You are offline', style: TextStyle(color: Colors.white)),
+                      const Icon(Icons.wifi_off, color: Colors.white),
+                      const SizedBox(width: 8),
+                      Text('You are offline'.tr(), style: const TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
               TextFormField(
                 controller: _titleController,
                 decoration: InputDecoration(
-                  labelText: 'Listing Title',
+                  labelText: 'Listing Title'.tr(),
                   hintText: _getTitleHint(),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
@@ -129,8 +130,8 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
-                  labelText: 'Description',
-                  hintText: 'Describe your offering in detail',
+                  labelText: 'Description'.tr(),
+                  hintText: 'Describe your offering in detail'.tr(),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 maxLines: 4,
@@ -142,7 +143,7 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                 },
               ),
               const SizedBox(height: 16),
-              const Text('Listing Photos'),
+              Text('Listing Photos'.tr()),
               const SizedBox(height: 8),
               GestureDetector(
                 onTap: isOffline ? null : _uploadPhoto,
@@ -165,13 +166,13 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
-                        labelText: 'Category',
+                        labelText: 'Category'.tr(),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       ),
-                      items: const [
-                        DropdownMenuItem(value: 'standard', child: Text('Standard')),
-                        DropdownMenuItem(value: 'premium', child: Text('Premium')),
-                        DropdownMenuItem(value: 'luxury', child: Text('Luxury')),
+                      items: [
+                        DropdownMenuItem(value: 'standard', child: Text('Standard'.tr())),
+                        DropdownMenuItem(value: 'premium', child: Text('Premium'.tr())),
+                        DropdownMenuItem(value: 'luxury', child: Text('Luxury'.tr())),
                       ],
                       initialValue: _category.isNotEmpty ? _category : null,
                       onChanged: (value) => setState(() => _category = value ?? ''),
@@ -188,8 +189,8 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                     child: TextFormField(
                       controller: _priceController,
                       decoration: InputDecoration(
-                        labelText: 'Price',
-                        hintText: '\$ 50',
+                        labelText: 'Price'.tr(),
+                        hintText: '\$ 50'.tr(),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       keyboardType: TextInputType.number,
@@ -207,7 +208,7 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                 ],
               ),
               const SizedBox(height: 16),
-              const Text('Availability'),
+              Text('Availability'.tr()),
               const SizedBox(height: 8),
               TableCalendar(
                 firstDay: DateTime.utc(2010, 10, 16),
@@ -224,7 +225,7 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                       : () {
                           if (_formKey.currentState!.validate()) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('${widget.businessType.displayName} listing created!')),
+                              SnackBar(content: Text('${widget.businessType.displayName} listing created!'.tr())),
                             );
                             Navigator.pop(context);
                           }
@@ -233,7 +234,7 @@ class _BusinessListingsScreenState extends ConsumerState<BusinessListingsScreen>
                     backgroundColor: AppTheme.primaryOrange,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Create Listing'),
+                  child: Text('Create Listing'.tr()),
                 ),
               ),
             ],

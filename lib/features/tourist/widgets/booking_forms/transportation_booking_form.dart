@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:siwa/app/theme.dart';
 
 class TransportationBookingForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onFormDataChanged;
@@ -90,7 +92,7 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Seats'),
+            Text('Seats'.tr()),
             Row(
               children: [
                 IconButton(
@@ -133,18 +135,18 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _selectedRoute,
-          items: const [
-            DropdownMenuItem(value: 'route1', child: Text('Siwa to Cairo')),
-            DropdownMenuItem(value: 'route2', child: Text('Siwa to Alexandria')),
-            DropdownMenuItem(value: 'route3', child: Text('City Tour')),
+          items:  [
+            DropdownMenuItem(value: 'route1', child: Text('Siwa to Cairo'.tr())),
+            DropdownMenuItem(value: 'route2', child: Text('Siwa to Alexandria'.tr())),
+            DropdownMenuItem(value: 'route3', child: Text('City Tour'.tr())),
           ],
           onChanged: (value) => setState(() {
             _selectedRoute = value;
             _updateFormData();
           }),
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'Select Route',
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            hintText: 'Select Route'.tr(),
           ),
         ),
       ],
@@ -172,15 +174,26 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
               borderRadius: BorderRadius.circular(8),
             ),
             child: _photoIdPath != null
-                ? Image.network(_photoIdPath!, fit: BoxFit.cover)
-                : const Column(
+                ? Image.network(
+              _photoIdPath!,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stack) => Container(
+                color: AppTheme.lightBlueGray,
+                child: const Icon(
+                  Icons.image,
+                  size: 40,
+                  color: AppTheme.gray,
+                ),
+              ),
+            )
+                :  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.cloud_upload, size: 40, color: Colors.grey),
-                      SizedBox(height: 8),
-                      Text('Click to upload or drag and drop'),
-                      SizedBox(height: 4),
-                      Text(
+                      const Icon(Icons.cloud_upload, size: 40, color: Colors.grey),
+                      const SizedBox(height: 8),
+                      Text('Click to upload or drag and drop'.tr()),
+                      const SizedBox(height: 4),
+                      const Text(
                         'PNG, JPG or PDF (MAX.800x400px)',
                         style: TextStyle(fontSize: 12, color: Colors.grey),
                       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AddStopForm extends StatefulWidget {
   const AddStopForm({super.key});
@@ -22,24 +23,24 @@ class _AddStopFormState extends State<AddStopForm> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Stop Name', border: OutlineInputBorder()),
+              decoration: InputDecoration(labelText: 'Stop Name'.tr(), border: const OutlineInputBorder()),
               onChanged: (val) => _name = val,
             ),
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
+              decoration: InputDecoration(labelText: 'Description'.tr(), border: const OutlineInputBorder()),
               maxLines: 3,
               onChanged: (val) => _description = val,
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                ElevatedButton(onPressed: () => Navigator.pop(context), child: Text('Cancel'.tr())),
                 const SizedBox(width: 8),
                 ElevatedButton(onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     Navigator.pop(context);
                   }
-                }, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange), child: const Text('Add Stop')),
+                }, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange), child: Text('Add Stop'.tr())),
               ],
             ),
           ],

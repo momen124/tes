@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AddTourForm extends StatefulWidget {
   const AddTourForm({super.key});
@@ -22,7 +23,7 @@ class _AddTourFormState extends State<AddTourForm> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: const Text('Select Date'),
+              title: Text('Select Date'.tr()),
               subtitle: Text(_date.toString()),
               onTap: () async {
                 final selected = await showDatePicker(context: context, initialDate: _date, firstDate: DateTime.now(), lastDate: DateTime(2030));
@@ -30,20 +31,20 @@ class _AddTourFormState extends State<AddTourForm> {
               },
             ),
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
+              decoration: InputDecoration(labelText: 'Description'.tr(), border: const OutlineInputBorder()),
               maxLines: 3,
               onChanged: (val) => _description = val,
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                ElevatedButton(onPressed: () => Navigator.pop(context), child: Text('Cancel'.tr())),
                 const SizedBox(width: 8),
                 ElevatedButton(onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     Navigator.pop(context);
                   }
-                }, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange), child: const Text('Add Tour')),
+                }, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange), child: Text('Add Tour'.tr())),
               ],
             ),
           ],
