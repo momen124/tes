@@ -10,7 +10,12 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:siwa/features/tourist/screens/booking_form_screen.dart';
 
 class ServiceDetailScreen extends StatefulWidget {
-  const ServiceDetailScreen({super.key});
+  final Map<String, dynamic>? serviceData;
+  
+  const ServiceDetailScreen({
+    super.key,
+    this.serviceData,
+  });
 
   @override
   State<ServiceDetailScreen> createState() => _ServiceDetailScreenState();
@@ -34,9 +39,29 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   String _selectedPaymentMethod = 'card';
   bool _isProcessing = false;
 
-  static const double _basePrice = 220.0;
-  static const String _serviceName = 'Siwa Shali Lodge';
-  static const String _serviceType = 'accommodation';
+  // Service data getters with null safety - supports ALL service types
+  String get _serviceName => widget.serviceData?['name']?.toString() ?? 'Service';
+  double get _basePrice => (widget.serviceData?['price'] as num?)?.toDouble() ?? 0.0;
+  String get _serviceType => widget.serviceData?['category']?.toString() ?? 'service';
+  String get _description => widget.serviceData?['description']?.toString() ?? 'No description available';
+  String get _imageUrl => widget.serviceData?['imageUrl']?.toString() ?? '';
+  double get _rating => (widget.serviceData?['rating'] as num?)?.toDouble() ?? 0.0;
+  int get _reviews => widget.serviceData?['reviews'] as int? ?? 0;
+  String get _location => widget.serviceData?['location']?.toString() ?? 'Siwa Oasis';
+  
+  // Optional fields for different service types
+  List<String> get _highlights => (widget.serviceData?['highlights'] as List?)?.cast<String>() ?? [];
+  List<String> get _amenities => (widget.serviceData?['amenities'] as List?)?.cast<String>() ?? [];
+  List<String> get _specialties => (widget.serviceData?['specialties'] as List?)?.cast<String>() ?? [];
+  String get _duration => widget.serviceData?['duration']?.toString() ?? '';
+  String get _difficulty => widget.serviceData?['difficulty']?.toString() ?? '';
+  String get _openingHours => widget.serviceData?['openingHours']?.toString() ?? '';
+  String get _route => widget.serviceData?['route']?.toString() ?? '';
+  int get _seats => widget.serviceData?['seats'] as int? ?? 0;
+  String get _type => widget.serviceData?['type']?.toString() ?? '';
+  String get _cuisine => widget.serviceData?['cuisine']?.toString() ?? '';
+  String get _priceRange => widget.serviceData?['priceRange']?.toString() ?? '';
+  bool get _openNow => widget.serviceData?['openNow'] as bool? ?? true;
 
   @override
   void dispose() {
@@ -125,11 +150,15 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Book $_serviceName',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Text(
+                        'Book $_serviceName',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     IconButton(
@@ -225,8 +254,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       const SizedBox(height: 12),
                       TableCalendar(
                         firstDay: DateTime.now(),
-                        lastDay:
-                            DateTime.now().add(const Duration(days: 365)),
+                        lastDay: DateTime.now().add(const Duration(days: 365)),
                         focusedDay: _focusedDay,
                         selectedDayPredicate: (day) =>
                             isSameDay(_selectedCheckIn, day) ||
@@ -314,8 +342,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         controller: _specialRequestsController,
                         maxLines: 3,
                         decoration: InputDecoration(
-                          hintText:
-                              'e.g., Early check-in, room preferences...',
+                          hintText: 'e.g., Early check-in, room preferences...',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -351,7 +378,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             style: TextStyle(fontSize: 12, color: AppTheme.gray),
                           ),
                           Text(
-                            '\$${_calculateTotalPrice().toStringAsFixed(2)}',
+                            'EGP ${_calculateTotalPrice().toStringAsFixed(0)}',
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -462,9 +489,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.close),
-                      onPressed: _isProcessing
-                          ? null
-                          : () => Navigator.pop(context),
+                      onPressed: _isProcessing ? null : () => Navigator.pop(context),
                     ),
                   ],
                 ),
@@ -600,8 +625,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                   controller: _expiryController,
                                   decoration: InputDecoration(
                                     labelText: 'MM/YY',
-                                    prefixIcon:
-                                        const Icon(Icons.calendar_today),
+                                    prefixIcon: const Icon(Icons.calendar_today),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -697,7 +721,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             ],
                           )
                         : Text(
-                            'Pay \$${_calculateTotalPrice().toStringAsFixed(2)}',
+                            'Pay EGP ${_calculateTotalPrice().toStringAsFixed(0)}',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -740,41 +764,148 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Handle null service data
+    if (widget.serviceData == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Service Details'),
+        ),
+        body: const Center(
+          child: Text('Service not found'),
+        ),
+      );
+    }
+
+    // Get images list with fallback
+    final images = widget.serviceData?['images'] as List?;
+    final imageUrls = images?.cast<String>().where((url) => url.isNotEmpty).toList() ?? 
+                     (_imageUrl.isNotEmpty ? [_imageUrl] : <String>[]);
+    
+    // Get features based on service type
+    final features = _highlights.isNotEmpty ? _highlights : 
+                    _amenities.isNotEmpty ? _amenities :
+                    _specialties.isNotEmpty ? _specialties : <String>[];
+    
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/tourist_search'),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Text(_serviceName),
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Share feature coming soon')),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Image Carousel
-            CarouselSlider(
-              options: CarouselOptions(
+            if (imageUrls.isNotEmpty)
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 250,
+                  viewportFraction: 1.0,
+                  autoPlay: imageUrls.length > 1,
+                  autoPlayInterval: const Duration(seconds: 4),
+                ),
+                items: imageUrls
+                    .map((url) => Image.network(
+                          url,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          errorBuilder: (context, error, stack) => Container(
+                            color: AppTheme.lightBlueGray,
+                            child: const Icon(Icons.image, size: 40, color: AppTheme.gray),
+                          ),
+                        ))
+                    .toList(),
+              )
+            else
+              Container(
                 height: 250,
-                viewportFraction: 1.0,
-                autoPlay: true,
+                color: AppTheme.lightBlueGray,
+                child: const Center(
+                  child: Icon(Icons.image, size: 60, color: AppTheme.gray),
+                ),
               ),
-              items: [
-                'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
-              ]
-                  .map((url) => Image.network(
-                        url,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        errorBuilder: (context, error, stack) => Container(
-                          color: AppTheme.lightBlueGray,
-                          child: const Icon(Icons.image,
-                              size: 40, color: AppTheme.gray),
+
+            // Service Info
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title and Rating Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _serviceName,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ))
-                  .toList(),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryOrange.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.star, color: AppTheme.primaryOrange, size: 16),
+                            const SizedBox(width: 4),
+                            Text(
+                              _rating.toStringAsFixed(1),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.primaryOrange,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Service Type Badges
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      if (_location.isNotEmpty)
+                        _buildInfoBadge(Icons.location_on, _location),
+                      if (_reviews > 0)
+                        _buildInfoBadge(Icons.reviews, '$_reviews reviews'),
+                      if (_duration.isNotEmpty)
+                        _buildInfoBadge(Icons.access_time, _duration),
+                      if (_type.isNotEmpty)
+                        _buildInfoBadge(Icons.category, _type.toUpperCase()),
+                      if (_cuisine.isNotEmpty)
+                        _buildInfoBadge(Icons.restaurant, _cuisine),
+                      if (!_openNow)
+                        _buildInfoBadge(Icons.schedule, 'Closed', isWarning: true),
+                    ],
+                  ),
+                ],
+              ),
             ),
+
+            const Divider(height: 32),
 
             // About Section
             Padding(
@@ -789,22 +920,102 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Text(
-                    'Siwa Shali Lodge offers a unique stay in the heart of Siwa Oasis, blending traditional architecture with modern comforts.',
+                    _description,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 15,
                       color: AppTheme.gray.withOpacity(0.8),
-                      height: 1.5,
+                      height: 1.6,
                     ),
                   ),
                 ],
               ),
             ),
 
+            // Features/Highlights/Amenities Section
+            if (features.isNotEmpty) ...[
+              const Divider(height: 32),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _highlights.isNotEmpty ? 'Highlights' :
+                      _amenities.isNotEmpty ? 'Amenities' : 'Features',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ...features.map(
+                      (item) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: AppTheme.successGreen.withOpacity(0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.check,
+                                color: AppTheme.successGreen,
+                                size: 18,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                item,
+                                style: const TextStyle(fontSize: 15),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
+            // Additional Info (for transport, restaurants, etc.)
+            if (_route.isNotEmpty || _seats > 0 || _openingHours.isNotEmpty) ...[
+              const Divider(height: 32),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Additional Information',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    if (_route.isNotEmpty)
+                      _buildInfoRow(Icons.route, 'Route', _route),
+                    if (_seats > 0)
+                      _buildInfoRow(Icons.event_seat, 'Capacity', '$_seats seats'),
+                    if (_openingHours.isNotEmpty)
+                      _buildInfoRow(Icons.schedule, 'Hours', _openingHours),
+                    if (_difficulty.isNotEmpty)
+                      _buildInfoRow(Icons.fitness_center, 'Difficulty', _difficulty),
+                  ],
+                ),
+              ),
+            ],
+
             const Divider(height: 32),
 
-            // Reviews Section (simplified for brevity)
+            // Reviews Section
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -820,9 +1031,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      const Text(
-                        '4.7',
-                        style: TextStyle(
+                      Text(
+                        _rating.toStringAsFixed(1),
+                        style: const TextStyle(
                           fontSize: 48,
                           fontWeight: FontWeight.bold,
                         ),
@@ -835,14 +1046,16 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                             children: List.generate(
                               5,
                               (index) => Icon(
-                                index < 4 ? Icons.star : Icons.star_half,
+                                index < _rating.floor()
+                                    ? Icons.star
+                                    : (index < _rating ? Icons.star_half : Icons.star_border),
                                 color: AppTheme.primaryOrange,
                                 size: 20,
                               ),
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text('125 reviews'),
+                          Text('$_reviews reviews'),
                         ],
                       ),
                     ],
@@ -867,6 +1080,14 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
+                  Text(
+                    _location,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: AppTheme.gray,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: SizedBox(
@@ -878,8 +1099,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         ),
                         children: [
                           TileLayer(
-                            urlTemplate:
-                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                           ),
                           const MarkerLayer(
                             markers: [
@@ -906,22 +1126,36 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               padding: const EdgeInsets.all(16),
               child: SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: 56,
                 child: ElevatedButton(
-                  onPressed: _showBookingBottomSheet,
+                  onPressed: _openNow ? _showBookingBottomSheet : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryOrange,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                     ),
+                    elevation: 4,
                   ),
-                  child: Text(
-                    'Book Now - \$$_basePrice/night',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _openNow ? 'Book Now - ' : 'Currently Closed - ',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        'EGP ${_basePrice.toStringAsFixed(0)}',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -930,34 +1164,63 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
-        selectedItemColor: AppTheme.primaryOrange,
-        unselectedItemColor: AppTheme.gray,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: 'navigation.home'.tr(),
+    );
+  }
+
+  Widget _buildInfoBadge(IconData icon, String text, {bool isWarning = false}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: isWarning 
+            ? AppTheme.errorRed.withOpacity(0.1)
+            : AppTheme.lightBlueGray,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon, 
+            size: 14, 
+            color: isWarning ? AppTheme.errorRed : AppTheme.gray
           ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.search),
-            label: 'navigation.search'.tr(),
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.bookmark_border),
-            label: 'navigation.bookings'.tr(),
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person_outline),
-            label: 'navigation.profile'.tr(),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 12,
+              color: isWarning ? AppTheme.errorRed : AppTheme.gray,
+            ),
           ),
         ],
-        onTap: (index) {
-          if (index == 0) context.go('/tourist_home');
-          if (index == 2) context.go('/tourist_bookings');
-          if (index == 3) context.go('/tourist_profile');
-        },
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: AppTheme.primaryOrange),
+          const SizedBox(width: 12),
+          Text(
+            '$label: ',
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppTheme.gray,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

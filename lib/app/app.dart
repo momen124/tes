@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:siwa/features/tourist/screens/service_detail_screen.dart';
 import 'dart:ui' as ui;
 import 'package:siwa/providers/mock_data_provider.dart'; // Import the mock data provider
 
@@ -16,7 +17,6 @@ import '../features/tourist/screens/tourist_challenges_screen.dart';
 import '../features/tourist/screens/tourist_profile_screen.dart';
 import '../features/tourist/screens/tourist_search_screen.dart';
 import '../features/tourist/screens/booking_form_screen.dart';
-import '../features/tourist/screens/service_detail_screen.dart';
 import '../features/tourist/screens/siwa_info_screen.dart';
 import '../features/tourist/screens/transportation_list_screen.dart';
 import '../features/tourist/screens/attractions_list_screen.dart';
