@@ -1,5 +1,5 @@
 // lib/features/tourist/screens/tourist_bookings_screen.dart
-import 'package:siwa/providers/mock_data_provider.dart';
+import 'package:siwa/data/mock_data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,7 +51,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
   @override
   Widget build(BuildContext context) {
     final isOffline = ref.watch(offlineProvider);
-    final bookings = ref.watch(mockDataProvider).getAllBookings();
+    final bookings = mockData.getAllBookings();
 
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,

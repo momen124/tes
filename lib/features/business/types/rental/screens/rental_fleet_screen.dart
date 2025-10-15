@@ -1,4 +1,4 @@
-import 'package:siwa/providers/mock_data_provider.dart';
+import 'package:siwa/data/mock_data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -74,9 +74,9 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
               ),
-              itemCount: ref.watch(mockDataProvider).getAllOther().length,
+              itemCount: mockData.getAllOther().length,
               itemBuilder: (context, index) {
-                final vehicle = ref.watch(mockDataProvider).getAllOther()[index];
+                final vehicle = mockData.getAllOther()[index];
                 return _buildVehicleCard(vehicle).animate().fadeIn();
               },
             ),
@@ -259,8 +259,8 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 setState(() {
-                  ref.watch(mockDataProvider).getAllOther().add({
-                    'id': ref.watch(mockDataProvider).getAllOther().length + 1,
+                  mockData.getAllOther().add({
+                    'id': mockData.getAllOther().length + 1,
                     'type': typeController.text,
                     'model': modelController.text,
                     'rate': double.tryParse(rateController.text) ?? 0.0,
@@ -323,7 +323,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              setState(() => ref.watch(mockDataProvider).getAllOther().remove(vehicle));
+              setState(() => mockData.getAllOther().remove(vehicle));
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('business.rental.vehicle_deleted'.tr())),
@@ -393,9 +393,9 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
               child: ListView.builder(
                 controller: scrollController,
                 padding: const EdgeInsets.all(16),
-                itemCount: ref.watch(mockDataProvider).getAllOther().length,
+                itemCount: mockData.getAllOther().length,
                 itemBuilder: (context, index) {
-                  final rental = ref.watch(mockDataProvider).getAllOther()[index];
+                  final rental = mockData.getAllOther()[index];
                   if (rental == null || rental is! Map<String, dynamic>) return const SizedBox.shrink();
                   final vehicle = rental['vehicle']?.toString() ?? 'Unknown Vehicle';
                   final revenue = double.tryParse(rental['revenue']?.toString() ?? '0') ?? 0;

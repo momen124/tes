@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siwa/app/theme.dart';
-import 'package:siwa/providers/mock_data_provider.dart';
+import 'package:siwa/data/mock_data_repository.dart';
 import 'package:siwa/features/tourist/widgets/service_card.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -307,7 +307,7 @@ class _TouristSearchScreenState extends ConsumerState<TouristSearchScreen> {
   Widget build(BuildContext context) {
     final filterState = ref.watch(searchFilterProvider);
     final filterNotifier = ref.read(searchFilterProvider.notifier);
-    final filteredServices = filterNotifier.filterServices(ref.watch(mockDataProvider).getAllOther());
+    final filteredServices = filterNotifier.filterServices(mockData.getAllOther());
 
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,

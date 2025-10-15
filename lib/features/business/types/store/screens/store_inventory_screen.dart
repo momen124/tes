@@ -1,4 +1,4 @@
-import 'package:siwa/providers/mock_data_provider.dart';
+import 'package:siwa/data/mock_data_repository.dart';
 // lib/features/business/types/store/screens/store_inventory_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,7 +27,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
   
 
   List<Map<String, dynamic>> get filteredProducts {
-    return ref.watch(mockDataProvider).getAllProducts().where((product) {
+    return mockData.getAllProducts().where((product) {
       final matchesSearch =
           (product['name'] as String?)?.toLowerCase().contains(
             _searchQuery.toLowerCase(),
@@ -108,7 +108,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: isOffline ? null : _showOrdersBottomSheet,
         icon: const Icon(Icons.receipt_long),
-        label: Text('Orders (${ref.watch(mockDataProvider).getAllOther().length})'.tr()),
+        label: Text('Orders (${mockData.getAllOther().length})'.tr()),
         backgroundColor: isOffline ? AppTheme.gray : AppTheme.primaryOrange,
       ),
     );
@@ -175,7 +175,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
   }
 
   Widget _buildLowStockAlert() {
-    final lowStockProducts = ref.watch(mockDataProvider).getAllProducts()
+    final lowStockProducts = mockData.getAllProducts()
         .where((p) {
           final stock = p['stock'] as int? ?? 0;
           final threshold = p['lowStockThreshold'] as int? ?? 0;
@@ -376,8 +376,8 @@ final isLowStock = (product['stock'] as int? ?? 0) < (product['lowStockThreshold
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 setState(() {
-                  ref.watch(mockDataProvider).getAllProducts().add({
-                    'id': ref.watch(mockDataProvider).getAllProducts().length + 1,
+                  mockData.getAllProducts().add({
+                    'id': mockData.getAllProducts().length + 1,
                     'name': nameController.text,
                     'price': double.tryParse(priceController.text) ?? 0.0,
                     'stock': int.tryParse(stockController.text) ?? 0,
@@ -567,9 +567,9 @@ final isLowStock = (product['stock'] as int? ?? 0) < (product['lowStockThreshold
               child: ListView.builder(
                 controller: scrollController,
                 padding: const EdgeInsets.all(16),
-                itemCount: ref.watch(mockDataProvider).getAllOther().length,
+                itemCount: mockData.getAllOther().length,
                 itemBuilder: (context, index) {
-                  final order = ref.watch(mockDataProvider).getAllOther()[index];
+                  final order = mockData.getAllOther()[index];
                   return _buildOrderCard(order).animate().fadeIn();
                 },
               ),
