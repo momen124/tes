@@ -6,7 +6,7 @@ import 'package:siwa/features/tourist/widgets/service_card.dart';
 import 'package:siwa/widgets/unified_bottom_nav.dart';
 import 'package:siwa/data/mock_data_repository.dart';
 import 'package:siwa/data/mock_data_repository_ar.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class TouristHomeScreen extends StatelessWidget {
   const TouristHomeScreen({super.key});
 
@@ -65,7 +65,7 @@ class TouristHomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    _t(context, 'app.name'),
+                    ('app.name'.tr()),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -108,7 +108,7 @@ class TouristHomeScreen extends StatelessWidget {
                       const Icon(Icons.search, color: AppTheme.primaryOrange),
                       const SizedBox(width: 12),
                       Text(
-                        _t(context, 'tourist.where_to'),
+                        ( 'tourist.where_to'.tr()),
                         style: const TextStyle(color: AppTheme.gray, fontSize: 16),
                       ),
                     ],
@@ -129,35 +129,35 @@ class TouristHomeScreen extends StatelessWidget {
                 children: [
                   _buildCategoryChip(
                     context,
-                    _t(context, 'tourist.categories.accommodations'),
+                    ( 'tourist.categories.accommodations'.tr()),
                     Icons.hotel,
                     true,
                     '/tourist_search',
                   ),
                   _buildCategoryChip(
                     context,
-                    _t(context, 'tourist.categories.transportation'),
+                    ( 'tourist.categories.transportation'.tr()),
                     Icons.directions_car,
                     false,
                     '/transportation',
                   ),
                   _buildCategoryChip(
                     context,
-                    _t(context, 'tourist.categories.attractions'),
+                    ( 'tourist.categories.attractions'.tr()),
                     Icons.attractions,
                     false,
                     '/attractions',
                   ),
                   _buildCategoryChip(
                     context,
-                    _t(context, 'tourist.categories.tours'),
+                    ( 'tourist.categories.tours'.tr()),
                     Icons.tour,
                     false,
                     '/tour_guides',
                   ),
                   _buildCategoryChip(
                     context,
-                    _t(context, 'tourist.categories.food'),
+                    ( 'tourist.categories.food'.tr()),
                     Icons.restaurant,
                     false,
                     '/restaurants',
@@ -175,7 +175,7 @@ class TouristHomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    _t(context, 'tourist.featured_experiences'),
+                    ('tourist.featured_experiences'.tr()),
                     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
@@ -183,7 +183,7 @@ class TouristHomeScreen extends StatelessWidget {
                       context.push('/tourist_search?featured=true');
                     },
                     child: Text(
-                      _t(context, 'tourist.see_all'),
+                      ('tourist.see_all'.tr()),
                       style: const TextStyle(color: AppTheme.primaryOrange),
                     ),
                   ),
@@ -198,7 +198,7 @@ class TouristHomeScreen extends StatelessWidget {
               height: 340,
               child: featuredServices.isEmpty
                   ? Center(
-                      child: Text(_t(context, 'common.loading')),
+                      child: Text(( 'common.loading'.tr())),
                     )
                   : CarouselSlider(
                       options: CarouselOptions(
@@ -243,7 +243,7 @@ class TouristHomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    _t(context, 'tourist.hidden_gems'),
+                    ( 'tourist.hidden_gems'.tr()),
                     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
@@ -251,7 +251,7 @@ class TouristHomeScreen extends StatelessWidget {
                       context.push('/tourist_search?hidden_gems=true');
                     },
                     child: Text(
-                      _t(context, 'tourist.discover_more'),
+                      ( 'tourist.discover_more'.tr()),
                       style: const TextStyle(color: AppTheme.primaryOrange),
                     ),
                   ),
@@ -268,7 +268,8 @@ class TouristHomeScreen extends StatelessWidget {
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(32.0),
-                        child: Text(_t(context, 'common.loading')),
+                        child: Text(('common.loading'.tr())),
+
                       ),
                     ),
                   )
@@ -354,13 +355,5 @@ class TouristHomeScreen extends StatelessWidget {
     );
   }
 
-  // Translation helper - replace with your actual translation method
-  String _t(BuildContext context, String key) {
-    // TODO: Replace with your actual translation implementation
-    // Example for easy_localization:
-    // return context.tr(key);
-    
-    // Fallback: return last part of key
-    return key.split('.').last;
-  }
+
 }
