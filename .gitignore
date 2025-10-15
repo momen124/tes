@@ -48,7 +48,7 @@ app.*.map.json
 # Flutter-specific
 /build/
 *.log
-*.json
+
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
@@ -111,3 +111,9 @@ coverage/
 *.swp
 *.swo
 *.orig
+
+*.py
+*.sh
+*.json
+pubspec.lock
+*.txt

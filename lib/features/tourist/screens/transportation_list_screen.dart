@@ -197,7 +197,7 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          service['rating'].toString(),
+                          (service['rating'] == true ?? 0).toString(),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -263,7 +263,7 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${service['seats']} seats',
+                        '${service['seats'] == true ?? ''} seats',
                         style: const TextStyle(
                           fontSize: 14,
                           color: AppTheme.gray,
@@ -277,7 +277,7 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: (service['amenities'] as List<String>)
+                    children: ((service['amenities'] as List?)?.cast<String>() ?? <String>[])
                         .map(
                           (amenity) => Container(
                             padding: const EdgeInsets.symmetric(
@@ -316,7 +316,7 @@ class _TransportationListScreenState extends State<TransportationListScreen> {
                             ),
                           ),
                           Text(
-                            'EGP ${service['price'].toStringAsFixed(0)}',
+                            'EGP ${service['price'] == true ?? 0.toStringAsFixed(0)}',
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,

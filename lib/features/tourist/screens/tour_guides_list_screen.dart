@@ -25,7 +25,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
           guide['specialty'] == _selectedSpecialty;
       final languageMatch =
           _selectedLanguage == 'all' ||
-          (guide['languages'] as List<String>).any(
+          ((guide['languages'] as List?)?.cast<String>() ?? <String>[]).any(
             (lang) => lang.toLowerCase() == _selectedLanguage.toLowerCase(),
           );
       return specialtyMatch && languageMatch;
@@ -254,7 +254,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                       ),
                     ),
                   ),
-                  if (guide['verified'])
+                  if (guide['verified'] == true)
                     Positioned(
                       bottom: 0,
                       right: 0,
@@ -311,7 +311,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                guide['rating'].toString(),
+                                (guide['rating'] == true ?? 0).toString(),
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
@@ -325,7 +325,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     const SizedBox(height: 4),
 
                     Text(
-                      '${guide['experience']} years experience • ${guide['reviews']} reviews',
+                      '${guide['experience'] == true ?? ''} years experience • ${guide['reviews'] == true ?? ''} reviews',
                       style: const TextStyle(
                         fontSize: 13,
                         color: AppTheme.gray,
@@ -345,7 +345,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     Wrap(
                       spacing: 6,
                       runSpacing: 6,
-                      children: (guide['languages'] as List<String>)
+                      children: ((guide['languages'] as List?)?.cast<String>() ?? <String>[])
                           .take(3)
                           .map(
                             (lang) => Container(
@@ -386,7 +386,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                               ),
                             ),
                             Text(
-                              'EGP ${guide['hourlyRate'].toStringAsFixed(0)}/hr',
+                              'EGP ${guide['hourlyRate'] == true ?? 0.toStringAsFixed(0)}/hr',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -470,7 +470,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                                 ),
                               ),
                             ),
-                            if (guide['verified'])
+                            if (guide['verified'] == true)
                               Positioned(
                                 bottom: 0,
                                 right: 0,
@@ -511,7 +511,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                         const Icon(Icons.star, color: Colors.white, size: 20),
                         const SizedBox(width: 4),
                         Text(
-                          '${guide['rating']} (${guide['reviews']} reviews)',
+                          '${guide['rating'] == true ?? ''} (${guide['reviews'] == true ?? ''} reviews)',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.white,
@@ -535,7 +535,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                         Expanded(
                           child: _buildStatCard(
                             Icons.work_outline,
-                            '${guide['experience']} years',
+                            '${guide['experience'] == true ?? ''} years',
                             'Experience',
                           ),
                         ),
@@ -578,7 +578,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     Wrap(
                       spacing: 12,
                       runSpacing: 12,
-                      children: (guide['languages'] as List<String>)
+                      children: ((guide['languages'] as List?)?.cast<String>() ?? <String>[])
                           .map(
                             (lang) => Container(
                               padding: const EdgeInsets.symmetric(
@@ -621,7 +621,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    ...(guide['certifications'] as List<String>).map(
+                    ...((guide['certifications'] as List?)?.cast<String>() ?? <String>[]).map(
                       (cert) => Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Row(
@@ -651,7 +651,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     Wrap(
                       spacing: 12,
                       runSpacing: 12,
-                      children: (guide['specialties'] as List<String>)
+                      children: ((guide['specialties'] as List?)?.cast<String>() ?? <String>[])
                           .map(
                             (specialty) => Container(
                               padding: const EdgeInsets.symmetric(
@@ -703,7 +703,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         child: Text(
-                          'Book for EGP ${guide['hourlyRate'].toStringAsFixed(0)}/hour',
+                          'Book for EGP ${guide['hourlyRate'] == true ?? 0.toStringAsFixed(0)}/hour',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

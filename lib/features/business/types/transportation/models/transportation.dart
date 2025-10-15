@@ -1,5 +1,7 @@
 // lib/features/business/types/transportation/models/transportation.dart
 
+// lib/features/business/types/transportation/models/transportation.dart
+
 class TransportationService {
   final String id;
   final String businessId;
@@ -42,8 +44,8 @@ class TransportationService {
             .map((v) => Vehicle.fromJson(v))
             .toList(),
         routes: (json['routes'] as List).map((r) => Route.fromJson(r)).toList(),
-        rating: json['rating'] ?? 0.0,
-        reviewCount: json['reviewCount'] ?? 0,
+        rating: json['rating'] as double? ?? 0.0,
+        reviewCount: json['reviewCount'] as int? ?? 0,
       );
 }
 
@@ -90,12 +92,12 @@ class Vehicle {
     type: json['type'],
     licensePlate: json['licensePlate'],
     driver: json['driver'],
-    driverVerified: json['driverVerified'] ?? false,
-    rate: json['rate'],
+    driverVerified: json['driverVerified'] as bool? ?? false,
+    rate: json['rate'] as double? ?? 0.0,
     routes: json['routes'],
-    capacity: json['capacity'] ?? 4,
-    amenities: List<String>.from(json['amenities'] ?? []),
-    available: json['available'] ?? true,
+    capacity: json['capacity'] as int? ?? 4,
+    amenities: List<String>.from(json['amenities'] as List<dynamic>? ?? []),
+    available: json['available'] as bool? ?? true,
   );
 }
 

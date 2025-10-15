@@ -157,7 +157,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            room['available'] ? 'Available' : 'Occupied',
+                            room['available'] == true ? 'Available' : 'Occupied',
                             style: AppTheme.bodySmall.copyWith(
                               color: AppTheme.white,
                             ),
@@ -167,7 +167,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '\$${room['price'].toStringAsFixed(0)}/night',
+                      '\$${room['price'] == true ?? 0.toStringAsFixed(0)}/night',
                       style: AppTheme.titleMedium.copyWith(
                         color: AppTheme.primaryOrange,
                       ),
@@ -551,7 +551,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
     final formKey = GlobalKey<FormState>();
     final typeController = TextEditingController(text: room['type']);
     final priceController = TextEditingController(
-      text: room['price'].toString(),
+      text: (room['price'] == true ?? 0).toString(),
     );
 
     showDialog(

@@ -29,7 +29,18 @@ class ProductDetailScreen extends StatelessWidget {
               items: [
                 'https://www.kemetexperience.com/wp-content/uploads/2019/09/incredible-white-desert-960x636.jpg',
                 'https://www.sharm-club.com/assets/images/oasis/tour-white-desert-safari.jpg',
-              ].map((url) => Image.network(url, fit: BoxFit.cover)).toList(),
+              ].map((url) => Image.network(
+              url,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stack) => Container(
+                color: AppTheme.lightBlueGray,
+                child: const Icon(
+                  Icons.image,
+                  size: 40,
+                  color: AppTheme.gray,
+                ),
+              ),
+            )).toList(),
             ),
              Padding(
               padding: const EdgeInsets.all(16),

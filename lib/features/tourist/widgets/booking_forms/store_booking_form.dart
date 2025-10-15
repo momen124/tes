@@ -71,7 +71,7 @@ class _StoreBookingFormState extends State<StoreBookingForm> {
         ),
         const SizedBox(height: 16),
         Text(
-          '${widget.product['price'] ?? '100'} EGP',
+          '${widget.product['price'] == true ?? '100'} EGP',
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,

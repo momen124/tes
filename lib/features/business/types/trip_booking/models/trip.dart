@@ -65,14 +65,14 @@ class Trip {
         .toList(),
     price: json['price'],
     maxParticipants: json['maxParticipants'],
-    currentParticipants: json['currentParticipants'] ?? 0,
+    currentParticipants: json['currentParticipants'] as int? ?? 0,
     duration: json['duration'],
     included: List<String>.from(json['included']),
     requirements: List<String>.from(json['requirements']),
-    difficultyLevel: json['difficultyLevel'] ?? 'moderate',
+    difficultyLevel: json['difficultyLevel'] as String? ?? 'moderate',
     images: List<String>.from(json['images']),
-    rating: json['rating'] ?? 0.0,
-    reviewCount: json['reviewCount'] ?? 0,
+    rating: json['rating'] as double? ?? 0.0,
+    reviewCount: json['reviewCount'] as int? ?? 0,
   );
 }
 
@@ -201,7 +201,7 @@ class TripSchedule {
     id: json['id'],
     tripId: json['tripId'],
     date: DateTime.parse(json['date']),
-    status: json['status'] ?? 'available',
+    status: json['status'] as String? ?? 'available',
     availableSlots: json['availableSlots'],
   );
 }

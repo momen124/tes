@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:siwa/app/theme.dart';
 
 class TransportationBookingForm extends StatefulWidget {
   final Function(Map<String, dynamic>) onFormDataChanged;
@@ -173,7 +174,18 @@ class _TransportationBookingFormState extends State<TransportationBookingForm> {
               borderRadius: BorderRadius.circular(8),
             ),
             child: _photoIdPath != null
-                ? Image.network(_photoIdPath!, fit: BoxFit.cover)
+                ? Image.network(
+              _photoIdPath!,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stack) => Container(
+                color: AppTheme.lightBlueGray,
+                child: const Icon(
+                  Icons.image,
+                  size: 40,
+                  color: AppTheme.gray,
+                ),
+              ),
+            )
                 :  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

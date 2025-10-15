@@ -30,7 +30,18 @@ class ServiceDetailScreen extends StatelessWidget {
               ),
               items: [
                 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
-              ].map((url) => Image.network(url, fit: BoxFit.cover)).toList(),
+              ].map((url) => Image.network(
+              url,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stack) => Container(
+                color: AppTheme.lightBlueGray,
+                child: const Icon(
+                  Icons.image,
+                  size: 40,
+                  color: AppTheme.gray,
+                ),
+              ),
+            )).toList(),
             ),
             const Padding(
               padding: EdgeInsets.all(16),

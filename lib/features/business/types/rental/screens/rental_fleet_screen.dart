@@ -153,7 +153,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '\$${vehicle['rate'].toStringAsFixed(0)}/${vehicle['rateType']}',
+                        '\$${vehicle['rate'] == true ?? 0.toStringAsFixed(0)}/${vehicle['rateType'] == true ?? 0}',
                         style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
                       ),
                     ],
@@ -287,7 +287,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
     final formKey = GlobalKey<FormState>();
     final typeController = TextEditingController(text: vehicle['type']);
     final modelController = TextEditingController(text: vehicle['model']);
-    final rateController = TextEditingController(text: vehicle['rate'].toString());
+    final rateController = TextEditingController(text: (vehicle['rate'] ?? 0).toString());
 
     showDialog(
       context: context,
@@ -407,7 +407,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                             children: [
                               Text(rental['vehicle'], style: AppTheme.titleMedium),
                               Text(
-                                '\$${rental['revenue'].toStringAsFixed(0)}',
+                                '\$${(double.tryParse(rental['revenue']?.toString() ?? '') ?? 0).toStringAsFixed(0)}',
                                 style: AppTheme.titleMedium.copyWith(color: AppTheme.successGreen),
                               ),
                             ],

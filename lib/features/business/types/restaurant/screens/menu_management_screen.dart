@@ -200,7 +200,7 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    if (item['isSpecial'])
+                    if (item['isSpecial'] == true)
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
@@ -478,7 +478,7 @@ class _MenuManagementScreenState extends ConsumerState<MenuManagementScreen> {
   void _showEditMenuItem(Map<String, dynamic> item, String category) {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController(text: item['name']);
-    final priceController = TextEditingController(text: item['price'].toString());
+    final priceController = TextEditingController(text: (item['price'] == true ?? 0).toString());
     final descController = TextEditingController(text: item['description']);
     final ingredientsControllers = (item['ingredients'] as List?)?.map<TextEditingController>((ing) => TextEditingController(text: ing)).toList().cast<TextEditingController>() ?? [];
 

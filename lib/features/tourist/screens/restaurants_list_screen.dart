@@ -190,7 +190,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                     ),
                   ),
                 ),
-                if (restaurant['openNow'])
+                if (restaurant['openNow'] == true)
                   Positioned(
                     top: 12,
                     left: 12,
@@ -252,7 +252,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                         const Icon(Icons.star, color: AppTheme.primaryOrange, size: 14),
                         const SizedBox(width: 4),
                         Text(
-                          restaurant['rating'].toString(),
+                          '${restaurant['rating'] ?? 0}',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -303,13 +303,13 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                       const Icon(Icons.delivery_dining, size: 16, color: AppTheme.gray),
                       const SizedBox(width: 4),
                       Text(
-                        '${restaurant['deliveryTime']} • ',
+                        '${restaurant['deliveryTime'] ?? ''} • ',
                         style: const TextStyle(fontSize: 13, color: AppTheme.gray),
                       ),
                       const Icon(Icons.payments, size: 16, color: AppTheme.gray),
                       const SizedBox(width: 4),
                       Text(
-                        'Min EGP ${restaurant['minOrder'].toStringAsFixed(0)}',
+                        'Min EGP ${restaurant['minOrder'] ?? 0}',
                         style: const TextStyle(fontSize: 13, color: AppTheme.gray),
                       ),
                     ],
@@ -320,7 +320,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: (restaurant['specialties'] as List<String>)
+                    children: ((restaurant['specialties'] as List?)?.cast<String>() ?? <String>[])
                         .take(3)
                         .map((specialty) => Container(
                               padding: const EdgeInsets.symmetric(
@@ -448,11 +448,11 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: restaurant['openNow'] ? AppTheme.successGreen : AppTheme.errorRed,
+                            color: restaurant['openNow'] == true ? AppTheme.successGreen : AppTheme.errorRed,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            restaurant['openNow'] ? 'Open' : 'Closed',
+                            restaurant['openNow'] == true ? 'Open' : 'Closed',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -467,7 +467,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                         const Icon(Icons.star, color: AppTheme.primaryOrange, size: 20),
                         const SizedBox(width: 4),
                         Text(
-                          '${restaurant['rating']} (${restaurant['reviews']} reviews)',
+                          '${restaurant['rating'] ?? ''} (${restaurant['reviews'] ?? 0} reviews)',
                           style: const TextStyle(fontSize: 14, color: AppTheme.gray),
                         ),
                       ],
@@ -493,10 +493,10 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: _buildInfoBox(
-                            Icons.payments,
-                            'Min Order',
-                            'EGP ${restaurant['minOrder'].toStringAsFixed(0)}',
-                          ),
+                              Icons.payments,
+                              'Min Order',
+                              'EGP ${restaurant['minOrder'] ?? 0}',
+                            ),
                         ),
                       ],
                     ),
@@ -505,10 +505,10 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                       children: [
                         Expanded(
                           child: _buildInfoBox(
-                            Icons.local_shipping,
-                            'Delivery Fee',
-                            'EGP ${restaurant['deliveryFee'].toStringAsFixed(0)}',
-                          ),
+                              Icons.local_shipping,
+                              'Delivery Fee',
+                              'EGP ${restaurant['deliveryFee'] ?? 0}',
+                            ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -534,7 +534,7 @@ class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
                     Wrap(
                       spacing: 12,
                       runSpacing: 12,
-                      children: (restaurant['specialties'] as List<String>)
+                      children: ((restaurant['specialties'] as List?)?.cast<String>() ?? <String>[])
                           .map((specialty) => Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 16,

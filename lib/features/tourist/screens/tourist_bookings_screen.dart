@@ -1,5 +1,5 @@
+// lib/features/tourist/screens/tourist_bookings_screen.dart
 import 'package:siwa/data/mock_data_repository.dart';
-// Your provided code for this screen already closely matches the screenshot. Add image URLs for cards.
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,24 +17,41 @@ class TouristBookingsScreen extends ConsumerStatefulWidget {
 }
 
 class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
-  
-
   Color _getStatusColor(String status) {
-    switch (status) {
-      case 'Confirmed':
-        return AppTheme.successGreen;
-      case 'Pending':
-        return AppTheme.warningYellow;
-      case 'Cancelled':
-        return AppTheme.errorRed;
-      default:
-        return AppTheme.gray;
+    final statusLower = status.toLowerCase();
+    if (statusLower.contains('confirm')) {
+      return AppTheme.successGreen;
+    } else if (statusLower.contains('pend')) {
+      return AppTheme.warningYellow;
+    } else if (statusLower.contains('cancel')) {
+      return AppTheme.errorRed;
+    }
+    return AppTheme.gray;
+  }
+
+  String _formatDate(dynamic date) {
+    if (date == null) return 'Date unavailable';
+    
+    try {
+      if (date is DateTime) {
+        return DateFormat('MMM dd, yyyy').format(date);
+      } else if (date is String) {
+        final parsed = DateTime.tryParse(date);
+        if (parsed != null) {
+          return DateFormat('MMM dd, yyyy').format(parsed);
+        }
+        return date;
+      }
+      return date.toString();
+    } catch (e) {
+      return 'Date unavailable';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final isOffline = ref.watch(offlineProvider);
+    final bookings = mockData.getAllBookings();
 
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,
@@ -49,9 +66,9 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('common.settings'.tr())));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('common.settings'.tr())),
+              );
             },
           ),
         ],
@@ -63,7 +80,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              // color: AppTheme.offlineBanner,
+              color: AppTheme.lightGray,
               child: const Row(
                 children: [
                   Icon(
@@ -84,7 +101,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
 
           // Bookings List
           Expanded(
-            child: mockData.getAllBookings().isEmpty
+            child: bookings.isEmpty
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -116,9 +133,16 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.all(16),
-                    itemCount: mockData.getAllBookings().length,
+                    itemCount: bookings.length,
                     itemBuilder: (context, index) {
-                      final booking = mockData.getAllBookings()[index];
+                      final booking = bookings[index];
+                      
+                      // Extract booking details with null safety
+                      final title = booking['title']?.toString() ?? (booking['guest'] ?? 'Unknown Booking').toString();
+                      final imageUrl = (booking['imageUrl'] ?? 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800').toString();
+                      final status = (booking['status'] ?? 'unknown').toString();
+                      final date = booking['date'] == true ?? booking['checkIn'];
+                      
                       return Card(
                         margin: const EdgeInsets.only(bottom: 16),
                         elevation: 2,
@@ -132,29 +156,56 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                             padding: const EdgeInsets.all(16),
                             child: Row(
                               children: [
+                                // Booking Image
                                 Container(
                                   width: 80,
                                   height: 80,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    image: DecorationImage(
-                                      image: NetworkImage(booking['imageUrl']),
+                                    color: AppTheme.lightBlueGray,
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      imageUrl,
                                       fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Container(
+                                          color: AppTheme.lightBlueGray,
+                                          child: const Icon(
+                                            Icons.hotel,
+                                            size: 40,
+                                            color: AppTheme.primaryOrange,
+                                          ),
+                                        );
+                                      },
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) return child;
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress.expectedTotalBytes != null
+                                                ? loadingProgress.cumulativeBytesLoaded /
+                                                    loadingProgress.expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        booking['title'],
+                                        title,
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                       const SizedBox(height: 6),
                                       Row(
@@ -165,11 +216,15 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                                             color: AppTheme.gray,
                                           ),
                                           const SizedBox(width: 4),
-                                          Text(
-                                            'Booking Date: ${booking['date']}',
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              color: AppTheme.gray,
+                                          Expanded(
+                                            child: Text(
+                                              _formatDate(date),
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                color: AppTheme.gray,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ],
@@ -181,21 +236,15 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                                           vertical: 4,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: _getStatusColor(
-                                            booking['status'],
-                                          ).withOpacity(0.15),
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
+                                          color: _getStatusColor(status).withOpacity(0.15),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                         child: Text(
-                                          booking['status'],
+                                          status,
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600,
-                                            color: _getStatusColor(
-                                              booking['status'],
-                                            ),
+                                            color: _getStatusColor(status),
                                           ),
                                         ),
                                       ),

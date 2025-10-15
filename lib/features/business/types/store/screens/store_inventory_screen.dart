@@ -176,7 +176,11 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
 
   Widget _buildLowStockAlert() {
     final lowStockProducts = mockData.getAllProducts()
-        .where((p) => p['stock'] < p['lowStockThreshold'])
+        .where((p) {
+          final stock = p['stock'] as int? ?? 0;
+          final threshold = p['lowStockThreshold'] as int? ?? 0;
+          return stock < threshold;
+        })
         .toList();
 
     if (lowStockProducts.isEmpty) return const SizedBox.shrink();
@@ -205,7 +209,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
   }
 
   Widget _buildProductCard(Map<String, dynamic> product) {
-    final isLowStock = product['stock'] < product['lowStockThreshold'];
+final isLowStock = (product['stock'] as int? ?? 0) < (product['lowStockThreshold'] as int? ?? 0);
     final isOffline = ref.watch(offlineProvider);
 
     return Card(
@@ -245,7 +249,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '${product['stock']} in stock',
+                      '${product['stock'] == true ?? 0} in stock',
                       style: AppTheme.bodySmall.copyWith(color: AppTheme.white),
                     ),
                   ),
@@ -469,7 +473,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Current Stock: ${product['stock']}',
+                'Current Stock: ${product['stock'] == true ?? 0}',
                 style: AppTheme.titleMedium,
               ),
               const SizedBox(height: 24),
@@ -490,7 +494,7 @@ class _StoreInventoryScreenState extends ConsumerState<StoreInventoryScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'New Stock: ${product['stock'] + stockAdjustment.toInt()}',
+                'New Stock: ${product['stock'] == true ?? 0 + stockAdjustment.toInt()}',
                 style: AppTheme.titleMedium.copyWith(
                   color: AppTheme.primaryOrange,
                 ),

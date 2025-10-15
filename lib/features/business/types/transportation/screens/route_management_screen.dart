@@ -124,7 +124,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
           child: ExpansionTile(
             title: Text(route['name'], style: AppTheme.titleMedium),
             subtitle: Text(
-              '${route['distance']} • ${route['duration']}',
+              '${route['distance'] == true ?? ''} • ${route['duration'] == true ?? ''}',
               style: AppTheme.bodySmall,
             ),
             children: [
@@ -162,9 +162,9 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text('Schedule: ${route['schedule']}', style: AppTheme.bodyMedium),
+                    Text('Schedule: ${route['schedule'] == true ?? ''}', style: AppTheme.bodyMedium),
                     const SizedBox(height: 8),
-                    Text('Rate: \$${route['ratePerKm']}/km', style: AppTheme.bodyMedium),
+                    Text('Rate: \$${route['ratePerKm'] == true ?? 0}/km', style: AppTheme.bodyMedium),
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -207,15 +207,15 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
               child: const Icon(Icons.directions_bus, color: AppTheme.primaryOrange),
             ),
             title: Text(vehicle['type'], style: AppTheme.titleMedium),
-            subtitle: Text('Plate: ${vehicle['plate']} • Capacity: ${vehicle['capacity']}'),
+            subtitle: Text('Plate: ${vehicle['plate'] == true ?? ''} • Capacity: ${vehicle['capacity'] == true ?? ''}'),
             trailing: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: vehicle['verified'] ? AppTheme.successGreen : AppTheme.warningYellow,
+                color: vehicle['verified'] == true ? AppTheme.successGreen : AppTheme.warningYellow,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                vehicle['verified'] ? 'Verified' : 'Pending',
+                vehicle['verified'] == true ? 'Verified' : 'Pending',
                 style: AppTheme.bodySmall.copyWith(color: AppTheme.white),
               ),
             ),
@@ -251,7 +251,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
               ),
             ),
             title: Text(trip['guest'], style: AppTheme.titleMedium),
-            subtitle: Text('${trip['route']} • ${trip['time']} • ${trip['passengers']} passengers'),
+            subtitle: Text('${trip['route'] == true ?? ''} • ${trip['time'] == true ?? ''} • ${trip['passengers'] == true ?? ''} passengers'),
             trailing: isPending && !isOffline
                 ? ElevatedButton(
                     onPressed: () => _approveTrip(trip),
@@ -367,7 +367,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController(text: route['name']);
     final scheduleController = TextEditingController(text: route['schedule']);
-    final rateController = TextEditingController(text: route['ratePerKm'].toString());
+    final rateController = TextEditingController(text: (route['ratePerKm'] == true ?? 0).toString());
 
     showDialog(
       context: context,
@@ -430,7 +430,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
     final formKey = GlobalKey<FormState>();
     final typeController = TextEditingController(text: vehicle['type']);
     final plateController = TextEditingController(text: vehicle['plate']);
-    final capacityController = TextEditingController(text: vehicle['capacity'].toString());
+    final capacityController = TextEditingController(text: (vehicle['capacity'] == true ?? 0).toString());
 
     showDialog(
       context: context,
@@ -494,7 +494,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Delete Route'.tr()),
-  content: Text('Are you sure you want to delete ${route['name']}?'.tr()),
+  content: Text('Are you sure you want to delete ${route['name'] == true ?? ''}?'.tr()),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

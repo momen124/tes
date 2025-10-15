@@ -53,7 +53,7 @@ class _RentalBookingFormState extends State<RentalBookingForm> {
         ),
         const SizedBox(height: 8),
         Text(
-          widget.rental['description'] ??
+          widget.rental['description']?.toString() ??
               'Explore the beauty of Siva with our reliable rental services.',
           style: TextStyle(fontSize: 16, color: Colors.grey[600]),
         ),

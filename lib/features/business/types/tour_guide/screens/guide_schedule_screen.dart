@@ -202,7 +202,7 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    "\$${tour['price'].toStringAsFixed(0)}",
+                    "\$${tour['price'] == true ?? 0.toStringAsFixed(0)}",
                     style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
                   ),
                   Row(
@@ -312,8 +312,8 @@ class _GuideScheduleScreenState extends ConsumerState<GuideScheduleScreen> {
     final formKey = GlobalKey<FormState>();
     final titleController = TextEditingController(text: tour['title']);
     final durationController = TextEditingController(text: tour['duration']);
-    final guestsController = TextEditingController(text: tour['guests'].toString());
-    final priceController = TextEditingController(text: tour['price'].toString());
+    final guestsController = TextEditingController(text: (tour['guests'] == true ?? 0).toString());
+    final priceController = TextEditingController(text: (tour['price'] == true ?? 0).toString());
 
     showDialog(
       context: context,

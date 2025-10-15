@@ -170,7 +170,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                         ),
                         const SizedBox(width: 2),
                         Text(
-                          attraction['rating'].toString(),
+                          (attraction['rating'] == true ?? 0).toString(),
                           style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
@@ -246,7 +246,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'EGP ${attraction['price'].toStringAsFixed(0)}',
+                          'EGP ${attraction['price'] == true ?? 0.toStringAsFixed(0)}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -356,7 +356,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '${attraction['rating']} (${attraction['reviews']} reviews)',
+                          '${attraction['rating'] == true ?? ''} (${attraction['reviews'] == true ?? ''} reviews)',
                           style: const TextStyle(
                             fontSize: 14,
                             color: AppTheme.gray,
@@ -423,7 +423,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    ...(attraction['highlights'] as List<String>).map(
+                    ...((attraction['highlights'] as List?)?.cast<String>() ?? <String>[]).map(
                       (highlight) => Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Row(
@@ -460,7 +460,7 @@ class _AttractionsListScreenState extends State<AttractionsListScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         child: Text(
-                          'Book for EGP ${attraction['price'].toStringAsFixed(0)}',
+                          'Book for EGP ${attraction['price'] == true ?? 0.toStringAsFixed(0)}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
