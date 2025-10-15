@@ -1,4 +1,4 @@
-import 'package:siwa/data/mock_data_repository.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -7,14 +7,16 @@ import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 import 'package:siwa/widgets/language_switcher.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class TouristProfileScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
+class TouristProfileScreen extends ConsumerStatefulWidget {
   const TouristProfileScreen({super.key});
 
   @override
-  State<TouristProfileScreen> createState() => _TouristProfileScreenState();
+  ConsumerState<TouristProfileScreen> createState() => _TouristProfileScreenState();
 }
 
-class _TouristProfileScreenState extends State<TouristProfileScreen> {
+class _TouristProfileScreenState extends ConsumerState<TouristProfileScreen> {
   final _nameController = TextEditingController(text: 'tourist.profile.default_name'.tr());
   final _emailController = TextEditingController(text: 'amani.hassan@example.com');
   String _ageRange = '25-34';
@@ -193,9 +195,9 @@ class _TouristProfileScreenState extends State<TouristProfileScreen> {
                 height: 100,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: mockData.getAllBadges().length,
+                  itemCount: ref.watch(mockDataProvider).getAllBadges().length,
                   itemBuilder: (context, index) {
-                    final badge = mockData.getAllBadges()[index];
+                    final badge = ref.watch(mockDataProvider).getAllBadges()[index];
                     return Padding(
                       padding: const EdgeInsets.only(right: 16),
                       child: Column(

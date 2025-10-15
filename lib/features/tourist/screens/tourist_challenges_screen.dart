@@ -1,4 +1,4 @@
-import 'package:siwa/data/mock_data_repository.dart';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:siwa/app/theme.dart';
@@ -6,23 +6,25 @@ import 'package:go_router/go_router.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class TouristChallengesScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
+class TouristChallengesScreen extends ConsumerStatefulWidget {
   const TouristChallengesScreen({super.key});
 
   @override
-  State<TouristChallengesScreen> createState() =>
+  ConsumerState<TouristChallengesScreen> createState() =>
       _TouristChallengesScreenState();
 }
 
-class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
+class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScreen> {
   int get _totalPoints {
-    return mockData.getAllOther()
+    return ref.watch(mockDataProvider).getAllOther()
         .where((c) => c['completed'] == true)
         .fold(0, (sum, c) => sum + (c['points'] as int? ?? 0));
   }
 
   int get _completedCount {
-    return mockData.getAllOther().where((c) => c['completed'] == true).length;
+    return ref.watch(mockDataProvider).getAllOther().where((c) => c['completed'] == true).length;
   }
 
   Future<void> _uploadPhoto(Map<String, dynamic> challenge) async {
@@ -96,9 +98,9 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                 Text('tourist.challenges.challenge_progress'.tr(), style: AppTheme.titleMedium),
                 const SizedBox(height: 12),
                 LinearProgressIndicator(
-                  value: mockData.getAllOther().isEmpty
+                  value: ref.watch(mockDataProvider).getAllOther().isEmpty
                       ? 0
-                      : _completedCount / mockData.getAllOther().length,
+                      : _completedCount / ref.watch(mockDataProvider).getAllOther().length,
                   backgroundColor: AppTheme.gray.withOpacity(0.2),
                   valueColor: const AlwaysStoppedAnimation(
                     AppTheme.primaryOrange,
@@ -107,7 +109,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '$_completedCount/${mockData.getAllOther().length} Completed',
+                  '$_completedCount/${ref.watch(mockDataProvider).getAllOther().length} Completed',
                   style: AppTheme.bodySmall.copyWith(color: AppTheme.gray),
                 ),
               ],
@@ -120,9 +122,9 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: mockData.getAllOther().length,
+              itemCount: ref.watch(mockDataProvider).getAllOther().length,
               itemBuilder: (context, index) {
-                final challenge = mockData.getAllOther()[index];
+                final challenge = ref.watch(mockDataProvider).getAllOther()[index];
                 return Card(
                   margin: const EdgeInsets.only(bottom: 16),
                   child: Column(

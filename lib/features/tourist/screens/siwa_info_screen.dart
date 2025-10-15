@@ -1,17 +1,19 @@
-import 'package:siwa/data/mock_data_repository.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class SiwaInfoScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
+class SiwaInfoScreen extends ConsumerStatefulWidget {
   const SiwaInfoScreen({super.key});
 
   @override
-  State<SiwaInfoScreen> createState() => _SiwaInfoScreenState();
+  ConsumerState<SiwaInfoScreen> createState() => _SiwaInfoScreenState();
 }
 
-class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
+class _SiwaInfoScreenState extends ConsumerState<SiwaInfoScreen> {
   bool _historyExpanded = true;
   bool _bestTimeExpanded = false;
   bool _travelTipsExpanded = false;
@@ -221,9 +223,9 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                       crossAxisSpacing: 16,
                       childAspectRatio: 0.85,
                     ),
-                    itemCount: mockData.getAllOther().length,
+                    itemCount: ref.watch(mockDataProvider).getAllOther().length,
                     itemBuilder: (context, index) {
-                      final service = mockData.getAllOther()[index];
+                      final service = ref.watch(mockDataProvider).getAllOther()[index];
                       // Ensure service is a Map and handle null cases
                       if (service == null || service is! Map<String, dynamic>) {
                         return const SizedBox.shrink(); // Skip invalid items

@@ -1,27 +1,29 @@
-import 'package:siwa/data/mock_data_repository.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class AttractionsListScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
+class AttractionsListScreen extends ConsumerStatefulWidget {
   const AttractionsListScreen({super.key});
 
   @override
-  State<AttractionsListScreen> createState() => _AttractionsListScreenState();
+  ConsumerState<AttractionsListScreen> createState() => _AttractionsListScreenState();
 }
 
-class _AttractionsListScreenState extends State<AttractionsListScreen> {
+class _AttractionsListScreenState extends ConsumerState<AttractionsListScreen> {
   String _selectedCategory = 'all';
 
   
 
   List<Map<String, dynamic>> get _filteredAttractions {
     if (_selectedCategory == 'all') {
-      return mockData.getAllAttractions();
+      return ref.watch(mockDataProvider).getAllAttractions();
     }
-    return mockData.getAllAttractions()
+    return ref.watch(mockDataProvider).getAllAttractions()
         .where((attraction) => attraction['category'] == _selectedCategory)
         .toList();
   }

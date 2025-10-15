@@ -1,28 +1,30 @@
-import 'package:siwa/data/mock_data_repository.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class TransportationListScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
+class TransportationListScreen extends ConsumerStatefulWidget {
   const TransportationListScreen({super.key});
 
   @override
-  State<TransportationListScreen> createState() =>
+  ConsumerState<TransportationListScreen> createState() =>
       _TransportationListScreenState();
 }
 
-class _TransportationListScreenState extends State<TransportationListScreen> {
+class _TransportationListScreenState extends ConsumerState<TransportationListScreen> {
   String _selectedType = 'all';
 
   
 
   List<Map<String, dynamic>> get _filteredServices {
     if (_selectedType == 'all') {
-      return mockData.getAllTransportation();
+      return ref.watch(mockDataProvider).getAllTransportation();
     }
-    return mockData.getAllTransportation()
+    return ref.watch(mockDataProvider).getAllTransportation()
         .where((service) => service['type'] == _selectedType)
         .toList();
   }

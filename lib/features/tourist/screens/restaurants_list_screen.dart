@@ -1,25 +1,27 @@
-import 'package:siwa/data/mock_data_repository.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class RestaurantsListScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
+class RestaurantsListScreen extends ConsumerStatefulWidget {
   const RestaurantsListScreen({super.key});
 
   @override
-  State<RestaurantsListScreen> createState() => _RestaurantsListScreenState();
+  ConsumerState<RestaurantsListScreen> createState() => _RestaurantsListScreenState();
 }
 
-class _RestaurantsListScreenState extends State<RestaurantsListScreen> {
+class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
   String _selectedCuisine = 'all';
   String _priceRange = 'all';
   
   
 
   List<Map<String, dynamic>> get _filteredRestaurants {
-    return mockData.getAllRestaurants().where((restaurant) {
+    return ref.watch(mockDataProvider).getAllRestaurants().where((restaurant) {
       final cuisineMatch = _selectedCuisine == 'all' || restaurant['cuisine'] == _selectedCuisine;
       final priceMatch = _priceRange == 'all' || restaurant['priceRange'] == _priceRange;
       return cuisineMatch && priceMatch;

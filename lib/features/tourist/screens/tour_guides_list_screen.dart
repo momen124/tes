@@ -1,23 +1,25 @@
-import 'package:siwa/data/mock_data_repository.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class TourGuidesListScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
+class TourGuidesListScreen extends ConsumerStatefulWidget {
   const TourGuidesListScreen({super.key});
 
   @override
-  State<TourGuidesListScreen> createState() => _TourGuidesListScreenState();
+  ConsumerState<TourGuidesListScreen> createState() => _TourGuidesListScreenState();
 }
 
-class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
+class _TourGuidesListScreenState extends ConsumerState<TourGuidesListScreen> {
   String _selectedSpecialty = 'all';
   String _selectedLanguage = 'all';
 
   List<Map<String, dynamic>> get _filteredGuides {
-    return (mockData.getAllTourGuides() ?? []).where((guide) {
+    return (ref.watch(mockDataProvider).getAllTourGuides() ?? []).where((guide) {
       final specialtyMatch =
           _selectedSpecialty == 'all' ||
           (guide['specialty']?.toString() ?? '').toLowerCase() == _selectedSpecialty.toLowerCase();
