@@ -16,7 +16,6 @@ import '../features/tourist/screens/tourist_challenges_screen.dart';
 import '../features/tourist/screens/tourist_profile_screen.dart';
 import '../features/tourist/screens/tourist_search_screen.dart';
 import '../features/tourist/screens/booking_form_screen.dart';
-import '../features/tourist/screens/product_detail_screen.dart';
 import '../features/tourist/screens/service_detail_screen.dart';
 import '../features/tourist/screens/siwa_info_screen.dart';
 import '../features/tourist/screens/transportation_list_screen.dart';
@@ -78,7 +77,6 @@ final GoRouter _router = GoRouter(
     ),
     
     // Detail Pages
-    GoRoute(path: '/product_detail', builder: (context, state) => const ProductDetailScreen()),
     GoRoute(path: '/service_detail', builder: (context, state) => const ServiceDetailScreen()),
     GoRoute(path: '/siwa_info', builder: (context, state) => const SiwaInfoScreen()),
     

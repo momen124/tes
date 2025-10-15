@@ -30,7 +30,6 @@ class DebugNavigatorScreen extends StatelessWidget {
             'Booking Form (default)',
             '/booking_form?type=default',
           ),
-          _buildNavButton(context, 'Product Detail', '/product_detail'),
           _buildNavButton(context, 'Service Detail', '/service_detail'),
           _buildNavButton(context, 'Siwa Info', '/siwa_info'),
           _buildNavButton(context, 'Attractions List', '/attractions'),

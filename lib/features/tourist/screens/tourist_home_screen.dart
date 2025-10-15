@@ -292,7 +292,7 @@ class TouristHomeScreen extends StatelessWidget {
                           imageUrl: gem['imageUrl'] as String,
                           reviews: gem['reviews'] as int,
                           serviceType: gem['category'] as String,
-                          onTap: () => context.push('/product_detail', extra: gem),
+                          onTap: () => context.push('/service_detail', extra: gem),
                         );
                       },
                       childCount: hiddenGems.length > 4 ? 4 : hiddenGems.length,

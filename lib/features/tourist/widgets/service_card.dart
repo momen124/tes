@@ -324,7 +324,7 @@ class ServiceCard extends StatelessWidget {
 
   void _navigateToDetail(BuildContext context) {
     context.push(
-      '/product_detail',
+      '/service_detail',
       extra: {
         'id': id,
         'name': name,
