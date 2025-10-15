@@ -1,4 +1,4 @@
-import 'package:siwa/data/mock_data_repository.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -97,9 +97,9 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
   Widget _buildRoomsTab() {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: mockData.getAllOther().length,
+      itemCount: ref.watch(mockDataProvider).getAllOther().length,
       itemBuilder: (context, index) {
-        final room = mockData.getAllOther()[index];
+        final room = ref.watch(mockDataProvider).getAllOther()[index];
         if (room == null || room is! Map<String, dynamic>) return const SizedBox.shrink();
         final photos = (room['photos'] as List?)?.cast<String>() ?? ['https://images.unsplash.com/photo-1589993464410-6c55678afc12?w=800&h=600&fit=crop'];
         final type = room['type']?.toString() ?? 'Unknown Room';
@@ -377,9 +377,9 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
     final isOffline = ref.watch(offlineProvider);
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: mockData.getAllBookings().length,
+      itemCount: ref.watch(mockDataProvider).getAllBookings().length,
       itemBuilder: (context, index) {
-        final reservation = mockData.getAllBookings()[index];
+        final reservation = ref.watch(mockDataProvider).getAllBookings()[index];
         if (reservation == null || reservation is! Map<String, dynamic>) return const SizedBox.shrink();
         final guest = reservation['guest']?.toString() ?? 'Unknown Guest';
         final status = reservation['status']?.toString() ?? 'pending';
@@ -527,7 +527,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
         builder: (_, controller) => AddRoomForm(
           onRoomAdded: (roomData) {
             setState(() {
-              mockData.getAllOther().add(roomData);
+              ref.watch(mockDataProvider).getAllOther().add(roomData);
             });
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

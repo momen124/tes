@@ -1,4 +1,4 @@
-import 'package:siwa/data/mock_data_repository.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
 // lib/features/business/types/tour_guide/screens/trip_itinerary_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -95,8 +95,8 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                     ? int.tryParse(durationParts[1].replaceAll('m', '')) ?? 0
                     : 0;
                 setState(() {
-                  mockData.getAllOther().add({
-                    'id': mockData.getAllOther().length + 1,
+                  ref.watch(mockDataProvider).getAllOther().add({
+                    'id': ref.watch(mockDataProvider).getAllOther().length + 1,
                     'name': nameController.text,
                     'duration': Duration(hours: hours, minutes: minutes),
                     'description': descriptionController.text,
@@ -164,21 +164,21 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                         PieChartData(
                           sections: [
                             PieChartSectionData(
-                              value: mockData.getAllBookings().where((b) => b['status'] == 'confirmed').length.toDouble(),
+                              value: ref.watch(mockDataProvider).getAllBookings().where((b) => b['status'] == 'confirmed').length.toDouble(),
                               color: AppTheme.successGreen,
                               title: 'Confirmed'.tr(),
                               radius: 50,
                               titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                             PieChartSectionData(
-                              value: mockData.getAllBookings().where((b) => b['status'] == 'pending').length.toDouble(),
+                              value: ref.watch(mockDataProvider).getAllBookings().where((b) => b['status'] == 'pending').length.toDouble(),
                               color: AppTheme.warningYellow,
                               title: 'Pending'.tr(),
                               radius: 50,
                               titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                             PieChartSectionData(
-                              value: (10 - mockData.getAllBookings().length).toDouble(),
+                              value: (10 - ref.watch(mockDataProvider).getAllBookings().length).toDouble(),
                               color: AppTheme.lightGray,
                               title: 'Available'.tr(),
                               radius: 50,
@@ -201,18 +201,18 @@ class _TripItineraryScreenState extends ConsumerState<TripItineraryScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: mockData.getAllOther().length,
+                    itemCount: ref.watch(mockDataProvider).getAllOther().length,
                     onReorder: (oldIndex, newIndex) {
                       if (!isOffline) {
                         setState(() {
                           if (newIndex > oldIndex) newIndex--;
-                          final item = mockData.getAllOther().removeAt(oldIndex);
-                          mockData.getAllOther().insert(newIndex, item);
+                          final item = ref.watch(mockDataProvider).getAllOther().removeAt(oldIndex);
+                          ref.watch(mockDataProvider).getAllOther().insert(newIndex, item);
                         });
                       }
                     },
                     itemBuilder: (context, index) {
-                      final item = mockData.getAllOther()[index];
+                      final item = ref.watch(mockDataProvider).getAllOther()[index];
                       return ListTile(
                         key: Key((item['id'] as int?)?.toString() ?? '0'),
                         title: Text(item['name'] as String? ?? ''),

@@ -1,4 +1,4 @@
-import 'package:siwa/data/mock_data_repository.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -110,9 +110,9 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen>
   Widget _buildRoutesTab(bool isOffline) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: mockData.getAllOther().length,
+      itemCount: ref.watch(mockDataProvider).getAllOther().length,
       itemBuilder: (context, index) {
-        final route = mockData.getAllOther()[index];
+        final route = ref.watch(mockDataProvider).getAllOther()[index];
         if (route == null || route is! Map<String, dynamic>) return const SizedBox.shrink();
         final name = route['name']?.toString() ?? 'Unknown Route';
         final distance = route['distance']?.toString() ?? 'N/A';
@@ -197,9 +197,9 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen>
   Widget _buildVehiclesTab(bool isOffline) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: mockData.getAllTransportation().length,
+      itemCount: ref.watch(mockDataProvider).getAllTransportation().length,
       itemBuilder: (context, index) {
-        final vehicle = mockData.getAllTransportation()[index];
+        final vehicle = ref.watch(mockDataProvider).getAllTransportation()[index];
         if (vehicle == null || vehicle is! Map<String, dynamic>) return const SizedBox.shrink();
         final type = vehicle['type']?.toString() ?? 'Unknown Type';
         final plate = vehicle['plate']?.toString() ?? 'N/A';
@@ -240,9 +240,9 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen>
   Widget _buildTripsTab(bool isOffline) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: mockData.getAllOther().length,
+      itemCount: ref.watch(mockDataProvider).getAllOther().length,
       itemBuilder: (context, index) {
-        final trip = mockData.getAllOther()[index];
+        final trip = ref.watch(mockDataProvider).getAllOther()[index];
         if (trip == null || trip is! Map<String, dynamic>) return const SizedBox.shrink();
         final guest = trip['guest']?.toString() ?? 'Unknown Guest';
         final route = trip['route']?.toString() ?? 'N/A';
@@ -356,8 +356,8 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen>
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 setState(() {
-                  mockData.getAllOther().add({
-                    'id': mockData.getAllOther().length + 1,
+                  ref.watch(mockDataProvider).getAllOther().add({
+                    'id': ref.watch(mockDataProvider).getAllOther().length + 1,
                     'name': nameController.text,
                     'stops': [const LatLng(29.2031, 25.5197), const LatLng(29.2000, 25.5200)],
                     'ratePerKm': double.tryParse(rateController.text) ?? 2.0,
@@ -520,7 +520,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen>
           ElevatedButton(
             onPressed: () {
               setState(() {
-                mockData.getAllOther().remove(route);
+                ref.watch(mockDataProvider).getAllOther().remove(route);
               });
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(

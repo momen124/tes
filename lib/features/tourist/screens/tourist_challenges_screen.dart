@@ -1,4 +1,4 @@
-import 'package:siwa/data/mock_data_repository.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:siwa/app/theme.dart';
