@@ -4,12 +4,31 @@ import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/service_card.dart';
 import 'package:siwa/widgets/unified_bottom_nav.dart';
+import 'package:siwa/data/mock_data_repository.dart';
+import 'package:siwa/data/mock_data_repository_ar.dart';
 
 class TouristHomeScreen extends StatelessWidget {
   const TouristHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Detect current locale
+    final locale = Localizations.localeOf(context);
+    final isArabic = locale.languageCode == 'ar';
+    
+    // Get data from appropriate repository based on locale
+    final allOther = isArabic 
+        ? MockDataRepositoryAr().getAllOther()
+        : MockDataRepository().getAllOther();
+    
+    final featuredServices = allOther
+        .where((item) => item['featured'] == true && item['category'] != 'challenge')
+        .toList();
+    
+    final hiddenGems = allOther
+        .where((item) => item['hidden_gem'] == true && item['category'] != 'challenge')
+        .toList();
+
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,
       body: CustomScrollView(
@@ -45,9 +64,9 @@ class TouristHomeScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text(
-                    'Siwa Oasis',
-                    style: TextStyle(
+                  Text(
+                    _t(context, 'app.name'),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -56,7 +75,11 @@ class TouristHomeScreen extends StatelessWidget {
                 ],
               ),
               centerTitle: false,
-              titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
+              titlePadding: EdgeInsets.only(
+                left: isArabic ? 0 : 16,
+                right: isArabic ? 16 : 0,
+                bottom: 16,
+              ),
             ),
           ),
 
@@ -79,14 +102,14 @@ class TouristHomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      SizedBox(width: 20),
-                      Icon(Icons.search, color: AppTheme.primaryOrange),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 20),
+                      const Icon(Icons.search, color: AppTheme.primaryOrange),
+                      const SizedBox(width: 12),
                       Text(
-                        'Where to?',
-                        style: TextStyle(color: AppTheme.gray, fontSize: 16),
+                        _t(context, 'tourist.where_to'),
+                        style: const TextStyle(color: AppTheme.gray, fontSize: 16),
                       ),
                     ],
                   ),
@@ -102,38 +125,39 @@ class TouristHomeScreen extends StatelessWidget {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
+                reverse: isArabic, // Reverse for RTL
                 children: [
                   _buildCategoryChip(
                     context,
-                    'Accommodations',
+                    _t(context, 'tourist.categories.accommodations'),
                     Icons.hotel,
                     true,
                     '/tourist_search',
                   ),
                   _buildCategoryChip(
                     context,
-                    'Transportation',
+                    _t(context, 'tourist.categories.transportation'),
                     Icons.directions_car,
                     false,
                     '/transportation',
                   ),
                   _buildCategoryChip(
                     context,
-                    'Attractions',
+                    _t(context, 'tourist.categories.attractions'),
                     Icons.attractions,
                     false,
                     '/attractions',
                   ),
                   _buildCategoryChip(
                     context,
-                    'Tours',
+                    _t(context, 'tourist.categories.tours'),
                     Icons.tour,
                     false,
                     '/tour_guides',
                   ),
                   _buildCategoryChip(
                     context,
-                    'Food',
+                    _t(context, 'tourist.categories.food'),
                     Icons.restaurant,
                     false,
                     '/restaurants',
@@ -150,18 +174,17 @@ class TouristHomeScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Featured Experiences',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Text(
+                    _t(context, 'tourist.featured_experiences'),
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
                     onPressed: () {
-                      // Navigate to search with featured filter
                       context.push('/tourist_search?featured=true');
                     },
-                    child: const Text(
-                      'See All',
-                      style: TextStyle(color: AppTheme.primaryOrange),
+                    child: Text(
+                      _t(context, 'tourist.see_all'),
+                      style: const TextStyle(color: AppTheme.primaryOrange),
                     ),
                   ),
                 ],
@@ -173,78 +196,42 @@ class TouristHomeScreen extends StatelessWidget {
           SliverToBoxAdapter(
             child: SizedBox(
               height: 340,
-              child: CarouselSlider(
-                options: CarouselOptions(
-                  height: 340,
-                  aspectRatio: 16 / 9,
-                  viewportFraction: 0.85,
-                  enableInfiniteScroll: true,
-                  autoPlay: true,
-                  autoPlayInterval: const Duration(seconds: 4),
-                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  enlargeCenterPage: true,
-                  scrollDirection: Axis.horizontal,
-                ),
-                items: [
-                  ServiceCard(
-                    id: 'safari-1',
-                    name: 'Desert Safari Adventure',
-                    price: 80.0,
-                    rating: 4.6,
-                    description:
-                        'Explore the vast golden dunes of Siwa desert with expert guides',
-                    imageUrl:
-                        'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800',
-                    reviews: 128,
-                    isFeatured: true,
-                    serviceType: 'tour',
-                    onTap: () => context.push(
-                      '/product_detail',
-                      extra: {
-                        'id': 'safari-1',
-                        'name': 'Desert Safari Adventure',
-                        'price': 80.0,
-                        'rating': 4.6,
-                        'description':
-                            'Explore the vast golden dunes of Siwa desert with expert guides. Experience the thrill of dune bashing, camel riding, and witness the breathtaking sunset over the endless desert landscape.',
-                        'imageUrl':
-                            'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800',
-                        'reviews': 128,
-                        'serviceType': 'tour',
-                      },
+              child: featuredServices.isEmpty
+                  ? Center(
+                      child: Text(_t(context, 'common.loading')),
+                    )
+                  : CarouselSlider(
+                      options: CarouselOptions(
+                        height: 340,
+                        aspectRatio: 16 / 9,
+                        viewportFraction: 0.85,
+                        enableInfiniteScroll: featuredServices.length > 1,
+                        autoPlay: featuredServices.length > 1,
+                        autoPlayInterval: const Duration(seconds: 4),
+                        autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enlargeCenterPage: true,
+                        scrollDirection: Axis.horizontal,
+                        reverse: isArabic, // Reverse for RTL
+                      ),
+                      items: featuredServices.take(5).map((service) {
+                        return ServiceCard(
+                          id: service['id'].toString(),
+                          name: service['name'] as String,
+                          price: (service['price'] as num).toDouble(),
+                          rating: (service['rating'] as num).toDouble(),
+                          description: service['description'] as String,
+                          imageUrl: service['imageUrl'] as String,
+                          reviews: service['reviews'] as int,
+                          isFeatured: true,
+                          serviceType: service['category'] as String,
+                          onTap: () => context.push(
+                            '/product_detail',
+                            extra: service,
+                          ),
+                        );
+                      }).toList(),
                     ),
-                  ),
-                  ServiceCard(
-                    id: 'oasis-1',
-                    name: 'Oasis Retreat & Spa',
-                    price: 110.0,
-                    rating: 4.8,
-                    description:
-                        'Relax in luxurious oasis accommodation with natural hot springs',
-                    imageUrl:
-                        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
-                    reviews: 95,
-                    isFeatured: true,
-                    serviceType: 'hotel',
-                    onTap: () => context.push(
-                      '/product_detail',
-                      extra: {
-                        'id': 'oasis-1',
-                        'name': 'Oasis Retreat & Spa',
-                        'price': 110.0,
-                        'rating': 4.8,
-                        'description':
-                            'Relax in luxurious oasis accommodation with natural hot springs. Our eco-friendly resort offers traditional mud-brick architecture combined with modern amenities.',
-                        'imageUrl':
-                            'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
-                        'reviews': 95,
-                        'serviceType': 'hotel',
-                      },
-                    ),
-                  ),
-                ],
-              ),
             ),
           ),
 
@@ -255,18 +242,17 @@ class TouristHomeScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Hidden Gems',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Text(
+                    _t(context, 'tourist.hidden_gems'),
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
                     onPressed: () {
-                      // Navigate to search with hidden gems filter
                       context.push('/tourist_search?hidden_gems=true');
                     },
-                    child: const Text(
-                      'Discover More',
-                      style: TextStyle(color: AppTheme.primaryOrange),
+                    child: Text(
+                      _t(context, 'tourist.discover_more'),
+                      style: const TextStyle(color: AppTheme.primaryOrange),
                     ),
                   ),
                 ],
@@ -277,74 +263,40 @@ class TouristHomeScreen extends StatelessWidget {
           // Hidden Gems Grid
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 0.75,
-              ),
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final gems = [
-                  {
-                    'id': 'pottery-1',
-                    'name': 'Abo Ali\'s Pottery',
-                    'price': 40.0,
-                    'rating': 4.8,
-                    'description': 'Traditional pottery workshop',
-                    'imageUrl':
-                        'https://images.unsplash.com/photo-1574737331253-33d0be6d1e7a?w=400',
-                    'reviews': 23,
-                    'serviceType': 'activity',
-                  },
-                  {
-                    'id': 'weaving-1',
-                    'name': 'Fatma\'s Weaving',
-                    'price': 35.0,
-                    'rating': 4.7,
-                    'description': 'Handmade textile crafts',
-                    'imageUrl':
-                        'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400',
-                    'reviews': 18,
-                    'serviceType': 'activity',
-                  },
-                  {
-                    'id': 'salt-therapy-1',
-                    'name': 'Salt Lake Therapy',
-                    'price': 25.0,
-                    'rating': 4.9,
-                    'description': 'Natural salt therapy sessions',
-                    'imageUrl':
-                        'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400',
-                    'reviews': 42,
-                    'serviceType': 'activity',
-                  },
-                  {
-                    'id': 'stargazing-1',
-                    'name': 'Desert Stargazing',
-                    'price': 55.0,
-                    'rating': 4.8,
-                    'description': 'Night sky observation tours',
-                    'imageUrl':
-                        'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400',
-                    'reviews': 31,
-                    'serviceType': 'tour',
-                  },
-                ];
-                final gem = gems[index];
-                return ServiceCard(
-                  id: gem['id'] as String,
-                  name: gem['name'] as String,
-                  price: gem['price'] as double,
-                  rating: gem['rating'] as double,
-                  description: gem['description'] as String,
-                  imageUrl: gem['imageUrl'] as String,
-                  reviews: gem['reviews'] as int,
-                  serviceType: gem['serviceType'] as String,
-                  onTap: () => context.push('/product_detail', extra: gem),
-                );
-              }, childCount: 4),
-            ),
+            sliver: hiddenGems.isEmpty
+                ? SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: Text(_t(context, 'common.loading')),
+                      ),
+                    ),
+                  )
+                : SliverGrid(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.75,
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final gem = hiddenGems[index];
+                        return ServiceCard(
+                          id: gem['id'].toString(),
+                          name: gem['name'] as String,
+                          price: (gem['price'] as num).toDouble(),
+                          rating: (gem['rating'] as num).toDouble(),
+                          description: gem['description'] as String,
+                          imageUrl: gem['imageUrl'] as String,
+                          reviews: gem['reviews'] as int,
+                          serviceType: gem['category'] as String,
+                          onTap: () => context.push('/product_detail', extra: gem),
+                        );
+                      },
+                      childCount: hiddenGems.length > 4 ? 4 : hiddenGems.length,
+                    ),
+                  ),
           ),
 
           // Bottom Spacing
@@ -374,34 +326,7 @@ class TouristHomeScreen extends StatelessWidget {
         elevation: 2,
         child: InkWell(
           borderRadius: BorderRadius.circular(25),
-          onTap: () {
-            // Handle navigation based on category
-            switch (title) {
-              case 'Accommodations':
-                context.push(
-                  '/tourist_search',
-                ); // or '/accommodations' when list screen is ready
-                break;
-              case 'Transportation':
-                context.push('/transportation');
-                break;
-              case 'Attractions':
-                context.push(
-                  '/attractions',
-                ); // when attractions list screen is ready
-                break;
-              case 'Tours':
-                context.push('/tour_guides');
-                break;
-              case 'Food':
-                context.push(
-                  '/restaurants',
-                ); // when restaurants list screen is ready
-                break;
-              default:
-                context.push('/tourist_search');
-            }
-          },
+          onTap: () => context.push(route),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Row(
@@ -427,5 +352,15 @@ class TouristHomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Translation helper - replace with your actual translation method
+  String _t(BuildContext context, String key) {
+    // TODO: Replace with your actual translation implementation
+    // Example for easy_localization:
+    // return context.tr(key);
+    
+    // Fallback: return last part of key
+    return key.split('.').last;
   }
 }

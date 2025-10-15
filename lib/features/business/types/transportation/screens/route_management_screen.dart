@@ -152,7 +152,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen>
                             polylines: [
                               Polyline(
                                 points: stops
-                                    .where((point) => point is LatLng)
+                                    .whereType<LatLng>()
                                     .cast<LatLng>()
                                     .toList(),
                                 color: AppTheme.oasisTeal,

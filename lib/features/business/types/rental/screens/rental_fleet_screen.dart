@@ -84,7 +84,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
   }
 
   Widget _buildVehicleCard(Map<String, dynamic> vehicle) {
-    if (vehicle == null || vehicle is! Map<String, dynamic>) return const SizedBox.shrink();
+    if (vehicle is! Map<String, dynamic>) return const SizedBox.shrink();
     final isAvailable = vehicle['available'] as bool? ?? false;
     final image = vehicle['image'] is IconData ? vehicle['image'] as IconData : _getVehicleIcon(vehicle['type']?.toString() ?? '');
     final type = vehicle['type']?.toString() ?? 'Unknown Type';

@@ -184,9 +184,7 @@ class ProviderConverter {
     final lastImport = matches.last;
     final insertPosition = lastImport.end;
     
-    return content.substring(0, insertPosition) +
-           "\n$importStatement" +
-           content.substring(insertPosition);
+    return "${content.substring(0, insertPosition)}\n$importStatement${content.substring(insertPosition)}";
   }
   
   String _listToMethodName(String listName) {
@@ -241,6 +239,6 @@ class ProviderConverter {
       print('⚠️  Some files had errors. Please check output above.');
     }
     
-    print('\n' + '═' * 70);
+    print('\n${'═' * 70}');
   }
 }
