@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:siwa/providers/mock_data_provider.dart';
 
 /// Language Switcher Widget
 /// Can be used as a button, toggle, or dropdown
-class LanguageSwitcher extends StatelessWidget {
+class LanguageSwitcher extends ConsumerWidget {
   final LanguageSwitcherStyle style;
   
   const LanguageSwitcher({
@@ -12,7 +14,7 @@ class LanguageSwitcher extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     switch (style) {
       case LanguageSwitcherStyle.toggle:
         return _ToggleLanguageSwitcher();
@@ -37,9 +39,9 @@ enum LanguageSwitcherStyle {
 }
 
 /// Toggle Switch Style (Recommended for Settings)
-class _ToggleLanguageSwitcher extends StatelessWidget {
+class _ToggleLanguageSwitcher extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isArabic = context.locale.languageCode == 'ar';
     
     return Container(
@@ -67,7 +69,7 @@ class _ToggleLanguageSwitcher extends StatelessWidget {
           Switch(
             value: isArabic,
             onChanged: (value) {
-              _changeLanguage(context, value ? 'ar' : 'en');
+              _changeLanguage(context, ref, value ? 'ar' : 'en');
             },
             activeThumbColor: Theme.of(context).colorScheme.primary,
           ),
@@ -88,14 +90,14 @@ class _ToggleLanguageSwitcher extends StatelessWidget {
 }
 
 /// Button Style (Good for prominent placement)
-class _ButtonLanguageSwitcher extends StatelessWidget {
+class _ButtonLanguageSwitcher extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isArabic = context.locale.languageCode == 'ar';
     
     return ElevatedButton.icon(
       onPressed: () {
-        _changeLanguage(context, isArabic ? 'en' : 'ar');
+        _changeLanguage(context, ref, isArabic ? 'en' : 'ar');
       },
       icon: const Icon(Icons.language),
       label: Text(isArabic ? 'English' : 'العربية'),
@@ -110,14 +112,14 @@ class _ButtonLanguageSwitcher extends StatelessWidget {
 }
 
 /// Dropdown Menu Style (Compact, good for AppBar)
-class _DropdownLanguageSwitcher extends StatelessWidget {
+class _DropdownLanguageSwitcher extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return PopupMenuButton<String>(
       icon: const Icon(Icons.language),
       tooltip: 'language'.tr(),
       onSelected: (languageCode) {
-        _changeLanguage(context, languageCode);
+        _changeLanguage(context, ref, languageCode);
       },
       itemBuilder: (BuildContext context) => [
         PopupMenuItem(
@@ -154,14 +156,14 @@ class _DropdownLanguageSwitcher extends StatelessWidget {
 }
 
 /// FAB Style (Floating Action Button)
-class _FabLanguageSwitcher extends StatelessWidget {
+class _FabLanguageSwitcher extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isArabic = context.locale.languageCode == 'ar';
     
     return FloatingActionButton.extended(
       onPressed: () {
-        _changeLanguage(context, isArabic ? 'en' : 'ar');
+        _changeLanguage(context, ref, isArabic ? 'en' : 'ar');
       },
       icon: const Icon(Icons.language),
       label: Text(isArabic ? 'EN' : 'ع'),
@@ -171,9 +173,9 @@ class _FabLanguageSwitcher extends StatelessWidget {
 }
 
 /// Icon Button Style (Minimal, good for AppBar)
-class _IconButtonLanguageSwitcher extends StatelessWidget {
+class _IconButtonLanguageSwitcher extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isArabic = context.locale.languageCode == 'ar';
     
     return IconButton(
@@ -194,21 +196,22 @@ class _IconButtonLanguageSwitcher extends StatelessWidget {
       ),
       tooltip: isArabic ? 'Switch to English' : 'التبديل للعربية',
       onPressed: () {
-        _changeLanguage(context, isArabic ? 'en' : 'ar');
+        _changeLanguage(context, ref, isArabic ? 'en' : 'ar');
       },
     );
   }
 }
 
-/// Helper function to change language
-void _changeLanguage(BuildContext context, String languageCode) async {
+/// Helper function to change language with Riverpod integration
+void _changeLanguage(BuildContext context, WidgetRef ref, String languageCode) async {
+  // Update EasyLocalization locale
   await context.setLocale(Locale(languageCode));
+  
+  // Update Riverpod locale provider to trigger mock data change
+  ref.read(currentLocaleProvider.notifier).state = Locale(languageCode);
   
   // Force rebuild of the entire widget tree
   if (context.mounted) {
-    // Pop all routes and rebuild
-    Navigator.of(context).popUntil((route) => route.isFirst);
-    
     // Optional: Show a snackbar confirmation
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -225,14 +228,14 @@ void _changeLanguage(BuildContext context, String languageCode) async {
 }
 
 /// Animated Language Switcher (Fancy version)
-class AnimatedLanguageSwitcher extends StatefulWidget {
+class AnimatedLanguageSwitcher extends ConsumerStatefulWidget {
   const AnimatedLanguageSwitcher({super.key});
 
   @override
-  State<AnimatedLanguageSwitcher> createState() => _AnimatedLanguageSwitcherState();
+  ConsumerState<AnimatedLanguageSwitcher> createState() => _AnimatedLanguageSwitcherState();
 }
 
-class _AnimatedLanguageSwitcherState extends State<AnimatedLanguageSwitcher> {
+class _AnimatedLanguageSwitcherState extends ConsumerState<AnimatedLanguageSwitcher> {
   bool _isExpanded = false;
 
   @override
@@ -291,7 +294,7 @@ class _AnimatedLanguageSwitcherState extends State<AnimatedLanguageSwitcher> {
     
     return GestureDetector(
       onTap: () {
-        _changeLanguage(context, code);
+        _changeLanguage(context, ref, code);
         setState(() {
           _isExpanded = false;
         });
@@ -325,11 +328,11 @@ class _AnimatedLanguageSwitcherState extends State<AnimatedLanguageSwitcher> {
 }
 
 /// List Tile Style (Perfect for Settings Screen)
-class LanguageSwitcherListTile extends StatelessWidget {
+class LanguageSwitcherListTile extends ConsumerWidget {
   const LanguageSwitcherListTile({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isArabic = context.locale.languageCode == 'ar';
     
     return ListTile(
@@ -348,12 +351,12 @@ class LanguageSwitcherListTile extends StatelessWidget {
       subtitle: Text(isArabic ? 'العربية' : 'English'),
       trailing: const Icon(Icons.chevron_right),
       onTap: () {
-        _showLanguageDialog(context);
+        _showLanguageDialog(context, ref);
       },
     );
   }
 
-  void _showLanguageDialog(BuildContext context) {
+  void _showLanguageDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -361,21 +364,21 @@ class LanguageSwitcherListTile extends StatelessWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildLanguageOption(context, 'en', 'English', '🇬🇧'),
+            _buildLanguageOption(context, ref, 'en', 'English', '🇬🇧'),
             const SizedBox(height: 8),
-            _buildLanguageOption(context, 'ar', 'العربية', '🇪🇬'),
+            _buildLanguageOption(context, ref, 'ar', 'العربية', '🇪🇬'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildLanguageOption(BuildContext context, String code, String label, String flag) {
+  Widget _buildLanguageOption(BuildContext context, WidgetRef ref, String code, String label, String flag) {
     final isSelected = context.locale.languageCode == code;
     
     return InkWell(
       onTap: () {
-        _changeLanguage(context, code);
+        _changeLanguage(context, ref, code);
         Navigator.pop(context);
       },
       borderRadius: BorderRadius.circular(12),

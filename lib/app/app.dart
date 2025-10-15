@@ -1,10 +1,10 @@
-// lib/app/app.dart
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:ui' as ui;
+import 'package:siwa/providers/mock_data_provider.dart'; // Import the mock data provider
 
 // Import all screens
 import '../features/auth/screens/login_screen.dart';
@@ -207,6 +207,14 @@ class SiwaApp extends ConsumerWidget {
     final currentLocale = context.locale;
     final isArabic = currentLocale.languageCode == 'ar';
 
+    // Update the provider when locale changes (assuming currentLocaleProvider exists)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(currentLocaleProvider.notifier).state = currentLocale;
+    });
+
+    // Watch the mockDataProvider to ensure it's available app-wide
+    final mockData = ref.watch(mockDataProvider);
+
     return MaterialApp.router(
       routerConfig: _router,
       
@@ -237,3 +245,8 @@ class SiwaApp extends ConsumerWidget {
     );
   }
 }
+
+// Provider for tracking current locale (if not already defined elsewhere)
+final currentLocaleProvider = StateProvider<Locale>((ref) {
+  return const Locale('en'); // Default locale
+});
