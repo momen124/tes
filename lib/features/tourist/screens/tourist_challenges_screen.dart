@@ -15,8 +15,6 @@ class TouristChallengesScreen extends StatefulWidget {
 }
 
 class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
-  
-
   int get _totalPoints {
     return mockData.getAllOther()
         .where((c) => c['completed'] == true)
@@ -40,7 +38,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            "${'tourist.challenges.challenge_completed'.tr()} ${challenge['points'] ?? ''} points",
+            "${'tourist.challenges.challenge_completed'.tr()} ${challenge['points'] ?? 0} points",
           ),
           backgroundColor: AppTheme.successGreen,
         ),
@@ -138,11 +136,13 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                             top: Radius.circular(16),
                           ),
                           image: DecorationImage(
-                            image: NetworkImage(challenge['imageUrl']),
+                            image: challenge['imageUrl'] != null
+                                ? NetworkImage(challenge['imageUrl'] as String)
+                                : const AssetImage('assets/placeholder.png') as ImageProvider, // Fallback placeholder
                             fit: BoxFit.cover,
                           ),
                         ),
-                        child: challenge['completed']
+                        child: challenge['completed'] == true
                             ? Container(
                                 decoration: BoxDecoration(
                                   color: AppTheme.successGreen.withOpacity(0.8),
@@ -172,7 +172,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    challenge['title'],
+                                    challenge['title']?.toString() ?? 'No Title',
                                     style: AppTheme.titleMedium,
                                   ),
                                 ),
@@ -182,13 +182,13 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                                     vertical: 6,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: challenge['completed']
+                                    color: challenge['completed'] == true
                                         ? AppTheme.successGreen
                                         : AppTheme.primaryOrange,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
-                                    '+${challenge['points'] ?? ''} pts',
+                                    '+${challenge['points']?.toString() ?? '0'} pts',
                                     style: AppTheme.bodySmall.copyWith(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -199,7 +199,7 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              challenge['description'],
+                              challenge['description']?.toString() ?? 'No Description',
                               style: AppTheme.bodyMedium.copyWith(
                                 color: AppTheme.gray,
                               ),
@@ -208,21 +208,21 @@ class _TouristChallengesScreenState extends State<TouristChallengesScreen> {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton.icon(
-                                onPressed: challenge['completed']
+                                onPressed: challenge['completed'] == true
                                     ? null
                                     : () => _uploadPhoto(challenge),
                                 icon: Icon(
-                                  challenge['completed']
+                                  challenge['completed'] == true
                                       ? Icons.check_circle
                                       : Icons.camera_alt,
                                 ),
                                 label: Text(
-                                  challenge['completed']
-                                      ? 'Completed'
-                                      : 'Upload Photo',
+                                  challenge['completed'] == true
+                                      ? 'Completed'.tr()
+                                      : 'Upload Photo'.tr(),
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: challenge['completed']
+                                  backgroundColor: challenge['completed'] == true
                                       ? AppTheme.successGreen
                                       : AppTheme.primaryOrange,
                                 ),

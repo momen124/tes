@@ -1,5 +1,4 @@
 import 'package:siwa/data/mock_data_repository.dart';
-// lib/features/business/types/rental/screens/rental_fleet_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -18,9 +17,6 @@ class RentalFleetScreen extends ConsumerStatefulWidget {
 
 class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
   late ConfettiController _confettiController;
-  
-
-  
 
   @override
   void initState() {
@@ -44,17 +40,17 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
-        title: Text('Rental Fleet'.tr()),
+        title: Text('business.rental.fleet'.tr()), // Corrected translation key
         actions: [
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: isOffline ? null : _showRentalHistory,
-            tooltip: 'Rental History'.tr(),
+            tooltip: 'business.rental.history'.tr(), // Corrected translation key
           ),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: isOffline ? null : _showAddVehicleDialog,
-            tooltip: 'Add Vehicle'.tr(),
+            tooltip: 'business.rental.add_vehicle'.tr(), // Corrected translation key
           ),
         ],
       ),
@@ -84,12 +80,17 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                 return _buildVehicleCard(vehicle).animate().fadeIn();
               },
             ),
-
     );
   }
 
   Widget _buildVehicleCard(Map<String, dynamic> vehicle) {
-    final isAvailable = vehicle['available'];
+    if (vehicle == null || vehicle is! Map<String, dynamic>) return const SizedBox.shrink();
+    final isAvailable = vehicle['available'] as bool? ?? false;
+    final image = vehicle['image'] is IconData ? vehicle['image'] as IconData : _getVehicleIcon(vehicle['type']?.toString() ?? '');
+    final type = vehicle['type']?.toString() ?? 'Unknown Type';
+    final model = vehicle['model']?.toString() ?? 'Unknown Model';
+    final rate = double.tryParse(vehicle['rate']?.toString() ?? '0') ?? 0;
+    final rateType = vehicle['rateType']?.toString() ?? 'day';
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -104,7 +105,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                 children: [
                   Center(
                     child: Icon(
-                      vehicle['image'],
+                      image,
                       size: 80,
                       color: AppTheme.primaryOrange,
                     ),
@@ -140,20 +141,20 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        vehicle['type'],
+                        type,
                         style: AppTheme.titleMedium.copyWith(fontSize: 14),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        vehicle['model'],
+                        model,
                         style: AppTheme.bodySmall,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '\$${(double.tryParse((vehicle['rate'] ?? 0).toString()) ?? 0).toStringAsFixed(0)}/${vehicle['rateType'] ?? 0}',
+                        '\$${rate.toStringAsFixed(0)}/$rateType',
                         style: AppTheme.titleMedium.copyWith(color: AppTheme.primaryOrange),
                       ),
                     ],
@@ -177,7 +178,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                         onPressed: ref.watch(offlineProvider)
                             ? null
                             : () {
-                                setState(() => vehicle['available'] = !vehicle['available']);
+                                setState(() => vehicle['available'] = !isAvailable);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
@@ -211,7 +212,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add Vehicle'.tr()),
+        title: Text('business.rental.add_vehicle'.tr()), // Corrected translation key
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -220,28 +221,28 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
               children: [
                 TextFormField(
                   controller: typeController,
-                  decoration: InputDecoration(labelText: 'Vehicle Type'.tr()),
+                  decoration: InputDecoration(labelText: 'business.rental.vehicle_type'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter vehicle type' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: modelController,
-                  decoration: InputDecoration(labelText: 'Model'.tr()),
+                  decoration: InputDecoration(labelText: 'business.rental.model'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter model' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: rateController,
-                  decoration: InputDecoration(labelText: 'Rate'.tr()),
+                  decoration: InputDecoration(labelText: 'business.rental.rate'.tr()),
                   keyboardType: TextInputType.number,
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter rate' : null,
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   initialValue: selectedRateType,
-                  decoration: InputDecoration(labelText: 'Rate Type'.tr()),
+                  decoration: InputDecoration(labelText: 'business.rental.rate_type'.tr()),
                   items: ['hour', 'day', 'week'].map((type) {
-                    return DropdownMenuItem(value: type, child: Text(type));
+                    return DropdownMenuItem(value: type, child: Text(type.tr()));
                   }).toList(),
                   onChanged: (value) => setState(() => selectedRateType = value!),
                 ),
@@ -252,7 +253,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'.tr()),
+            child: Text('common.cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -271,12 +272,12 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Vehicle added successfully'.tr())),
+                  SnackBar(content: Text('business.rental.vehicle_added'.tr())),
                 );
                 _confettiController.play();
               }
             },
-            child: Text('Add'.tr()),
+            child: Text('common.add'.tr()),
           ),
         ],
       ),
@@ -285,14 +286,14 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
 
   void _showEditVehicleDialog(Map<String, dynamic> vehicle) {
     final formKey = GlobalKey<FormState>();
-    final typeController = TextEditingController(text: vehicle['type']);
-    final modelController = TextEditingController(text: vehicle['model']);
+    final typeController = TextEditingController(text: vehicle['type']?.toString() ?? '');
+    final modelController = TextEditingController(text: vehicle['model']?.toString() ?? '');
     final rateController = TextEditingController(text: (vehicle['rate'] ?? 0).toString());
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Edit Vehicle'.tr()),
+        title: Text('business.rental.edit_vehicle'.tr()), // Corrected translation key
         content: Form(
           key: formKey,
           child: Column(
@@ -300,19 +301,19 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
             children: [
               TextFormField(
                 controller: typeController,
-                decoration: InputDecoration(labelText: 'Vehicle Type'.tr()),
+                decoration: InputDecoration(labelText: 'business.rental.vehicle_type'.tr()),
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter vehicle type' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: modelController,
-                decoration: InputDecoration(labelText: 'Model'.tr()),
+                decoration: InputDecoration(labelText: 'business.rental.model'.tr()),
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter model' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: rateController,
-                decoration: InputDecoration(labelText: 'Rate'.tr()),
+                decoration: InputDecoration(labelText: 'business.rental.rate'.tr()),
                 keyboardType: TextInputType.number,
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter rate' : null,
               ),
@@ -325,11 +326,11 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
               setState(() => mockData.getAllOther().remove(vehicle));
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Vehicle deleted'.tr())),
+                SnackBar(content: Text('business.rental.vehicle_deleted'.tr())),
               );
               _confettiController.play();
             },
-            child: Text('Delete'.tr(), style: const TextStyle(color: AppTheme.errorRed)),
+            child: Text('common.delete'.tr(), style: const TextStyle(color: AppTheme.errorRed)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -342,12 +343,12 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Vehicle updated'.tr())),
+                  SnackBar(content: Text('business.rental.vehicle_updated'.tr())),
                 );
                 _confettiController.play();
               }
             },
-            child: Text('Save'.tr()),
+            child: Text('common.save'.tr()),
           ),
         ],
       ),
@@ -380,7 +381,7 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Rental History'.tr(), style: AppTheme.titleLarge),
+                  Text('business.rental.history'.tr(), style: AppTheme.titleLarge),
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () => Navigator.pop(context),
@@ -395,6 +396,13 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                 itemCount: mockData.getAllOther().length,
                 itemBuilder: (context, index) {
                   final rental = mockData.getAllOther()[index];
+                  if (rental == null || rental is! Map<String, dynamic>) return const SizedBox.shrink();
+                  final vehicle = rental['vehicle']?.toString() ?? 'Unknown Vehicle';
+                  final revenue = double.tryParse(rental['revenue']?.toString() ?? '0') ?? 0;
+                  final customer = rental['customer']?.toString() ?? 'Unknown Customer';
+                  final startDate = rental['startDate'] as DateTime? ?? DateTime.now();
+                  final endDate = rental['endDate'] as DateTime? ?? DateTime.now().add(const Duration(days: 1));
+
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
                     child: Padding(
@@ -405,18 +413,18 @@ class _RentalFleetScreenState extends ConsumerState<RentalFleetScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(rental['vehicle'], style: AppTheme.titleMedium),
+                              Text(vehicle, style: AppTheme.titleMedium),
                               Text(
-                                '\$${(double.tryParse(rental['revenue']?.toString() ?? '') ?? 0).toStringAsFixed(0)}',
+                                '\$${revenue.toStringAsFixed(0)}',
                                 style: AppTheme.titleMedium.copyWith(color: AppTheme.successGreen),
                               ),
                             ],
                           ),
                           const SizedBox(height: 8),
-                          Text('Customer: ${rental['.tr()customer']}', style: AppTheme.bodyMedium),
+                          Text('Customer: $customer', style: AppTheme.bodyMedium),
                           const SizedBox(height: 4),
                           Text(
-                            'Period: ${_formatDate(rental['startDate'])} - ${_formatDate(rental['endDate'])}',
+                            'Period: ${_formatDate(startDate)} - ${_formatDate(endDate)}',
                             style: AppTheme.bodySmall,
                           ),
                         ],

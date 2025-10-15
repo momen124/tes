@@ -16,8 +16,6 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
   bool _bestTimeExpanded = false;
   bool _travelTipsExpanded = false;
 
-  
-
   Widget _buildMapPin(String label, Color color) {
     return Column(
       children: [
@@ -176,7 +174,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                             color: Colors.blue[50],
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child:  Center(
+                          child: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -226,6 +224,16 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                     itemCount: mockData.getAllOther().length,
                     itemBuilder: (context, index) {
                       final service = mockData.getAllOther()[index];
+                      // Ensure service is a Map and handle null cases
+                      if (service == null || service is! Map<String, dynamic>) {
+                        return const SizedBox.shrink(); // Skip invalid items
+                      }
+                      final icon = service['image'] is IconData
+                          ? service['image'] as IconData
+                          : Icons.help; // Default icon if invalid
+                      final title = service['title']?.toString() ?? 'Unknown Service';
+                      final subtitle = service['subtitle']?.toString() ?? 'No Description';
+
                       return Card(
                         elevation: 2,
                         shape: RoundedRectangleBorder(
@@ -244,7 +252,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                                 ),
                                 child: Center(
                                   child: Icon(
-                                    service['image'],
+                                    icon,
                                     size: 60,
                                     color: AppTheme.primaryOrange,
                                   ),
@@ -257,7 +265,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    service['title'],
+                                    title,
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -265,7 +273,7 @@ class _SiwaInfoScreenState extends State<SiwaInfoScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    service['subtitle'],
+                                    subtitle,
                                     style: const TextStyle(
                                       fontSize: 14,
                                       color: AppTheme.gray,

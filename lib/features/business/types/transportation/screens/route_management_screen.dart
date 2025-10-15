@@ -1,5 +1,4 @@
 import 'package:siwa/data/mock_data_repository.dart';
-// lib/features/business/types/transport/screens/route_management_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -18,15 +17,10 @@ class RouteManagementScreen extends ConsumerStatefulWidget {
   ConsumerState<RouteManagementScreen> createState() => _RouteManagementScreenState();
 }
 
-class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> with SingleTickerProviderStateMixin {
+class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen>
+    with SingleTickerProviderStateMixin {
   late ConfettiController _confettiController;
   late TabController _tabController;
-
-  
-
-  
-
-  
 
   @override
   void initState() {
@@ -43,17 +37,18 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
   }
 
   List<Marker> _buildRouteMarkers(Map<String, dynamic> route) {
-    final stops = route['stops'] as List?;
+    final stops = route['stops'] as List<dynamic>?;
     if (stops == null || stops.isEmpty) return [];
-    
     return [
       Marker(
-        point: stops[0],
+        point: stops[0] is LatLng ? stops[0] as LatLng : const LatLng(29.2031, 25.5197),
         child: const Icon(Icons.location_on, color: Colors.green, size: 30),
       ),
       if (stops.length > 1)
         Marker(
-          point: stops[stops.length - 1],
+          point: stops[stops.length - 1] is LatLng
+              ? stops[stops.length - 1] as LatLng
+              : const LatLng(29.2000, 25.5200),
           child: const Icon(Icons.location_on, color: Colors.red, size: 30),
         ),
     ];
@@ -69,12 +64,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
           icon: const Icon(Icons.arrow_back),
           onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
-        title: Text('Route Management'.tr()),
+        title: Text('business.transport.route_management'.tr()), // Corrected translation key
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: isOffline ? null : _showAddRouteDialog,
-            tooltip: 'Add Route'.tr(),
+            tooltip: 'business.transport.add_route'.tr(), // Corrected translation key
           ),
         ],
         bottom: TabBar(
@@ -109,7 +104,6 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                 _buildTripsTab(isOffline).animate().fadeIn(),
               ],
             ),
-
     );
   }
 
@@ -119,12 +113,20 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
       itemCount: mockData.getAllOther().length,
       itemBuilder: (context, index) {
         final route = mockData.getAllOther()[index];
+        if (route == null || route is! Map<String, dynamic>) return const SizedBox.shrink();
+        final name = route['name']?.toString() ?? 'Unknown Route';
+        final distance = route['distance']?.toString() ?? 'N/A';
+        final duration = route['duration']?.toString() ?? 'N/A';
+        final schedule = route['schedule']?.toString() ?? 'N/A';
+        final ratePerKm = route['ratePerKm'] is num ? route['ratePerKm'] as num : 0;
+        final stops = route['stops'] as List<dynamic>? ?? [const LatLng(29.2031, 25.5197)];
+
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
           child: ExpansionTile(
-            title: Text(route['name'], style: AppTheme.titleMedium),
+            title: Text(name, style: AppTheme.titleMedium),
             subtitle: Text(
-              '${route['distance'] ?? ''} • ${route['duration'] ?? ''}',
+              '$distance • $duration',
               style: AppTheme.bodySmall,
             ),
             children: [
@@ -137,8 +139,8 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                       height: 200,
                       child: FlutterMap(
                         options: MapOptions(
-                          initialCenter: (route['stops'] as List?)?.isNotEmpty == true 
-                              ? route['stops'][0] 
+                          initialCenter: stops.isNotEmpty && stops[0] is LatLng
+                              ? stops[0] as LatLng
                               : const LatLng(29.2031, 25.5197),
                           initialZoom: 12.0,
                         ),
@@ -149,7 +151,10 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                           PolylineLayer(
                             polylines: [
                               Polyline(
-                                points: List<LatLng>.from(route['stops'] as List? ?? []),
+                                points: stops
+                                    .where((point) => point is LatLng)
+                                    .cast<LatLng>()
+                                    .toList(),
                                 color: AppTheme.oasisTeal,
                                 strokeWidth: 4.0,
                               ),
@@ -162,9 +167,9 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text('Schedule: ${route['schedule'] ?? ''}', style: AppTheme.bodyMedium),
+                    Text('Schedule: $schedule', style: AppTheme.bodyMedium),
                     const SizedBox(height: 8),
-                    Text('Rate: \$${route['ratePerKm'] ?? 0}/km', style: AppTheme.bodyMedium),
+                    Text('Rate: \$${ratePerKm.toStringAsFixed(2)}/km', style: AppTheme.bodyMedium),
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -195,6 +200,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
       itemCount: mockData.getAllTransportation().length,
       itemBuilder: (context, index) {
         final vehicle = mockData.getAllTransportation()[index];
+        if (vehicle == null || vehicle is! Map<String, dynamic>) return const SizedBox.shrink();
+        final type = vehicle['type']?.toString() ?? 'Unknown Type';
+        final plate = vehicle['plate']?.toString() ?? 'N/A';
+        final capacity = vehicle['capacity']?.toString() ?? 'N/A';
+        final verified = vehicle['verified'] as bool? ?? false;
+
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           child: ListTile(
@@ -206,16 +217,16 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
               ),
               child: const Icon(Icons.directions_bus, color: AppTheme.primaryOrange),
             ),
-            title: Text(vehicle['type'], style: AppTheme.titleMedium),
-            subtitle: Text('Plate: ${vehicle['plate'] ?? ''} • Capacity: ${vehicle['capacity'] ?? ''}'),
+            title: Text(type, style: AppTheme.titleMedium),
+            subtitle: Text('Plate: $plate • Capacity: $capacity'),
             trailing: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: vehicle['verified'] == true ? AppTheme.successGreen : AppTheme.warningYellow,
+                color: verified ? AppTheme.successGreen : AppTheme.warningYellow,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                vehicle['verified'] == true ? 'Verified' : 'Pending',
+                verified ? 'Verified' : 'Pending',
                 style: AppTheme.bodySmall.copyWith(color: AppTheme.white),
               ),
             ),
@@ -232,7 +243,13 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
       itemCount: mockData.getAllOther().length,
       itemBuilder: (context, index) {
         final trip = mockData.getAllOther()[index];
-        final isPending = trip['status'] == 'pending';
+        if (trip == null || trip is! Map<String, dynamic>) return const SizedBox.shrink();
+        final guest = trip['guest']?.toString() ?? 'Unknown Guest';
+        final route = trip['route']?.toString() ?? 'N/A';
+        final time = trip['time']?.toString() ?? 'N/A';
+        final passengers = trip['passengers']?.toString() ?? 'N/A';
+        final status = trip['status']?.toString() ?? 'pending';
+        final isPending = status.toLowerCase() == 'pending';
 
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
@@ -250,8 +267,8 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                 color: isPending ? AppTheme.warningYellow : AppTheme.successGreen,
               ),
             ),
-            title: Text(trip['guest'], style: AppTheme.titleMedium),
-            subtitle: Text('${trip['route'] ?? ''} • ${trip['time'] ?? ''} • ${trip['passengers'] ?? ''} passengers'),
+            title: Text(guest, style: AppTheme.titleMedium),
+            subtitle: Text('$route • $time • $passengers passengers'),
             trailing: isPending && !isOffline
                 ? ElevatedButton(
                     onPressed: () => _approveTrip(trip),
@@ -289,7 +306,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add New Route'.tr()),
+        title: Text('business.transport.add_route'.tr()), // Corrected translation key
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -298,31 +315,31 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
               children: [
                 TextFormField(
                   controller: nameController,
-                  decoration: InputDecoration(labelText: 'Route Name'.tr()),
+                  decoration: InputDecoration(labelText: 'business.transport.route_name'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter route name' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: distanceController,
-                  decoration: InputDecoration(labelText: 'Distance (e.g., 25 km)'.tr()),
+                  decoration: InputDecoration(labelText: 'business.transport.distance'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter distance' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: durationController,
-                  decoration: InputDecoration(labelText: 'Duration (e.g., 1.5 hours)'.tr()),
+                  decoration: InputDecoration(labelText: 'business.transport.duration'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter duration' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: scheduleController,
-                  decoration: InputDecoration(labelText: 'Schedule (e.g., Daily 8AM-8PM)'.tr()),
+                  decoration: InputDecoration(labelText: 'business.transport.schedule'.tr()),
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter schedule' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: rateController,
-                  decoration: InputDecoration(labelText: 'Rate per km'.tr()),
+                  decoration: InputDecoration(labelText: 'business.transport.rate_per_km'.tr()),
                   keyboardType: TextInputType.number,
                   validator: (value) => (value?.isEmpty ?? true) ? 'Enter rate' : null,
                 ),
@@ -333,7 +350,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'.tr()),
+            child: Text('common.cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -351,12 +368,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Route added successfully'.tr())),
+                  SnackBar(content: Text('business.transport.route_added'.tr())),
                 );
                 _confettiController.play();
               }
             },
-            child: Text('Add'.tr()),
+            child: Text('common.add'.tr()),
           ),
         ],
       ),
@@ -365,14 +382,14 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
 
   void _showEditRouteDialog(Map<String, dynamic> route) {
     final formKey = GlobalKey<FormState>();
-    final nameController = TextEditingController(text: route['name']);
-    final scheduleController = TextEditingController(text: route['schedule']);
+    final nameController = TextEditingController(text: route['name']?.toString() ?? '');
+    final scheduleController = TextEditingController(text: route['schedule']?.toString() ?? '');
     final rateController = TextEditingController(text: (route['ratePerKm'] ?? 0).toString());
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Edit Route'.tr()),
+        title: Text('business.transport.edit_route'.tr()), // Corrected translation key
         content: Form(
           key: formKey,
           child: Column(
@@ -380,19 +397,19 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
             children: [
               TextFormField(
                 controller: nameController,
-                decoration: InputDecoration(labelText: 'Route Name'.tr()),
+                decoration: InputDecoration(labelText: 'business.transport.route_name'.tr()),
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter route name' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: scheduleController,
-                decoration: InputDecoration(labelText: 'Schedule'.tr()),
+                decoration: InputDecoration(labelText: 'business.transport.schedule'.tr()),
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter schedule' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: rateController,
-                decoration: InputDecoration(labelText: 'Rate per km'.tr()),
+                decoration: InputDecoration(labelText: 'business.transport.rate_per_km'.tr()),
                 keyboardType: TextInputType.number,
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter rate' : null,
               ),
@@ -402,7 +419,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'.tr()),
+            child: Text('common.cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -414,12 +431,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Route updated'.tr())),
+                  SnackBar(content: Text('business.transport.route_updated'.tr())),
                 );
                 _confettiController.play();
               }
             },
-            child: Text('Save'.tr()),
+            child: Text('common.save'.tr()),
           ),
         ],
       ),
@@ -428,14 +445,14 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
 
   void _showEditVehicleDialog(Map<String, dynamic> vehicle) {
     final formKey = GlobalKey<FormState>();
-    final typeController = TextEditingController(text: vehicle['type']);
-    final plateController = TextEditingController(text: vehicle['plate']);
+    final typeController = TextEditingController(text: vehicle['type']?.toString() ?? '');
+    final plateController = TextEditingController(text: vehicle['plate']?.toString() ?? '');
     final capacityController = TextEditingController(text: (vehicle['capacity'] ?? 0).toString());
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Edit Vehicle'.tr()),
+        title: Text('business.transport.edit_vehicle'.tr()), // Corrected translation key
         content: Form(
           key: formKey,
           child: Column(
@@ -443,19 +460,19 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
             children: [
               TextFormField(
                 controller: typeController,
-                decoration: InputDecoration(labelText: 'Vehicle Type'.tr()),
+                decoration: InputDecoration(labelText: 'business.transport.vehicle_type'.tr()),
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter vehicle type' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: plateController,
-                decoration: InputDecoration(labelText: 'Plate Number'.tr()),
+                decoration: InputDecoration(labelText: 'business.transport.plate_number'.tr()),
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter plate number' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: capacityController,
-                decoration: InputDecoration(labelText: 'Capacity'.tr()),
+                decoration: InputDecoration(labelText: 'business.transport.capacity'.tr()),
                 keyboardType: TextInputType.number,
                 validator: (value) => (value?.isEmpty ?? true) ? 'Enter capacity' : null,
               ),
@@ -465,7 +482,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'.tr()),
+            child: Text('common.cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -477,12 +494,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Vehicle updated'.tr())),
+                  SnackBar(content: Text('business.transport.vehicle_updated'.tr())),
                 );
                 _confettiController.play();
               }
             },
-            child: Text('Save'.tr()),
+            child: Text('common.save'.tr()),
           ),
         ],
       ),
@@ -493,12 +510,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete Route'.tr()),
-  content: Text('Are you sure you want to delete ${route['name'] ?? ''}?'.tr()),
+        title: Text('business.transport.delete_route'.tr()), // Corrected translation key
+        content: Text('Are you sure you want to delete ${route['name'] ?? 'this route'}?'.tr()),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'.tr()),
+            child: Text('common.cancel'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -507,12 +524,12 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
               });
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Route deleted'.tr())),
+                SnackBar(content: Text('business.transport.route_deleted'.tr())),
               );
               _confettiController.play();
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppTheme.errorRed),
-            child: Text('Delete'.tr()),
+            child: Text('common.delete'.tr()),
           ),
         ],
       ),
@@ -525,7 +542,7 @@ class _RouteManagementScreenState extends ConsumerState<RouteManagementScreen> w
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Trip approved successfully!'.tr()),
+        content: Text('business.transport.trip_approved'.tr()),
         backgroundColor: AppTheme.successGreen,
       ),
     );

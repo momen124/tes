@@ -16,18 +16,16 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
   String _selectedSpecialty = 'all';
   String _selectedLanguage = 'all';
 
-  
-
   List<Map<String, dynamic>> get _filteredGuides {
-    return mockData.getAllTourGuides().where((guide) {
+    return (mockData.getAllTourGuides() ?? []).where((guide) {
       final specialtyMatch =
           _selectedSpecialty == 'all' ||
-          guide['specialty'] == _selectedSpecialty;
+          (guide['specialty']?.toString() ?? '').toLowerCase() == _selectedSpecialty.toLowerCase();
       final languageMatch =
           _selectedLanguage == 'all' ||
-          ((guide['languages'] as List?)?.cast<String>() ?? <String>[]).any(
+          (((guide['languages'] as List?)?.cast<String>() ?? <String>[]).any(
             (lang) => lang.toLowerCase() == _selectedLanguage.toLowerCase(),
-          );
+          ));
       return specialtyMatch && languageMatch;
     }).toList();
   }
@@ -72,23 +70,11 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                   child: Row(
                     children: [
                       _buildSpecialtyChip('All', 'all', Icons.star),
-                      _buildSpecialtyChip(
-                        'History',
-                        'history',
-                        Icons.account_balance,
-                      ),
+                      _buildSpecialtyChip('History', 'history', Icons.account_balance),
                       _buildSpecialtyChip('Culture', 'culture', Icons.museum),
-                      _buildSpecialtyChip(
-                        'Adventure',
-                        'adventure',
-                        Icons.terrain,
-                      ),
+                      _buildSpecialtyChip('Adventure', 'adventure', Icons.terrain),
                       _buildSpecialtyChip('Nature', 'nature', Icons.nature),
-                      _buildSpecialtyChip(
-                        'Photography',
-                        'photography',
-                        Icons.camera_alt,
-                      ),
+                      _buildSpecialtyChip('Photography', 'photography', Icons.camera_alt),
                     ],
                   ),
                 ),
@@ -226,6 +212,17 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
   }
 
   Widget _buildGuideCard(Map<String, dynamic> guide) {
+    // Null-safe defaults
+    final imageUrl = guide['imageUrl']?.toString() ?? 'https://via.placeholder.com/80';
+    final name = guide['name']?.toString() ?? 'Unknown Guide';
+    final rating = guide['rating'] as num? ?? 0;
+    final reviews = guide['reviews']?.toString() ?? '0';
+    final experience = guide['experience'] as num? ?? 0;
+    final bio = guide['bio']?.toString() ?? 'No bio available';
+    final languages = (guide['languages'] as List?)?.cast<String>() ?? <String>[];
+    final hourlyRate = guide['hourlyRate'] as num? ?? 0;
+    final verified = guide['verified'] as bool? ?? false;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
@@ -249,12 +246,13 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       image: DecorationImage(
-                        image: NetworkImage(guide['imageUrl']),
+                        image: NetworkImage(imageUrl),
                         fit: BoxFit.cover,
+                        onError: (exception, stackTrace) => const AssetImage('assets/placeholder.png'),
                       ),
                     ),
                   ),
-                  if (guide['verified'] == true)
+                  if (verified)
                     Positioned(
                       bottom: 0,
                       right: 0,
@@ -285,7 +283,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            guide['name'],
+                            name,
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -311,7 +309,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                (guide['rating'] ?? 0).toString(),
+                                rating.toString(),
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
@@ -323,31 +321,25 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                       ],
                     ),
                     const SizedBox(height: 4),
-
                     Text(
-                      '${guide['experience'] ?? ''} years experience • ${guide['reviews'] ?? ''} reviews',
+                      '$experience years experience • $reviews reviews',
                       style: const TextStyle(
                         fontSize: 13,
                         color: AppTheme.gray,
                       ),
                     ),
                     const SizedBox(height: 8),
-
                     Text(
-                      guide['bio'],
+                      bio,
                       style: const TextStyle(fontSize: 14),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
-
-                    // Languages
                     Wrap(
                       spacing: 6,
                       runSpacing: 6,
-                      children: ((guide['languages'] as List?)?.cast<String>() ?? <String>[])
-                          .take(3)
-                          .map(
+                      children: languages.take(3).map(
                             (lang) => Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 8,
@@ -366,12 +358,9 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                                 ),
                               ),
                             ),
-                          )
-                          .toList(),
+                          ).toList(),
                     ),
                     const SizedBox(height: 12),
-
-                    // Rate and Book Button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -386,7 +375,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                               ),
                             ),
                             Text(
-                              'EGP ${(guide['hourlyRate'] ?? 0).toStringAsFixed(0)}/hr',
+                              'EGP ${hourlyRate.toStringAsFixed(0)}/hr',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -421,6 +410,21 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
   }
 
   void _showGuideProfile(Map<String, dynamic> guide) {
+    // Null-safe defaults
+    final imageUrl = guide['imageUrl']?.toString() ?? 'https://via.placeholder.com/100';
+    final name = guide['name']?.toString() ?? 'Unknown Guide';
+    final rating = guide['rating'] as num? ?? 0;
+    final reviews = guide['reviews']?.toString() ?? '0';
+    final experience = guide['experience'] as num? ?? 0;
+    final bio = guide['bio']?.toString() ?? 'No bio available';
+    final languages = (guide['languages'] as List?)?.cast<String>() ?? <String>[];
+    final certifications = (guide['certifications'] as List?)?.cast<String>() ?? <String>[];
+    final specialties = (guide['specialties'] as List?)?.cast<String>() ?? <String>[];
+    final hourlyRate = guide['hourlyRate'] as num? ?? 0;
+    final verified = guide['verified'] as bool? ?? false;
+    final responseTime = guide['responseTime']?.toString() ?? 'N/A';
+    final availability = (guide['availability'] as Map<String, bool>?) ?? {};
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -465,12 +469,13 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                                   width: 3,
                                 ),
                                 image: DecorationImage(
-                                  image: NetworkImage(guide['imageUrl']),
+                                  image: NetworkImage(imageUrl),
                                   fit: BoxFit.cover,
+                                  onError: (exception, stackTrace) => const AssetImage('assets/placeholder.png'),
                                 ),
                               ),
                             ),
-                            if (guide['verified'] == true)
+                            if (verified)
                               Positioned(
                                 bottom: 0,
                                 right: 0,
@@ -497,7 +502,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      guide['name'],
+                      name,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -511,7 +516,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                         const Icon(Icons.star, color: Colors.white, size: 20),
                         const SizedBox(width: 4),
                         Text(
-                          '${guide['rating'] ?? ''} (${guide['reviews'] ?? ''} reviews)',
+                          '$rating ($reviews reviews)',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.white,
@@ -535,7 +540,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                         Expanded(
                           child: _buildStatCard(
                             Icons.work_outline,
-                            '${guide['experience'] ?? ''} years',
+                            '$experience years',
                             'Experience',
                           ),
                         ),
@@ -543,7 +548,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                         Expanded(
                           child: _buildStatCard(
                             Icons.timer_outlined,
-                            guide['responseTime'],
+                            responseTime,
                             'Response',
                           ),
                         ),
@@ -561,7 +566,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      guide['bio'],
+                      bio,
                       style: const TextStyle(fontSize: 15, height: 1.5),
                     ),
                     const SizedBox(height: 24),
@@ -578,8 +583,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     Wrap(
                       spacing: 12,
                       runSpacing: 12,
-                      children: ((guide['languages'] as List?)?.cast<String>() ?? <String>[])
-                          .map(
+                      children: languages.map(
                             (lang) => Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 16,
@@ -607,8 +611,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                                 ],
                               ),
                             ),
-                          )
-                          .toList(),
+                          ).toList(),
                     ),
                     const SizedBox(height: 24),
 
@@ -621,7 +624,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    ...((guide['certifications'] as List?)?.cast<String>() ?? <String>[]).map(
+                    ...certifications.map(
                       (cert) => Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Row(
@@ -651,8 +654,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                     Wrap(
                       spacing: 12,
                       runSpacing: 12,
-                      children: ((guide['specialties'] as List?)?.cast<String>() ?? <String>[])
-                          .map(
+                      children: specialties.map(
                             (specialty) => Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 16,
@@ -670,8 +672,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                                 ),
                               ),
                             ),
-                          )
-                          .toList(),
+                          ).toList(),
                     ),
                     const SizedBox(height: 24),
 
@@ -684,7 +685,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    _buildAvailabilityCalendar(guide['availability']),
+                    _buildAvailabilityCalendar(availability),
                     const SizedBox(height: 24),
 
                     // Book Button
@@ -703,7 +704,7 @@ class _TourGuidesListScreenState extends State<TourGuidesListScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         child: Text(
-                          'Book for EGP ${(guide['hourlyRate'] ?? 0).toStringAsFixed(0)}/hour',
+                          'Book for EGP ${hourlyRate.toStringAsFixed(0)}/hour',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

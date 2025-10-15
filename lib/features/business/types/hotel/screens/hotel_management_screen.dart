@@ -1,5 +1,4 @@
 import 'package:siwa/data/mock_data_repository.dart';
-// lib/features/business/types/hotel/screens/hotel_management_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -16,8 +15,7 @@ class HotelManagementScreen extends ConsumerStatefulWidget {
   const HotelManagementScreen({super.key});
 
   @override
-  ConsumerState<HotelManagementScreen> createState() =>
-      _HotelManagementScreenState();
+  ConsumerState<HotelManagementScreen> createState() => _HotelManagementScreenState();
 }
 
 class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
@@ -27,10 +25,6 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
   DateTime? _selectedDay;
   final Set<DateTime> _blockedDates = {};
   late ConfettiController _confettiController;
-
-  
-
-  
 
   @override
   void initState() {
@@ -58,12 +52,12 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
           icon: const Icon(Icons.arrow_back),
           onPressed: isOffline ? null : () => context.go('/business_dashboard'),
         ),
-        title: Text('business.vehicles.vehicle_management'.tr()),
+        title: Text('business.hotel.hotel_management'.tr()), // Corrected translation key
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: isOffline ? null : _showAddRoomDialog,
-            tooltip: 'business.rental.add_new_room'.tr(),
+            tooltip: 'business.hotel.add_new_room'.tr(),
           ),
         ],
         bottom: TabBar(
@@ -106,6 +100,13 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
       itemCount: mockData.getAllOther().length,
       itemBuilder: (context, index) {
         final room = mockData.getAllOther()[index];
+        if (room == null || room is! Map<String, dynamic>) return const SizedBox.shrink();
+        final photos = (room['photos'] as List?)?.cast<String>() ?? ['https://images.unsplash.com/photo-1589993464410-6c55678afc12?w=800&h=600&fit=crop'];
+        final type = room['type']?.toString() ?? 'Unknown Room';
+        final price = room['price'] is num ? room['price'] as num : double.tryParse(room['price']?.toString() ?? '0') ?? 0;
+        final available = room['available'] as bool? ?? false;
+        final amenities = (room['amenities'] as List?)?.cast<String>() ?? [];
+
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
           child: Column(
@@ -114,13 +115,9 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
               SizedBox(
                 height: 200,
                 child: PageView.builder(
-                  itemCount: (room['photos'] as List?)?.length ?? 1,
+                  itemCount: photos.length,
                   itemBuilder: (context, photoIndex) {
-                    final photos = room['photos'] as List?;
-                    final photoUrl = photos != null && photos.isNotEmpty
-                        ? photos[photoIndex]
-                        : 'https://images.unsplash.com/photo-1589993464410-6c55678afc12?w=800&h=600&fit=crop';
-
+                    final photoUrl = photos[photoIndex];
                     return Image.network(
                       photoUrl,
                       fit: BoxFit.cover,
@@ -144,20 +141,18 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(room['type'], style: AppTheme.titleLarge),
+                        Text(type, style: AppTheme.titleLarge),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: room['available']
-                                ? AppTheme.successGreen
-                                : AppTheme.errorRed,
+                            color: available ? AppTheme.successGreen : AppTheme.errorRed,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            room['available'] == true ? 'Available' : 'Occupied',
+                            available ? 'Available' : 'Occupied',
                             style: AppTheme.bodySmall.copyWith(
                               color: AppTheme.white,
                             ),
@@ -167,12 +162,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '\$${(() {
-                        final p = room['price'];
-                        if (p is num) return p.toStringAsFixed(0);
-                        final parsed = double.tryParse(p?.toString() ?? '') ?? 0;
-                        return parsed.toStringAsFixed(0);
-                      })()}/night',
+                      '\$${price.toStringAsFixed(0)}/night',
                       style: AppTheme.titleMedium.copyWith(
                         color: AppTheme.primaryOrange,
                       ),
@@ -181,15 +171,13 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children:
-                          (room['amenities'] as List?)?.map<Widget>((amenity) {
-                            return Chip(
-                              label: Text(amenity),
-                              labelStyle: AppTheme.bodySmall,
-                              backgroundColor: AppTheme.lightBlueGray,
-                            );
-                          }).toList() ??
-                          [],
+                      children: amenities.map<Widget>((amenity) {
+                        return Chip(
+                          label: Text(amenity),
+                          labelStyle: AppTheme.bodySmall,
+                          backgroundColor: AppTheme.lightBlueGray,
+                        );
+                      }).toList(),
                     ),
                     const SizedBox(height: 12),
                     Row(
@@ -206,17 +194,14 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                         ),
                         IconButton(
                           icon: Icon(
-                            room['available']
-                                ? Icons.block
-                                : Icons.check_circle,
+                            available ? Icons.block : Icons.check_circle,
                             color: AppTheme.primaryOrange,
                           ),
                           onPressed: ref.watch(offlineProvider)
                               ? null
                               : () {
                                   setState(
-                                    () =>
-                                        room['available'] = !room['available'],
+                                    () => room['available'] = !available,
                                   );
                                   _confettiController.play();
                                 },
@@ -250,7 +235,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'business.dashboard.occupancy'.tr(),
+            'business.hotel.occupancy'.tr(),
             style: AppTheme.titleLarge,
           ).animate().fadeIn(),
           const SizedBox(height: 16),
@@ -281,7 +266,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'business.dashboard.occupancy'.tr(),
+                    'business.hotel.occupancy'.tr(),
                     style: AppTheme.titleMedium,
                   ).animate().fadeIn(),
                   const SizedBox(height: 16),
@@ -364,7 +349,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
           ).animate().fadeIn(),
           const SizedBox(height: 24),
           Text(
-            'business.dashboard.revenue'.tr(),
+            'business.hotel.revenue'.tr(),
             style: AppTheme.titleLarge,
           ).animate().fadeIn(),
           const SizedBox(height: 16),
@@ -395,7 +380,14 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
       itemCount: mockData.getAllBookings().length,
       itemBuilder: (context, index) {
         final reservation = mockData.getAllBookings()[index];
-        final isPending = reservation['status'] == 'pending';
+        if (reservation == null || reservation is! Map<String, dynamic>) return const SizedBox.shrink();
+        final guest = reservation['guest']?.toString() ?? 'Unknown Guest';
+        final status = reservation['status']?.toString() ?? 'pending';
+        final room = reservation['room']?.toString() ?? 'Unknown Room';
+        final checkIn = reservation['checkIn'] as DateTime? ?? DateTime.now();
+        final checkOut = reservation['checkOut'] as DateTime? ?? DateTime.now().add(const Duration(days: 1));
+        final isPending = status.toLowerCase() == 'pending';
+
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
           child: Padding(
@@ -406,7 +398,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(reservation['guest'], style: AppTheme.titleMedium),
+                    Text(guest, style: AppTheme.titleMedium),
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -429,7 +421,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  reservation['room'],
+                  room,
                   style: AppTheme.bodyMedium.copyWith(
                     color: AppTheme.primaryOrange,
                   ),
@@ -444,7 +436,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Check-in: ${_formatDate(reservation['checkIn'])}',
+                      'Check-in: ${_formatDate(checkIn)}',
                       style: AppTheme.bodyMedium,
                     ),
                   ],
@@ -459,7 +451,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Check-out: ${_formatDate(reservation['checkOut'])}',
+                      'Check-out: ${_formatDate(checkOut)}',
                       style: AppTheme.bodyMedium,
                     ),
                   ],
@@ -472,16 +464,15 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
                       TextButton(
                         onPressed: isOffline
                             ? null
-                            : () =>
-                                  _handleReservationAction(reservation, false),
-                        child: Text('business.rental.vehicle_types.electric'.tr()),
+                            : () => _handleReservationAction(reservation, false),
+                        child: Text('business.hotel.reject'.tr()),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: isOffline
                             ? null
                             : () => _handleReservationAction(reservation, true),
-                        child: Text('app.name'.tr()),
+                        child: Text('business.hotel.approve'.tr()),
                       ),
                     ],
                   ),
@@ -540,7 +531,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
             });
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('${roomData['.tr()name']} added successfully!'),
+                content: Text('${roomData['name']} added successfully!'.tr()),
                 backgroundColor: AppTheme.successGreen,
                 behavior: SnackBarBehavior.floating,
               ),
@@ -554,9 +545,9 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
 
   void _showEditRoomDialog(Map<String, dynamic> room) {
     final formKey = GlobalKey<FormState>();
-    final typeController = TextEditingController(text: room['type']);
+    final typeController = TextEditingController(text: room['type']?.toString() ?? '');
     final priceController = TextEditingController(
-      text: (room['price'] ?? 0).toString(),
+      text: (room['price'] is num ? room['price'] : double.tryParse(room['price']?.toString() ?? '0') ?? 0).toString(),
     );
 
     showDialog(
@@ -571,19 +562,15 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
               children: [
                 TextFormField(
                   controller: typeController,
-                  decoration: InputDecoration(labelText: 'business.rental.room_type'.tr()),
-                  validator: (value) =>
-                      value?.isEmpty ?? true ? 'Enter room type' : null,
+                  decoration: InputDecoration(labelText: 'business.hotel.room_type'.tr()),
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter room type' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: priceController,
-                  decoration: InputDecoration(
-                    labelText: 'business.rental.price_per_night'.tr(),
-                  ),
+                  decoration: InputDecoration(labelText: 'business.hotel.price_per_night'.tr()),
                   keyboardType: TextInputType.number,
-                  validator: (value) =>
-                      value?.isEmpty ?? true ? 'Enter price' : null,
+                  validator: (value) => (value?.isEmpty ?? true) ? 'Enter price' : null,
                 ),
               ],
             ),
@@ -599,8 +586,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
               if (formKey.currentState!.validate()) {
                 setState(() {
                   room['type'] = typeController.text;
-                  room['price'] =
-                      double.tryParse(priceController.text) ?? room['price'];
+                  room['price'] = double.tryParse(priceController.text) ?? room['price'];
                 });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -626,7 +612,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Block Dates for ${room['.tr()type']}',
+                'Block Dates for ${room['type']}'.tr(),
                 style: AppTheme.titleMedium,
               ),
               const SizedBox(height: 16),
@@ -669,10 +655,7 @@ class _HotelManagementScreenState extends ConsumerState<HotelManagementScreen>
     );
   }
 
-  void _handleReservationAction(
-    Map<String, dynamic> reservation,
-    bool approve,
-  ) {
+  void _handleReservationAction(Map<String, dynamic> reservation, bool approve) {
     setState(() {
       reservation['status'] = approve ? 'confirmed' : 'rejected';
     });
