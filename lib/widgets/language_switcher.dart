@@ -38,11 +38,44 @@ enum LanguageSwitcherStyle {
   iconButton // Icon button in AppBar
 }
 
+/// Helper function to change language with Riverpod integration
+Future<void> changeLanguage(BuildContext context, WidgetRef ref, String languageCode) async {
+  try {
+    // 1. Update Riverpod locale provider FIRST
+    ref.read(currentLocaleProvider.notifier).state = Locale(languageCode);
+    
+    // 2. Update EasyLocalization locale
+    await context.setLocale(Locale(languageCode));
+    
+    // 3. Force rebuild by invalidating providers (optional but recommended)
+    ref.invalidate(mockDataProvider);
+    
+    // 4. Show confirmation
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            languageCode == 'ar' 
+                ? 'تم التبديل إلى العربية' 
+                : 'Switched to English',
+          ),
+          duration: const Duration(seconds: 1),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  } catch (e) {
+    debugPrint('Error changing language: $e');
+  }
+}
+
 /// Toggle Switch Style (Recommended for Settings)
 class _ToggleLanguageSwitcher extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isArabic = context.locale.languageCode == 'ar';
+    // Watch both EasyLocalization and Riverpod locale
+    final currentLocale = ref.watch(currentLocaleProvider);
+    final isArabic = currentLocale.languageCode == 'ar';
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -69,7 +102,7 @@ class _ToggleLanguageSwitcher extends ConsumerWidget {
           Switch(
             value: isArabic,
             onChanged: (value) {
-              _changeLanguage(context, ref, value ? 'ar' : 'en');
+              changeLanguage(context, ref, value ? 'ar' : 'en');
             },
             activeThumbColor: Theme.of(context).colorScheme.primary,
           ),
@@ -93,11 +126,12 @@ class _ToggleLanguageSwitcher extends ConsumerWidget {
 class _ButtonLanguageSwitcher extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isArabic = context.locale.languageCode == 'ar';
+    final currentLocale = ref.watch(currentLocaleProvider);
+    final isArabic = currentLocale.languageCode == 'ar';
     
     return ElevatedButton.icon(
       onPressed: () {
-        _changeLanguage(context, ref, isArabic ? 'en' : 'ar');
+        changeLanguage(context, ref, isArabic ? 'en' : 'ar');
       },
       icon: const Icon(Icons.language),
       label: Text(isArabic ? 'English' : 'العربية'),
@@ -115,11 +149,13 @@ class _ButtonLanguageSwitcher extends ConsumerWidget {
 class _DropdownLanguageSwitcher extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentLocale = ref.watch(currentLocaleProvider);
+    
     return PopupMenuButton<String>(
       icon: const Icon(Icons.language),
-      tooltip: 'language'.tr(),
+      tooltip: 'Language',
       onSelected: (languageCode) {
-        _changeLanguage(context, ref, languageCode);
+        changeLanguage(context, ref, languageCode);
       },
       itemBuilder: (BuildContext context) => [
         PopupMenuItem(
@@ -129,7 +165,7 @@ class _DropdownLanguageSwitcher extends ConsumerWidget {
               const Text('🇬🇧', style: TextStyle(fontSize: 24)),
               const SizedBox(width: 12),
               const Text('English'),
-              if (context.locale.languageCode == 'en') ...[
+              if (currentLocale.languageCode == 'en') ...[
                 const Spacer(),
                 const Icon(Icons.check, color: Colors.green, size: 20),
               ],
@@ -143,7 +179,7 @@ class _DropdownLanguageSwitcher extends ConsumerWidget {
               const Text('🇪🇬', style: TextStyle(fontSize: 24)),
               const SizedBox(width: 12),
               const Text('العربية'),
-              if (context.locale.languageCode == 'ar') ...[
+              if (currentLocale.languageCode == 'ar') ...[
                 const Spacer(),
                 const Icon(Icons.check, color: Colors.green, size: 20),
               ],
@@ -159,11 +195,12 @@ class _DropdownLanguageSwitcher extends ConsumerWidget {
 class _FabLanguageSwitcher extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isArabic = context.locale.languageCode == 'ar';
+    final currentLocale = ref.watch(currentLocaleProvider);
+    final isArabic = currentLocale.languageCode == 'ar';
     
     return FloatingActionButton.extended(
       onPressed: () {
-        _changeLanguage(context, ref, isArabic ? 'en' : 'ar');
+        changeLanguage(context, ref, isArabic ? 'en' : 'ar');
       },
       icon: const Icon(Icons.language),
       label: Text(isArabic ? 'EN' : 'ع'),
@@ -176,7 +213,8 @@ class _FabLanguageSwitcher extends ConsumerWidget {
 class _IconButtonLanguageSwitcher extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isArabic = context.locale.languageCode == 'ar';
+    final currentLocale = ref.watch(currentLocaleProvider);
+    final isArabic = currentLocale.languageCode == 'ar';
     
     return IconButton(
       icon: Container(
@@ -196,133 +234,8 @@ class _IconButtonLanguageSwitcher extends ConsumerWidget {
       ),
       tooltip: isArabic ? 'Switch to English' : 'التبديل للعربية',
       onPressed: () {
-        _changeLanguage(context, ref, isArabic ? 'en' : 'ar');
+        changeLanguage(context, ref, isArabic ? 'en' : 'ar');
       },
-    );
-  }
-}
-
-/// Helper function to change language with Riverpod integration
-void _changeLanguage(BuildContext context, WidgetRef ref, String languageCode) async {
-  // Update EasyLocalization locale
-  await context.setLocale(Locale(languageCode));
-  
-  // Update Riverpod locale provider to trigger mock data change
-  ref.read(currentLocaleProvider.notifier).state = Locale(languageCode);
-  
-  // Force rebuild of the entire widget tree
-  if (context.mounted) {
-    // Optional: Show a snackbar confirmation
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          languageCode == 'ar' 
-              ? 'تم التبديل إلى العربية' 
-              : 'Switched to English',
-        ),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-}
-
-/// Animated Language Switcher (Fancy version)
-class AnimatedLanguageSwitcher extends ConsumerStatefulWidget {
-  const AnimatedLanguageSwitcher({super.key});
-
-  @override
-  ConsumerState<AnimatedLanguageSwitcher> createState() => _AnimatedLanguageSwitcherState();
-}
-
-class _AnimatedLanguageSwitcherState extends ConsumerState<AnimatedLanguageSwitcher> {
-  bool _isExpanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final isArabic = context.locale.languageCode == 'ar';
-    
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _isExpanded = !_isExpanded;
-        });
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.language,
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-            ),
-            const SizedBox(width: 8),
-            if (_isExpanded) ...[
-              _buildLanguageOption(context, 'en', 'English', '🇬🇧'),
-              const SizedBox(width: 8),
-              Container(
-                height: 24,
-                width: 1,
-                color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.3),
-              ),
-              const SizedBox(width: 8),
-              _buildLanguageOption(context, 'ar', 'العربية', '🇪🇬'),
-            ] else ...[
-              Text(
-                isArabic ? 'العربية' : 'English',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLanguageOption(BuildContext context, String code, String label, String flag) {
-    final isSelected = context.locale.languageCode == code;
-    
-    return GestureDetector(
-      onTap: () {
-        _changeLanguage(context, ref, code);
-        setState(() {
-          _isExpanded = false;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: isSelected 
-              ? Theme.of(context).colorScheme.primary
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            Text(flag, style: const TextStyle(fontSize: 20)),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).colorScheme.onPrimaryContainer,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -333,7 +246,8 @@ class LanguageSwitcherListTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isArabic = context.locale.languageCode == 'ar';
+    final currentLocale = ref.watch(currentLocaleProvider);
+    final isArabic = currentLocale.languageCode == 'ar';
     
     return ListTile(
       leading: Container(
@@ -347,7 +261,7 @@ class LanguageSwitcherListTile extends ConsumerWidget {
           color: Theme.of(context).colorScheme.onPrimaryContainer,
         ),
       ),
-      title: Text('language'.tr()),
+      title: const Text('Language'),
       subtitle: Text(isArabic ? 'العربية' : 'English'),
       trailing: const Icon(Icons.chevron_right),
       onTap: () {
@@ -357,28 +271,37 @@ class LanguageSwitcherListTile extends ConsumerWidget {
   }
 
   void _showLanguageDialog(BuildContext context, WidgetRef ref) {
+    final currentLocale = ref.read(currentLocaleProvider);
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('select_language'.tr()),
+        title: const Text('Select Language'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildLanguageOption(context, ref, 'en', 'English', '🇬🇧'),
+            _buildLanguageOption(context, ref, 'en', 'English', '🇬🇧', currentLocale),
             const SizedBox(height: 8),
-            _buildLanguageOption(context, ref, 'ar', 'العربية', '🇪🇬'),
+            _buildLanguageOption(context, ref, 'ar', 'العربية', '🇪🇬', currentLocale),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildLanguageOption(BuildContext context, WidgetRef ref, String code, String label, String flag) {
-    final isSelected = context.locale.languageCode == code;
+  Widget _buildLanguageOption(
+    BuildContext context, 
+    WidgetRef ref, 
+    String code, 
+    String label, 
+    String flag,
+    Locale currentLocale,
+  ) {
+    final isSelected = currentLocale.languageCode == code;
     
     return InkWell(
       onTap: () {
-        _changeLanguage(context, ref, code);
+        changeLanguage(context, ref, code);
         Navigator.pop(context);
       },
       borderRadius: BorderRadius.circular(12),

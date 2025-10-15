@@ -3,16 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:siwa/data/mock_data_repository.dart';
 import 'package:siwa/data/mock_data_repository_ar.dart';
 
-// Provider to track current locale
+// Provider to track current locale - this will trigger rebuilds
 final currentLocaleProvider = StateProvider<Locale>((ref) => const Locale('en'));
 
-// Provider that returns the appropriate data based on locale
+// Provider that returns the appropriate data based on locale with auto-refresh
 final mockDataProvider = Provider<dynamic>((ref) {
+  // Watch locale changes to trigger rebuilds
   final locale = ref.watch(currentLocaleProvider);
-  return locale.languageCode == 'ar' ? mockDataAr : mockData;
+  
+  // Return the appropriate repository based on locale
+  if (locale.languageCode == 'ar') {
+    return MockDataRepositoryAr();
+  }
+  return MockDataRepository();
 });
 
-// Convenience methods that work with both repository types
+// Convenience providers that automatically update with locale changes
 final restaurantsProvider = Provider<List<Map<String, dynamic>>>((ref) {
   final data = ref.watch(mockDataProvider);
   return data.getAllRestaurants();
