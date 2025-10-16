@@ -759,7 +759,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     );
 
     Navigator.pop(context);
-    context.push('/booking_confirmation', extra: booking);
+    context.push('/tourist_bookings', extra: booking);
   }
 
   @override

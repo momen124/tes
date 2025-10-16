@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:siwa/app/app.dart';
-import 'package:siwa/providers/mock_data_provider.dart' as mock;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

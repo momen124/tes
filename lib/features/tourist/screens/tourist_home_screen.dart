@@ -226,7 +226,7 @@ class TouristHomeScreen extends StatelessWidget {
                           isFeatured: true,
                           serviceType: service['category'] as String,
                           onTap: () => context.push(
-                            '/product_detail',
+                            '/service_detail',
                             extra: service,
                           ),
                         );

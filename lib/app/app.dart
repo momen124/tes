@@ -5,7 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/features/tourist/screens/service_detail_screen.dart';
 import 'dart:ui' as ui;
-import 'package:siwa/providers/mock_data_provider.dart'; // Import the mock data provider
+import 'package:siwa/providers/mock_data_provider.dart';
 
 // Import all screens
 import '../features/auth/screens/login_screen.dart';
@@ -30,10 +30,8 @@ import '../features/admin/screens/admin_moderation_screen.dart';
 import '../features/common/screens/debug_navigator_screen.dart';
 import 'theme.dart';
 
-// Global navigator key for route management
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-// Router configuration - MERGED VERSION
 final GoRouter _router = GoRouter(
   navigatorKey: navigatorKey,
   initialLocation: '/',
@@ -76,8 +74,35 @@ final GoRouter _router = GoRouter(
       },
     ),
     
-    // Detail Pages
-    GoRoute(path: '/service_detail', builder: (context, state) => const ServiceDetailScreen()),
+    // Detail Pages - FIXED TO ACCEPT EXTRA PARAMETER
+    GoRoute(
+      path: '/service_detail',
+      builder: (context, state) {
+        // Extract service data from extra parameter
+        final serviceData = state.extra as Map<String, dynamic>?;
+        
+        // Debug logging (can be removed in production)
+        debugPrint('🔍 Service Detail Route - Received data: ${serviceData?.keys}');
+        
+        return ServiceDetailScreen(
+          serviceData: serviceData,
+        );
+      },
+    ),
+    
+    // ALTERNATIVE: If you want to use /product_detail route as well
+    GoRoute(
+      path: '/product_detail',
+      builder: (context, state) {
+        final serviceData = state.extra as Map<String, dynamic>?;
+        debugPrint('🔍 Product Detail Route - Received data: ${serviceData?.keys}');
+        
+        return ServiceDetailScreen(
+          serviceData: serviceData,
+        );
+      },
+    ),
+    
     GoRoute(path: '/siwa_info', builder: (context, state) => const SiwaInfoScreen()),
     
     // List Pages
@@ -201,29 +226,20 @@ class SiwaApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Listen to locale changes from context
     final currentLocale = context.locale;
     final isArabic = currentLocale.languageCode == 'ar';
 
-    // Update the provider when locale changes (assuming currentLocaleProvider exists)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(currentLocaleProvider.notifier).state = currentLocale;
     });
 
-    // Watch the mockDataProvider to ensure it's available app-wide
     final mockData = ref.watch(mockDataProvider);
 
     return MaterialApp.router(
       routerConfig: _router,
-      
-      // Theming
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
-      
-      // App metadata
       title: 'app.name'.tr(),
-      
-      // Localization configuration
       supportedLocales: context.supportedLocales,
       locale: currentLocale,
       localizationsDelegates: [
@@ -232,8 +248,6 @@ class SiwaApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
         EasyLocalization.of(context)!.delegate,
       ],
-      
-      // Text direction based on locale
       builder: (context, child) {
         return Directionality(
           textDirection: isArabic ? ui.TextDirection.rtl : ui.TextDirection.ltr,
@@ -244,7 +258,6 @@ class SiwaApp extends ConsumerWidget {
   }
 }
 
-// Provider for tracking current locale (if not already defined elsewhere)
 final currentLocaleProvider = StateProvider<Locale>((ref) {
-  return const Locale('en'); // Default locale
+  return const Locale('en');
 });
