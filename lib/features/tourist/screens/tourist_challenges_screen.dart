@@ -37,19 +37,23 @@ class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScree
         challenge['completed'] = true;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "${'tourist.challenges.challenge_completed'.tr()} ${challenge['points'] ?? 0} points",
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "${'tourist.challenges.challenge_completed'.tr()} ${challenge['points'] ?? 0} ${'tourist.challenges.points'.tr()}",
+            ),
+            backgroundColor: AppTheme.successGreen,
           ),
-          backgroundColor: AppTheme.successGreen,
-        ),
-      );
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final challenges = ref.watch(mockDataProvider).getAllChallenges();
+    
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,
       appBar: AppBar(
@@ -74,7 +78,7 @@ class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScree
                   const Icon(Icons.stars, color: Colors.white, size: 16),
                   const SizedBox(width: 4),
                   Text(
-                    '$_totalPoints pts',
+                    '$_totalPoints ${'tourist.challenges.pts'.tr()}',
                     style: AppTheme.bodyMedium.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -98,9 +102,9 @@ class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScree
                 Text('tourist.challenges.challenge_progress'.tr(), style: AppTheme.titleMedium),
                 const SizedBox(height: 12),
                 LinearProgressIndicator(
-                  value: ref.watch(mockDataProvider).getAllChallenges().isEmpty
+                  value: challenges.isEmpty
                       ? 0
-                      : _completedCount / ref.watch(mockDataProvider).getAllChallenges().length,
+                      : _completedCount / challenges.length,
                   backgroundColor: AppTheme.gray.withOpacity(0.2),
                   valueColor: const AlwaysStoppedAnimation(
                     AppTheme.primaryOrange,
@@ -109,7 +113,7 @@ class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScree
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '$_completedCount/${ref.watch(mockDataProvider).getAllChallenges().length} Completed',
+                  '$_completedCount/${challenges.length} ${'tourist.challenges.completed'.tr()}',
                   style: AppTheme.bodySmall.copyWith(color: AppTheme.gray),
                 ),
               ],
@@ -120,124 +124,146 @@ class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScree
 
           // Challenge Cards
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: ref.watch(mockDataProvider).getAllChallenges().length,
-              itemBuilder: (context, index) {
-                final challenge = ref.watch(mockDataProvider).getAllChallenges()[index];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Challenge Image
-                      Container(
-                        height: 160,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(16),
-                          ),
-                          image: DecorationImage(
-                            image: challenge['imageUrl'] != null
-                                ? NetworkImage(challenge['imageUrl'] as String)
-                                : const AssetImage('assets/placeholder.png') as ImageProvider,
-                            fit: BoxFit.cover,
+            child: challenges.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.camera_alt_outlined,
+                          size: 80,
+                          color: AppTheme.gray.withOpacity(0.5),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'tourist.challenges.no_challenges'.tr(),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: AppTheme.gray,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        child: challenge['completed'] == true
-                            ? Container(
-                                decoration: BoxDecoration(
-                                  color: AppTheme.successGreen.withOpacity(0.8),
-                                  borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(16),
-                                  ),
-                                ),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.check_circle,
-                                    size: 64,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
-                            : null,
-                      ),
-
-                      // Challenge Details
-                      Padding(
-                        padding: const EdgeInsets.all(16),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: challenges.length,
+                    itemBuilder: (context, index) {
+                      final challenge = challenges[index];
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    challenge['title']?.toString() ?? 'No Title',
-                                    style: AppTheme.titleMedium,
-                                  ),
+                            // Challenge Image
+                            Container(
+                              height: 160,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(16),
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
+                                image: DecorationImage(
+                                  image: challenge['imageUrl'] != null
+                                      ? NetworkImage(challenge['imageUrl'] as String)
+                                      : const AssetImage('assets/placeholder.png') as ImageProvider,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              child: challenge['completed'] == true
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                        color: AppTheme.successGreen.withOpacity(0.8),
+                                        borderRadius: const BorderRadius.vertical(
+                                          top: Radius.circular(16),
+                                        ),
+                                      ),
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.check_circle,
+                                          size: 64,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  : null,
+                            ),
+
+                            // Challenge Details
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          challenge['title']?.toString() ?? 'tourist.challenges.no_title'.tr(),
+                                          style: AppTheme.titleMedium,
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 6,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: challenge['completed'] == true
+                                              ? AppTheme.successGreen
+                                              : AppTheme.primaryOrange,
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: Text(
+                                          '+${challenge['points']?.toString() ?? '0'} ${'tourist.challenges.pts'.tr()}',
+                                          style: AppTheme.bodySmall.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: challenge['completed'] == true
-                                        ? AppTheme.successGreen
-                                        : AppTheme.primaryOrange,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    '+${challenge['points']?.toString() ?? '0'} pts',
-                                    style: AppTheme.bodySmall.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    challenge['description']?.toString() ?? 'tourist.challenges.no_description'.tr(),
+                                    style: AppTheme.bodyMedium.copyWith(
+                                      color: AppTheme.gray,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              challenge['description']?.toString() ?? 'No Description',
-                              style: AppTheme.bodyMedium.copyWith(
-                                color: AppTheme.gray,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton.icon(
-                                onPressed: challenge['completed'] == true
-                                    ? null
-                                    : () => _uploadPhoto(challenge),
-                                icon: Icon(
-                                  challenge['completed'] == true
-                                      ? Icons.check_circle
-                                      : Icons.camera_alt,
-                                ),
-                                label: Text(
-                                  challenge['completed'] == true
-                                      ? 'Completed'.tr()
-                                      : 'Upload Photo'.tr(),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: challenge['completed'] == true
-                                      ? AppTheme.successGreen
-                                      : AppTheme.primaryOrange,
-                                ),
+                                  const SizedBox(height: 16),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton.icon(
+                                      onPressed: challenge['completed'] == true
+                                          ? null
+                                          : () => _uploadPhoto(challenge),
+                                      icon: Icon(
+                                        challenge['completed'] == true
+                                            ? Icons.check_circle
+                                            : Icons.camera_alt,
+                                      ),
+                                      label: Text(
+                                        challenge['completed'] == true
+                                            ? 'tourist.challenges.completed_button'.tr()
+                                            : 'tourist.challenges.upload_photo'.tr(),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: challenge['completed'] == true
+                                            ? AppTheme.successGreen
+                                            : AppTheme.primaryOrange,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
         ],
       ),
