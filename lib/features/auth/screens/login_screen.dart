@@ -77,17 +77,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: AppTheme.gradientBackground,
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
+          child: Center(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
               child: Form(
                 key: _formKey,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 80),
-                    
                     // Header
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -104,8 +106,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     const SizedBox(height: 40),
                     
-                    // Form
+                    // Form Card
                     Container(
+                      constraints: const BoxConstraints(maxWidth: 400),
                       decoration: AppTheme.cardDecoration,
                       padding: const EdgeInsets.all(24),
                       child: Column(
@@ -145,8 +148,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       strokeWidth: 2,
                                     ),
                                   )
-                                : Text('auth.login'.tr()
-, style: AppTheme.buttonText),
+                                : Text('auth.login'.tr(), style: AppTheme.buttonText),
                             ),
                           ),
                         ],

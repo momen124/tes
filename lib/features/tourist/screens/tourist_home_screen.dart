@@ -3,23 +3,23 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/service_card.dart';
+import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 import 'package:siwa/widgets/unified_bottom_nav.dart';
 import 'package:siwa/data/mock_data_repository.dart';
 import 'package:siwa/data/mock_data_repository_ar.dart';
 import 'package:easy_localization/easy_localization.dart';
+
 class TouristHomeScreen extends StatelessWidget {
   const TouristHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Detect current locale
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode == 'ar';
     
-    // Get data from appropriate repository based on locale
     final allOther = isArabic 
-        ? MockDataRepositoryAr().getAllOther()
-        : MockDataRepository().getAllOther();
+        ? MockDataRepositoryAr().getAllFeaturedServices()
+        : MockDataRepository().getAllFeaturedServices();
     
     final featuredServices = allOther
         .where((item) => item['featured'] == true && item['category'] != 'challenge')
@@ -65,7 +65,7 @@ class TouristHomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    ('app.name'.tr()),
+                    'app.name'.tr(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -108,7 +108,7 @@ class TouristHomeScreen extends StatelessWidget {
                       const Icon(Icons.search, color: AppTheme.primaryOrange),
                       const SizedBox(width: 12),
                       Text(
-                        ( 'tourist.where_to'.tr()),
+                        'tourist.where_to'.tr(),
                         style: const TextStyle(color: AppTheme.gray, fontSize: 16),
                       ),
                     ],
@@ -125,43 +125,13 @@ class TouristHomeScreen extends StatelessWidget {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                reverse: isArabic, // Reverse for RTL
+                reverse: isArabic,
                 children: [
-                  _buildCategoryChip(
-                    context,
-                    ( 'tourist.categories.accommodations'.tr()),
-                    Icons.hotel,
-                    true,
-                    '/tourist_search',
-                  ),
-                  _buildCategoryChip(
-                    context,
-                    ( 'tourist.categories.transportation'.tr()),
-                    Icons.directions_car,
-                    false,
-                    '/transportation',
-                  ),
-                  _buildCategoryChip(
-                    context,
-                    ( 'tourist.categories.attractions'.tr()),
-                    Icons.attractions,
-                    false,
-                    '/attractions',
-                  ),
-                  _buildCategoryChip(
-                    context,
-                    ( 'tourist.categories.tours'.tr()),
-                    Icons.tour,
-                    false,
-                    '/tour_guides',
-                  ),
-                  _buildCategoryChip(
-                    context,
-                    ( 'tourist.categories.food'.tr()),
-                    Icons.restaurant,
-                    false,
-                    '/restaurants',
-                  ),
+                  _buildCategoryChip(context, 'tourist.categories.accommodations'.tr(), Icons.hotel, true, '/tourist_search'),
+                  _buildCategoryChip(context, 'tourist.categories.transportation'.tr(), Icons.directions_car, false, '/transportation'),
+                  _buildCategoryChip(context, 'tourist.categories.attractions'.tr(), Icons.attractions, false, '/attractions'),
+                  _buildCategoryChip(context, 'tourist.categories.tours'.tr(), Icons.tour, false, '/tour_guides'),
+                  _buildCategoryChip(context, 'tourist.categories.food'.tr(), Icons.restaurant, false, '/restaurants'),
                 ],
               ),
             ),
@@ -175,15 +145,13 @@ class TouristHomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    ('tourist.featured_experiences'.tr()),
+                    'tourist.featured_experiences'.tr(),
                     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
-                    onPressed: () {
-                      context.push('/tourist_search?featured=true');
-                    },
+                    onPressed: () => context.push('/tourist_search?featured=true'),
                     child: Text(
-                      ('tourist.see_all'.tr()),
+                      'tourist.see_all'.tr(),
                       style: const TextStyle(color: AppTheme.primaryOrange),
                     ),
                   ),
@@ -197,12 +165,10 @@ class TouristHomeScreen extends StatelessWidget {
             child: SizedBox(
               height: 340,
               child: featuredServices.isEmpty
-                  ? Center(
-                      child: Text(( 'common.loading'.tr())),
-                    )
+                  ? Center(child: Text('common.loading'.tr()))
                   : CarouselSlider(
                       options: CarouselOptions(
-                        height: 340,
+                        height: 220,
                         aspectRatio: 16 / 9,
                         viewportFraction: 0.85,
                         enableInfiniteScroll: featuredServices.length > 1,
@@ -212,7 +178,7 @@ class TouristHomeScreen extends StatelessWidget {
                         autoPlayCurve: Curves.fastOutSlowIn,
                         enlargeCenterPage: true,
                         scrollDirection: Axis.horizontal,
-                        reverse: isArabic, // Reverse for RTL
+                        reverse: isArabic,
                       ),
                       items: featuredServices.take(5).map((service) {
                         return ServiceCard(
@@ -225,10 +191,7 @@ class TouristHomeScreen extends StatelessWidget {
                           reviews: service['reviews'] as int,
                           isFeatured: true,
                           serviceType: service['category'] as String,
-                          onTap: () => context.push(
-                            '/service_detail',
-                            extra: service,
-                          ),
+                          onTap: () => context.push('/service_detail', extra: service),
                         );
                       }).toList(),
                     ),
@@ -238,20 +201,18 @@ class TouristHomeScreen extends StatelessWidget {
           // Hidden Gems Section
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 32, 16, 8),
+              padding: const EdgeInsets.fromLTRB(16, 5, 12, 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    ( 'tourist.hidden_gems'.tr()),
+                    'tourist.hidden_gems'.tr(),
                     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
-                    onPressed: () {
-                      context.push('/tourist_search?hidden_gems=true');
-                    },
+                    onPressed: () => context.push('/tourist_search?hidden_gems=true'),
                     child: Text(
-                      ( 'tourist.discover_more'.tr()),
+                      'tourist.discover_more'.tr(),
                       style: const TextStyle(color: AppTheme.primaryOrange),
                     ),
                   ),
@@ -262,14 +223,13 @@ class TouristHomeScreen extends StatelessWidget {
 
           // Hidden Gems Grid
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 100), // Added bottom padding for nav bar
             sliver: hiddenGems.isEmpty
                 ? SliverToBoxAdapter(
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(32.0),
-                        child: Text(('common.loading'.tr())),
-
+                        child: Text('common.loading'.tr()),
                       ),
                     ),
                   )
@@ -299,15 +259,12 @@ class TouristHomeScreen extends StatelessWidget {
                     ),
                   ),
           ),
-
-          // Bottom Spacing
-          const SliverToBoxAdapter(child: SizedBox(height: 80)),
         ],
       ),
-
-      bottomNavigationBar: const UnifiedBottomNav(
-        currentIndex: 0,
-        type: NavBarType.tourist,
+      bottomNavigationBar: SafeArea(
+        child: const TouristBottomNav(
+          currentIndex: 0,
+        ),
       ),
     );
   }
@@ -354,6 +311,4 @@ class TouristHomeScreen extends StatelessWidget {
       ),
     );
   }
-
-
 }

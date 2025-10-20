@@ -129,7 +129,7 @@ class MockDataRepository {
       "rating": 4.9,
       "reviews": 234,
       "hourlyRate": 150.0,
-      "price": 150.0, // Added for consistency
+      "price": 150.0,
       "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
       "bio": "Expert in Siwan history and ancient Egyptian archaeology with over 15 years of experience guiding international tourists",
       "languages": ["Arabic", "English", "French"],
@@ -863,35 +863,51 @@ class MockDataRepository {
     }
   ];
 
-  // OTHER DATA - All fields complete (for challenges, etc.)
-  static final List<Map<String, dynamic>> other = [
-    // Hotel Rooms
+  // HOTEL ROOMS - All fields complete
+  static final List<Map<String, dynamic>> rooms = [
     {
       "id": 1,
+      "hotelId": 1,
       "type": "Deluxe Suite",
       "price": 150.0,
-      "amenities": ["WiFi", "Mini Bar", "Balcony"],
+      "amenities": ["WiFi", "Mini Bar", "Balcony", "King Bed"],
       "available": true,
-      "category": "room"
+      "capacity": 2,
+      "size": "45 sqm",
+      "view": "Desert View",
+      "category": "room",
+      "imageUrl": "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800"
     },
     {
       "id": 2,
+      "hotelId": 1,
       "type": "Standard Room",
       "price": 80.0,
-      "amenities": ["WiFi", "TV"],
+      "amenities": ["WiFi", "TV", "Queen Bed"],
       "available": true,
-      "category": "room"
+      "capacity": 2,
+      "size": "25 sqm",
+      "view": "Garden View",
+      "category": "room",
+      "imageUrl": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800"
     },
     {
       "id": 3,
+      "hotelId": 2,
       "type": "Family Room",
       "price": 200.0,
-      "amenities": ["WiFi", "Kitchen", "Living Room"],
+      "amenities": ["WiFi", "Kitchen", "Living Room", "Two Bedrooms"],
       "available": false,
-      "category": "room"
-    },
-    
-    // Rental Vehicles
+      "capacity": 4,
+      "size": "60 sqm",
+      "view": "Lake View",
+      "category": "room",
+      "imageUrl": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800"
+    }
+  ];
+
+  // RENTAL VEHICLES - All fields complete
+  static final List<Map<String, dynamic>> rentals = [
     {
       "id": 1,
       "type": "Mountain Bike",
@@ -900,8 +916,11 @@ class MockDataRepository {
       "rateType": "day",
       "available": true,
       "condition": "Excellent",
+      "features": ["21-speed gears", "Front suspension", "Water bottle holder"],
       "image": "pedal_bike",
-      "category": "rental"
+      "category": "rental",
+      "imageUrl": "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800",
+      "location": "Siwa Town Center"
     },
     {
       "id": 2,
@@ -911,8 +930,11 @@ class MockDataRepository {
       "rateType": "day",
       "available": false,
       "condition": "Good",
+      "features": ["4x4 capability", "AC", "GPS", "Seats 7"],
       "image": "directions_car",
-      "category": "rental"
+      "category": "rental",
+      "imageUrl": "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800",
+      "location": "Desert Safari Center"
     },
     {
       "id": 3,
@@ -922,11 +944,16 @@ class MockDataRepository {
       "rateType": "hour",
       "available": true,
       "condition": "Excellent",
+      "features": ["30km range", "25 km/h max speed", "LED display"],
       "image": "electric_scooter",
-      "category": "rental"
-    },
-    
-    // Photo Challenges
+      "category": "rental",
+      "imageUrl": "https://images.unsplash.com/photo-1578610906114-0b5e6dc32f52?w=800",
+      "location": "Market Square"
+    }
+  ];
+
+  // PHOTO CHALLENGES - All fields complete
+  static final List<Map<String, dynamic>> challenges = [
     {
       "id": 1,
       "title": "Capture the Sunset",
@@ -936,7 +963,10 @@ class MockDataRepository {
       "points": 50,
       "proof": null,
       "category": "challenge",
-      "difficulty": "easy"
+      "difficulty": "easy",
+      "location": "Fatnas Island",
+      "tips": ["Arrive 30 minutes before sunset", "Use golden hour lighting"],
+      "timeLimit": "2 hours"
     },
     {
       "id": 2,
@@ -947,7 +977,10 @@ class MockDataRepository {
       "points": 75,
       "proof": null,
       "category": "challenge",
-      "difficulty": "hard"
+      "difficulty": "hard",
+      "location": "Western Desert",
+      "tips": ["Hire a local guide", "Bring plenty of water"],
+      "timeLimit": "6 hours"
     },
     {
       "id": 3,
@@ -958,10 +991,15 @@ class MockDataRepository {
       "points": 60,
       "proof": null,
       "category": "challenge",
-      "difficulty": "medium"
-    },
-    
-    // Featured Services
+      "difficulty": "medium",
+      "location": "Birket Siwa",
+      "tips": ["Visit during calm weather", "Early morning has best lighting"],
+      "timeLimit": "3 hours"
+    }
+  ];
+
+  // FEATURED SERVICES - All fields complete
+  static final List<Map<String, dynamic>> featuredServices = [
     {
       "id": 1,
       "name": "Siwa Shali Resort",
@@ -974,7 +1012,9 @@ class MockDataRepository {
       "category": "accommodation",
       "description": "Luxury eco-resort with traditional architecture",
       "tags": ["luxury", "eco"],
-      "featured": true
+      "featured": true,
+      "openingHours": "24/7",
+      "contactNumber": "+20 123 456 7890"
     },
     {
       "id": 2,
@@ -987,7 +1027,9 @@ class MockDataRepository {
       "category": "attraction",
       "description": "Thrilling 4x4 desert safari",
       "tags": ["adventure", "desert"],
-      "hidden_gem": true
+      "hidden_gem": true,
+      "openingHours": "8:00 AM - 6:00 PM",
+      "contactNumber": "+20 123 456 7891"
     },
     {
       "id": 3,
@@ -1000,7 +1042,9 @@ class MockDataRepository {
       "category": "restaurant",
       "description": "Traditional Siwan cuisine",
       "tags": ["traditional", "local"],
-      "hidden_gem": true
+      "hidden_gem": true,
+      "openingHours": "7:00 AM - 10:00 PM",
+      "contactNumber": "+20 123 456 7892"
     }
   ];
 
@@ -1014,7 +1058,10 @@ class MockDataRepository {
   List<Map<String, dynamic>> getAllBookings() => bookings;
   List<Map<String, dynamic>> getAllReviews() => reviews;
   List<Map<String, dynamic>> getAllBadges() => badges;
-  List<Map<String, dynamic>> getAllOther() => other;
+  List<Map<String, dynamic>> getAllRooms() => rooms;
+  List<Map<String, dynamic>> getAllRentals() => rentals;
+  List<Map<String, dynamic>> getAllChallenges() => challenges;
+  List<Map<String, dynamic>> getAllFeaturedServices() => featuredServices;
 
   List<Map<String, dynamic>> getBookingsByUserId(String userId) {
     return bookings.where((b) => b['userId'] == userId).toList();
@@ -1024,7 +1071,18 @@ class MockDataRepository {
     final results = <Map<String, dynamic>>[];
     final lowerQuery = query.toLowerCase();
     
-    for (var category in [hotels, restaurants, guides, attractions, products, badges, other]) {
+    for (var category in [
+      hotels, 
+      restaurants, 
+      guides, 
+      attractions, 
+      products, 
+      badges, 
+      rooms, 
+      rentals, 
+      challenges, 
+      featuredServices
+    ]) {
       for (var item in category) {
         final name = (item['name'] as String?)?.toLowerCase() ?? '';
         final title = (item['title'] as String?)?.toLowerCase() ?? '';

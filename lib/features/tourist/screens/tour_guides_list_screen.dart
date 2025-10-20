@@ -147,7 +147,7 @@ class _TourGuidesListScreenState extends ConsumerState<TourGuidesListScreen> {
                     ),
                   )
                 : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
                     itemCount: _filteredGuides.length,
                     itemBuilder: (context, index) {
                       final guide = _filteredGuides[index];
@@ -157,7 +157,9 @@ class _TourGuidesListScreenState extends ConsumerState<TourGuidesListScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: const TouristBottomNav(currentIndex: 1),
+      bottomNavigationBar: SafeArea(
+      child: const TouristBottomNav(currentIndex: 1),
+    ),
     );
   }
 

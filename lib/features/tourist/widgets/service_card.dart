@@ -13,7 +13,7 @@ class ServiceCard extends StatelessWidget {
   final int? reviews;
   final String? location;
   final bool isFeatured;
-  final String serviceType; // hotel, tour, restaurant, etc.
+  final String serviceType;
   final VoidCallback? onTap;
 
   const ServiceCard({
@@ -33,6 +33,9 @@ class ServiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Detect RTL
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
+    
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -40,13 +43,17 @@ class ServiceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            // Dynamically adjust maxWidth based on parent constraints
+            // Responsive card width
             final cardWidth = constraints.maxWidth < 200
                 ? constraints.maxWidth
                 : (isFeatured ? 350.0 : 200.0);
+            
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              constraints: BoxConstraints(maxWidth: cardWidth),
+              constraints: BoxConstraints(
+                maxWidth: cardWidth,
+                minHeight: 100, // Ensure minimum height
+              ),
               decoration: BoxDecoration(
                 color: AppTheme.white,
                 borderRadius: BorderRadius.circular(20),
@@ -58,110 +65,99 @@ class ServiceCard extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Image with gradient overlay
-                  _buildImageSection(),
-                  // Content section
-                  Padding(
-                    padding: const EdgeInsets.all(8), // Further reduced padding
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Service name
-                        Text(
-                          name,
-                          style: TextStyle(
-                            fontSize: isFeatured ? 16 : 14, // Smaller font
-                            fontWeight: FontWeight.bold,
-                            height: 1.2,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4), // Tighter spacing
-                        // Description
-                        if (description != null && description!.isNotEmpty)
-                          Text(
-                            description!,
-                            style: TextStyle(
-                              fontSize: isFeatured ? 12 : 11, // Smaller font
-                              color: AppTheme.gray,
-                              height: 1.2,
-                            ),
-                            maxLines: isFeatured ? 3 : 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        // Reviews and location
-                        if (reviews != null || location != null) ...[
-                          const SizedBox(height: 4),
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxWidth: cardWidth - 16,
-                            ), // Match padding
-                            child: Wrap(
-                              spacing: 6,
-                              runSpacing: 4,
-                              children: [
-                                if (reviews != null)
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Icon(
-                                        Icons.people_outline,
-                                        size: 12,
-                                        color: AppTheme.gray,
-                                      ),
-                                      const SizedBox(width: 3),
-                                      Flexible(
-                                        fit: FlexFit.tight,
-                                        child: Text(
-                                          '$reviews reviews',
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            color: AppTheme.gray,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                if (location != null)
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Icon(
-                                        Icons.location_on_outlined,
-                                        size: 12,
-                                        color: AppTheme.gray,
-                                      ),
-                                      const SizedBox(width: 3),
-                                      Flexible(
-                                        fit: FlexFit.tight,
-                                        child: Text(
-                                          location!,
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            color: AppTheme.gray,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ],
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Image section with flexible height (prevents overflow)
+                    Expanded(
+                      flex: 3, // Allocate more space to image
+                      child: _buildImageSection(isRTL),
                     ),
-                  ),
-                ],
+                    
+                    // Content section with constrained height
+                    Expanded(
+                      flex: 2, // Allocate less space to text
+                      child: Padding(
+                        padding: const EdgeInsets.all(8), // Balanced padding
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Service name - Fixed overflow
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: cardWidth - 16, // Account for padding
+                              ),
+                              child: Text(
+                                name,
+                                style: TextStyle(
+                                  fontSize: isFeatured ? 15 : 13, // Compact font
+                                  fontWeight: FontWeight.bold,
+                                  height: 1.2,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            
+                            const SizedBox(height: 4), // Tighter spacing
+                            
+                            // Description - Fixed overflow
+                            if (description != null && description!.isNotEmpty)
+                              Flexible(
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxWidth: cardWidth - 16,
+                                  ),
+                                  child: Text(
+                                    description!,
+                                    style: TextStyle(
+                                      fontSize: isFeatured ? 11 : 10,
+                                      color: AppTheme.gray,
+                                      height: 1.2,
+                                    ),
+                                    maxLines: isFeatured ? 2 : 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            
+                            // Reviews and location - Fixed overflow with Wrap
+                            if (reviews != null || location != null) ...[
+                              const SizedBox(height: 4),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: cardWidth - 16, // Match padding
+                                ),
+                                child: Wrap(
+                                  spacing: 6,
+                                  runSpacing: 3,
+                                  children: [
+                                    if (reviews != null)
+                                      _buildInfoChip(
+                                        Icons.people_outline,
+                                        '$reviews reviews',
+                                        isRTL,
+                                      ),
+                                    if (location != null)
+                                      _buildInfoChip(
+                                        Icons.location_on_outlined,
+                                        location!,
+                                        isRTL,
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -170,44 +166,32 @@ class ServiceCard extends StatelessWidget {
     );
   }
 
-  Widget _buildImageSection() {
+  Widget _buildImageSection(bool isRTL) {
     return Stack(
       children: [
         // Main image
-        Container(
-          height: isFeatured ? 140 : 120, // Reduced image height
+        SizedBox(
           width: double.infinity,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            color: AppTheme.lightBlueGray,
-          ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            child: imageUrl != null && imageUrl!.isNotEmpty
-                ? SafeNetworkImage(
-                    imageUrl: imageUrl!,
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: BoxFit.cover,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                    errorWidget: _buildPlaceholderImage(),
-                  )
-                : _buildPlaceholderImage(),
-          ),
+          height: double.infinity,
+          child: imageUrl != null && imageUrl!.isNotEmpty
+              ? SafeNetworkImage(
+                  imageUrl: imageUrl!,
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                  errorWidget: _buildPlaceholderImage(),
+                )
+              : _buildPlaceholderImage(),
         ),
+        
         // Gradient overlay
         Container(
-          height: isFeatured ? 140 : 120,
           width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
@@ -220,10 +204,12 @@ class ServiceCard extends StatelessWidget {
             ),
           ),
         ),
-        // Rating badge
+        
+        // Rating badge - RTL aware positioning
         Positioned(
-          top: 8,
-          left: 8,
+          top: 6,
+          left: isRTL ? null : 6,
+          right: isRTL ? 6 : null,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
             decoration: BoxDecoration(
@@ -240,12 +226,12 @@ class ServiceCard extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.star, color: AppTheme.primaryOrange, size: 12),
+                Icon(Icons.star, color: AppTheme.primaryOrange, size: 12),
                 const SizedBox(width: 3),
                 Text(
                   rating.toStringAsFixed(1),
                   style: const TextStyle(
-                    fontSize: 10,
+                    fontSize: 11,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -253,10 +239,12 @@ class ServiceCard extends StatelessWidget {
             ),
           ),
         ),
-        // Price tag
+        
+        // Price tag - RTL aware positioning
         Positioned(
-          bottom: 8,
-          right: 8,
+          bottom: 6,
+          right: isRTL ? null : 6,
+          left: isRTL ? 6 : null,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
@@ -271,7 +259,7 @@ class ServiceCard extends StatelessWidget {
               ],
             ),
             child: Text(
-              '\$${price.toStringAsFixed(0)}',
+              'EGP ${price.toStringAsFixed(0)}',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 12,
@@ -284,13 +272,37 @@ class ServiceCard extends StatelessWidget {
     );
   }
 
+  Widget _buildInfoChip(IconData icon, String text, bool isRTL) {
+    return IntrinsicWidth(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+        children: [
+          Icon(icon, size: 12, color: AppTheme.gray),
+          const SizedBox(width: 4),
+          Flexible(
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 10,
+                color: AppTheme.gray,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildPlaceholderImage() {
     return Container(
       color: AppTheme.lightBlueGray,
       child: Center(
         child: Icon(
           _getIconForServiceType(),
-          size: 40, // Smaller icon
+          size: 35, // Balanced size
           color: AppTheme.primaryOrange,
         ),
       ),

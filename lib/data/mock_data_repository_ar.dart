@@ -277,7 +277,7 @@ class MockDataRepositoryAr {
     {
       "id": 2,
       "name": "خدمة تاكسي الصحراء",
-      "type": "تأكسي",
+      "type": "تاكسي",
       "plate": "XYZ789",
       "verified": true,
       "capacity": 4,
@@ -778,253 +778,322 @@ class MockDataRepositoryAr {
       "itemId": "1",
       "itemType": "hotel",
       "rating": 5.0,
-"comment": "إقامة رائعة في منتجع شالي سيوة! التصميم البيئي والضيافة الدافئة جعلاها لا تُنسى.",
-"date": "2025-09-15",
-"userName": "أماني حسن",
-"verified": true,
-"helpful": 23
-},
-{
-"id": 2,
-"userId": "user456",
-"itemId": "2",
-"itemType": "restaurant",
-"rating": 4.8,
-"comment": "مطبخ عبدو قدم أفضل بيتزا سيوية تذوقتها! أوصي به بشدة.",
-"date": "2025-08-20",
-"userName": "يوسف أحمد",
-"verified": true,
-"helpful": 18
-},
-{
-"id": 3,
-"userId": "user789",
-"itemId": "3",
-"itemType": "guide",
-"rating": 4.9,
-"comment": "جولة محمد سعيد الصحراوية كانت مثيرة! معرفته بسيوة جعلت الجولة استثنائية.",
-"date": "2025-07-10",
-"userName": "ليلى محمد",
-"verified": true,
-"helpful": 31
-},
-{
-"id": 4,
-"userId": "user101",
-"itemId": "1",
-"itemType": "transportation",
-"rating": 4.5,
-"comment": "حافلة سيوة السريعة كانت مريحة وفي الموعد، رائعة للرحلات الطويلة.",
-"date": "2025-06-05",
-"userName": "خالد عمر",
-"verified": true,
-"helpful": 12
-},
-{
-"id": 5,
-"userId": "user102",
-"itemId": "4",
-"itemType": "restaurant",
-"rating": 4.7,
-"comment": "كافيه تمور سيوة يقدم أفضل قهوة تمر وأجواء مريحة.",
-"date": "2025-05-12",
-"userName": "سارة علي",
-"verified": true,
-"helpful": 15
+      "comment": "إقامة رائعة في منتجع شالي سيوة! التصميم البيئي والضيافة الدافئة جعلاها لا تُنسى.",
+      "date": "2025-09-15",
+      "userName": "أماني حسن",
+      "verified": true,
+      "helpful": 23
+    },
+    {
+      "id": 2,
+      "userId": "user456",
+      "itemId": "2",
+      "itemType": "restaurant",
+      "rating": 4.8,
+      "comment": "مطبخ عبدو قدم أفضل بيتزا سيوية تذوقتها! أوصي به بشدة.",
+      "date": "2025-08-20",
+      "userName": "يوسف أحمد",
+      "verified": true,
+      "helpful": 18
+    },
+    {
+      "id": 3,
+      "userId": "user789",
+      "itemId": "3",
+      "itemType": "guide",
+      "rating": 4.9,
+      "comment": "جولة محمد سعيد الصحراوية كانت مثيرة! معرفته بسيوة جعلت الجولة استثنائية.",
+      "date": "2025-07-10",
+      "userName": "ليلى محمد",
+      "verified": true,
+      "helpful": 31
+    },
+    {
+      "id": 4,
+      "userId": "user101",
+      "itemId": "1",
+      "itemType": "transportation",
+      "rating": 4.5,
+      "comment": "حافلة سيوة السريعة كانت مريحة وفي الموعد، رائعة للرحلات الطويلة.",
+      "date": "2025-06-05",
+      "userName": "خالد عمر",
+      "verified": true,
+      "helpful": 12
+    },
+    {
+      "id": 5,
+      "userId": "user102",
+      "itemId": "4",
+      "itemType": "restaurant",
+      "rating": 4.7,
+      "comment": "كافيه تمور سيوة يقدم أفضل قهوة تمر وأجواء مريحة.",
+      "date": "2025-05-12",
+      "userName": "سارة علي",
+      "verified": true,
+      "helpful": 15
+    }
+  ];
+
+  // الأوسمة - جميع الحقول مكتملة مع روابط صالحة
+  static final List<Map<String, dynamic>> badges = [
+    {
+      "id": 1,
+      "name": "مستكشف الواحة الخفية",
+      "description": "اكتشاف واحة خفية",
+      "imageUrl": "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400",
+      "points": 75,
+      "rarity": "نادر"
+    },
+    {
+      "id": 2,
+      "name": "مصور غروب الشمس",
+      "description": "التقطت غروب الشمس المثالي",
+      "imageUrl": "https://images.unsplash.com/photo-1500322969630-a26ab6ef0e0a?w=400",
+      "points": 50,
+      "rarity": "شائع"
+    },
+    {
+      "id": 3,
+      "name": "سباح بحيرة الملح",
+      "description": "سبحت في بحيرات الملح",
+      "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400",
+      "points": 60,
+      "rarity": "غير شائع"
+    }
+  ];
+
+  // غرف الفندق - جميع الحقول مكتملة
+  static final List<Map<String, dynamic>> rooms = [
+    {
+      "id": 1,
+      "hotelId": 1,
+      "type": "جناح فاخر",
+      "price": 150.0,
+      "amenities": ["واي فاي", "بار صغير", "شرفة", "سرير كينج"],
+      "available": true,
+      "capacity": 2,
+      "size": "45 متر مربع",
+      "view": "إطلالة صحراوية",
+      "category": "room",
+      "imageUrl": "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800"
+    },
+    {
+      "id": 2,
+      "hotelId": 1,
+      "type": "غرفة قياسية",
+      "price": 80.0,
+      "amenities": ["واي فاي", "تلفاز", "سرير كوين"],
+      "available": true,
+      "capacity": 2,
+      "size": "25 متر مربع",
+      "view": "إطلالة حديقة",
+      "category": "room",
+      "imageUrl": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800"
+    },
+    {
+      "id": 3,
+      "hotelId": 2,
+      "type": "غرفة عائلية",
+      "price": 200.0,
+      "amenities": ["واي فاي", "مطبخ", "غرفة معيشة", "غرفتي نوم"],
+      "available": false,
+      "capacity": 4,
+      "size": "60 متر مربع",
+      "view": "إطلالة بحيرة",
+      "category": "room",
+      "imageUrl": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800"
+    }
+  ];
+
+  // مركبات للإيجار - جميع الحقول مكتملة
+  static final List<Map<String, dynamic>> rentals = [
+    {
+      "id": 1,
+      "type": "دراجة جبلية",
+      "model": "Trek X-Caliber",
+      "rate": 25.0,
+      "rateType": "يوم",
+      "available": true,
+      "condition": "ممتاز",
+      "features": ["21 سرعة", "تعليق أمامي", "حامل زجاجة ماء"],
+      "image": "pedal_bike",
+      "category": "rental",
+      "imageUrl": "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800",
+      "location": "مركز مدينة سيوة"
+    },
+    {
+      "id": 2,
+      "type": "سيارة SUV",
+      "model": "Toyota Land Cruiser",
+      "rate": 120.0,
+      "rateType": "يوم",
+      "available": false,
+      "condition": "جيد",
+      "features": ["قدرة 4x4", "تكييف", "نظام ملاحة GPS", "سعة 7 مقاعد"],
+      "image": "directions_car",
+      "category": "rental",
+      "imageUrl": "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800",
+      "location": "مركز رحلات الصحراء"
+    },
+    {
+      "id": 3,
+      "type": "سكوتر كهربائي",
+      "model": "Xiaomi Pro 2",
+      "rate": 15.0,
+      "rateType": "ساعة",
+      "available": true,
+      "condition": "ممتاز",
+      "features": ["مدى 30 كم", "سرعة قصوى 25 كم/س", "شاشة LED"],
+      "image": "electric_scooter",
+      "category": "rental",
+      "imageUrl": "https://images.unsplash.com/photo-1578610906114-0b5e6dc32f52?w=800",
+      "location": "ساحة السوق"
+    }
+  ];
+
+  // تحديات التصوير - جميع الحقول مكتملة
+  static final List<Map<String, dynamic>> challenges = [
+    {
+      "id": 1,
+      "title": "التقط غروب الشمس",
+      "description": "ابحث عن الموقع المثالي لتصوير غروب الشمس فوق الكثبان الرملية.",
+      "imageUrl": "https://images.unsplash.com/photo-1500322969630-a26ab6ef0e0a?w=800",
+      "completed": false,
+      "points": 50,
+      "proof": null,
+      "category": "challenge",
+      "difficulty": "سهل",
+      "location": "جزيرة فتناس",
+      "tips": ["صل قبل 30 دقيقة من غروب الشمس", "استخدم إضاءة الساعة الذهبية"],
+      "timeLimit": "2 ساعات"
+    },
+    {
+      "id": 2,
+      "title": "الواحة الخفية",
+      "description": "اكتشف وصور واحة خفية في صحراء سيوة.",
+      "imageUrl": "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800",
+      "completed": false,
+      "points": 75,
+      "proof": null,
+      "category": "challenge",
+      "difficulty": "صعب",
+      "location": "الصحراء الغربية",
+      "tips": ["استأجر دليل محلي", "أحضر كمية كافية من الماء"],
+      "timeLimit": "6 ساعات"
+    },
+    {
+      "id": 3,
+      "title": "انعكاس بحيرة الملح",
+      "description": "التقط انعكاسات رائعة على سطح بحيرات الملح.",
+      "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+      "completed": false,
+      "points": 60,
+      "proof": null,
+      "category": "challenge",
+      "difficulty": "متوسط",
+      "location": "بركة سيوة",
+      "tips": ["زيارة خلال الطقس الهادئ", "الصباح الباكر يوفر أفضل إضاءة"],
+      "timeLimit": "3 ساعات"
+    }
+  ];
+
+  // الخدمات المميزة - جميع الحقول مكتملة
+  static final List<Map<String, dynamic>> featuredServices = [
+    {
+      "id": 1,
+      "name": "منتجع شالي سيوة",
+      "price": 120.0,
+      "rating": 4.5,
+      "location": "سيوة، مصر",
+      "imageUrl": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+      "eco_friendly": true,
+      "reviews": 125,
+      "category": "accommodation",
+      "description": "منتجع فاخر صديق للبيئة بتصميم معماري تقليدي",
+      "tags": ["فاخر", "بيئي"],
+      "featured": true,
+      "openingHours": "24/7",
+      "contactNumber": "+20 123 456 7890"
+    },
+    {
+      "id": 2,
+      "name": "مغامرة صحراوية",
+      "price": 80.0,
+      "rating": 4.6,
+      "location": "صحراء سيوة",
+      "imageUrl": "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800",
+      "reviews": 128,
+      "category": "attraction",
+      "description": "جولة صحراوية مثيرة بمركبة 4x4",
+      "tags": ["مغامرة", "صحراء"],
+      "hidden_gem": true,
+      "openingHours": "8:00 ص - 6:00 م",
+      "contactNumber": "+20 123 456 7891"
+    },
+    {
+      "id": 3,
+      "name": "مطعم عبدو",
+      "price": 25.0,
+      "rating": 4.8,
+      "location": "ساحة السوق، سيوة",
+      "imageUrl": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800",
+      "reviews": 234,
+      "category": "restaurant",
+      "description": "مأكولات سيوية تقليدية",
+      "tags": ["تقليدي", "محلي"],
+      "hidden_gem": true,
+      "openingHours": "7:00 ص - 10:00 م",
+      "contactNumber": "+20 123 456 7892"
+    }
+  ];
+
+  // طرق الوصول
+  List<Map<String, dynamic>> getAllHotels() => hotels;
+  List<Map<String, dynamic>> getAllRestaurants() => restaurants;
+  List<Map<String, dynamic>> getAllTourGuides() => guides;
+  List<Map<String, dynamic>> getAllTransportation() => transportation;
+  List<Map<String, dynamic>> getAllAttractions() => attractions;
+  List<Map<String, dynamic>> getAllProducts() => products;
+  List<Map<String, dynamic>> getAllBookings() => bookings;
+  List<Map<String, dynamic>> getAllReviews() => reviews;
+  List<Map<String, dynamic>> getAllBadges() => badges;
+  List<Map<String, dynamic>> getAllRooms() => rooms;
+  List<Map<String, dynamic>> getAllRentals() => rentals;
+  List<Map<String, dynamic>> getAllChallenges() => challenges;
+  List<Map<String, dynamic>> getAllFeaturedServices() => featuredServices;
+
+  List<Map<String, dynamic>> getBookingsByUserId(String userId) {
+    return bookings.where((b) => b['userId'] == userId).toList();
+  }
+
+  List<Map<String, dynamic>> searchAll(String query) {
+    final results = <Map<String, dynamic>>[];
+    final lowerQuery = query.toLowerCase();
+    
+    for (var category in [
+      hotels, 
+      restaurants, 
+      guides, 
+      attractions, 
+      products, 
+      badges, 
+      rooms, 
+      rentals, 
+      challenges, 
+      featuredServices
+    ]) {
+      for (var item in category) {
+        final name = (item['name'] as String?)?.toLowerCase() ?? '';
+        final title = (item['title'] as String?)?.toLowerCase() ?? '';
+        final description = (item['description'] as String?)?.toLowerCase() ?? '';
+        if (name.contains(lowerQuery) || title.contains(lowerQuery) || description.contains(lowerQuery)) {
+          results.add(item);
+        }
+      }
+    }
+    
+    return results;
+  }
 }
-];
-// الأوسمة - جميع الحقول مكتملة مع روابط صالحة
-static final List<Map<String, dynamic>> badges = [
-{
-"id": 1,
-"name": "مستكشف الواحة الخفية",
-"description": "اكتشاف واحة خفية",
-"imageUrl": "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400",
-"points": 75,
-"rarity": "نادر"
-},
-{
-"id": 2,
-"name": "مصور غروب الشمس",
-"description": "التقطت غروب الشمس المثالي",
-"imageUrl": "https://images.unsplash.com/photo-1500322969630-a26ab6ef0e0a?w=400",
-"points": 50,
-"rarity": "شائع"
-},
-{
-"id": 3,
-"name": "سباح بحيرة الملح",
-"description": "سبحت في بحيرات الملح",
-"imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400",
-"points": 60,
-"rarity": "غير شائع"
-}
-];
-// بيانات أخرى - جميع الحقول مكتملة (للتحديات، إلخ)
-static final List<Map<String, dynamic>> other = [
-// غرف الفندق
-{
-"id": 1,
-"type": "جناح فاخر",
-"price": 150.0,
-"amenities": ["واي فاي", "بار صغير", "شرفة"],
-"available": true,
-"category": "room"
-},
-{
-"id": 2,
-"type": "غرفة قياسية",
-"price": 80.0,
-"amenities": ["واي فاي", "تلفاز"],
-"available": true,
-"category": "room"
-},
-{
-"id": 3,
-"type": "غرفة عائلية",
-"price": 200.0,
-"amenities": ["واي فاي", "مطبخ", "غرفة معيشة"],
-"available": false,
-"category": "room"
-},
-// مركبات للإيجار
-{
-"id": 1,
-"type": "دراجة جبلية",
-"model": "Trek X-Caliber",
-"rate": 25.0,
-"rateType": "يوم",
-"available": true,
-"condition": "ممتاز",
-"image": "pedal_bike",
-"category": "rental"
-},
-{
-"id": 2,
-"type": "سيارة SUV",
-"model": "Toyota Land Cruiser",
-"rate": 120.0,
-"rateType": "يوم",
-"available": false,
-"condition": "جيد",
-"image": "directions_car",
-"category": "rental"
-},
-{
-"id": 3,
-"type": "سكوتر كهربائي",
-"model": "Xiaomi Pro 2",
-"rate": 15.0,
-"rateType": "ساعة",
-"available": true,
-"condition": "ممتاز",
-"image": "electric_scooter",
-"category": "rental"
-},
-// تحديات التصوير
-{
-"id": 1,
-"title": "التقط غروب الشمس",
-"description": "ابحث عن الموقع المثالي لتصوير غروب الشمس فوق الكثبان الرملية.",
-"imageUrl": "https://images.unsplash.com/photo-1500322969630-a26ab6ef0e0a?w=800",
-"completed": false,
-"points": 50,
-"proof": null,
-"category": "challenge",
-"difficulty": "سهل"
-},
-{
-"id": 2,
-"title": "الواحة الخفية",
-"description": "اكتشف واصور واحة خفية في صحراء سيوة.",
-"imageUrl": "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800",
-"completed": false,
-"points": 75,
-"proof": null,
-"category": "challenge",
-"difficulty": "صعب"
-},
-{
-"id": 3,
-"title": "انعكاس بحيرة الملح",
-"description": "التقط انعكاسات رائعة على سطح بحيرات الملح.",
-"imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
-"completed": false,
-"points": 60,
-"proof": null,
-"category": "challenge",
-"difficulty": "متوسط"
-},
-// الخدمات المميزة
-{
-"id": 1,
-"name": "منتجع شالي سيوة",
-"price": 120.0,
-"rating": 4.5,
-"location": "سيوة، مصر",
-"imageUrl": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
-"eco_friendly": true,
-"reviews": 125,
-"category": "accommodation",
-"description": "منتجع فاخر صديق للبيئة بتصميم معماري تقليدي",
-"tags": ["فاخر", "بيئي"],
-"featured": true
-},
-{
-"id": 2,
-"name": "مغامرة صحراوية",
-"price": 80.0,
-"rating": 4.6,
-"location": "صحراء سيوة",
-"imageUrl": "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800",
-"reviews": 128,
-"category": "attraction",
-"description": "جولة صحراوية مثيرة بمركبة 4x4",
-"tags": ["مغامرة", "صحراء"],
-"hidden_gem": true
-},
-{
-"id": 3,
-"name": "مطعم عبدو",
-"price": 25.0,
-"rating": 4.8,
-"location": "ساحة السوق، سيوة",
-"imageUrl": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800",
-"reviews": 234,
-"category": "restaurant",
-"description": "مأكولات سيوية تقليدية",
-"tags": ["تقليدي", "محلي"],
-"hidden_gem": true
-}
-];
-// طرق الوصول
-List<Map<String, dynamic>> getAllHotels() => hotels;
-List<Map<String, dynamic>> getAllRestaurants() => restaurants;
-List<Map<String, dynamic>> getAllTourGuides() => guides;
-List<Map<String, dynamic>> getAllTransportation() => transportation;
-List<Map<String, dynamic>> getAllAttractions() => attractions;
-List<Map<String, dynamic>> getAllProducts() => products;
-List<Map<String, dynamic>> getAllBookings() => bookings;
-List<Map<String, dynamic>> getAllReviews() => reviews;
-List<Map<String, dynamic>> getAllBadges() => badges;
-List<Map<String, dynamic>> getAllOther() => other;
-List<Map<String, dynamic>> getBookingsByUserId(String userId) {
-return bookings.where((b) => b['userId'] == userId).toList();
-}
-List<Map<String, dynamic>> searchAll(String query) {
-final results = <Map<String, dynamic>>[];
-final lowerQuery = query.toLowerCase();
-for (var category in [hotels, restaurants, guides, attractions, products, badges, other]) {
-for (var item in category) {
-final name = (item['name'] as String?)?.toLowerCase() ?? '';
-final title = (item['title'] as String?)?.toLowerCase() ?? '';
-final description = (item['description'] as String?)?.toLowerCase() ?? '';
-if (name.contains(lowerQuery) || title.contains(lowerQuery) || description.contains(lowerQuery)) {
-results.add(item);
-}
-}
-}
-return results;
-}
-}
+
 final mockDataAr = MockDataRepositoryAr();

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:siwa/app/theme.dart';
@@ -8,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siwa/providers/mock_data_provider.dart';
+
 class TouristChallengesScreen extends ConsumerStatefulWidget {
   const TouristChallengesScreen({super.key});
 
@@ -18,13 +18,13 @@ class TouristChallengesScreen extends ConsumerStatefulWidget {
 
 class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScreen> {
   int get _totalPoints {
-    return ref.watch(mockDataProvider).getAllOther()
+    return ref.watch(mockDataProvider).getAllChallenges()
         .where((c) => c['completed'] == true)
         .fold(0, (sum, c) => sum + (c['points'] as int? ?? 0));
   }
 
   int get _completedCount {
-    return ref.watch(mockDataProvider).getAllOther().where((c) => c['completed'] == true).length;
+    return ref.watch(mockDataProvider).getAllChallenges().where((c) => c['completed'] == true).length;
   }
 
   Future<void> _uploadPhoto(Map<String, dynamic> challenge) async {
@@ -98,9 +98,9 @@ class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScree
                 Text('tourist.challenges.challenge_progress'.tr(), style: AppTheme.titleMedium),
                 const SizedBox(height: 12),
                 LinearProgressIndicator(
-                  value: ref.watch(mockDataProvider).getAllOther().isEmpty
+                  value: ref.watch(mockDataProvider).getAllChallenges().isEmpty
                       ? 0
-                      : _completedCount / ref.watch(mockDataProvider).getAllOther().length,
+                      : _completedCount / ref.watch(mockDataProvider).getAllChallenges().length,
                   backgroundColor: AppTheme.gray.withOpacity(0.2),
                   valueColor: const AlwaysStoppedAnimation(
                     AppTheme.primaryOrange,
@@ -109,7 +109,7 @@ class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScree
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '$_completedCount/${ref.watch(mockDataProvider).getAllOther().length} Completed',
+                  '$_completedCount/${ref.watch(mockDataProvider).getAllChallenges().length} Completed',
                   style: AppTheme.bodySmall.copyWith(color: AppTheme.gray),
                 ),
               ],
@@ -122,9 +122,9 @@ class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScree
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: ref.watch(mockDataProvider).getAllOther().length,
+              itemCount: ref.watch(mockDataProvider).getAllChallenges().length,
               itemBuilder: (context, index) {
-                final challenge = ref.watch(mockDataProvider).getAllOther()[index];
+                final challenge = ref.watch(mockDataProvider).getAllChallenges()[index];
                 return Card(
                   margin: const EdgeInsets.only(bottom: 16),
                   child: Column(
@@ -140,7 +140,7 @@ class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScree
                           image: DecorationImage(
                             image: challenge['imageUrl'] != null
                                 ? NetworkImage(challenge['imageUrl'] as String)
-                                : const AssetImage('assets/placeholder.png') as ImageProvider, // Fallback placeholder
+                                : const AssetImage('assets/placeholder.png') as ImageProvider,
                             fit: BoxFit.cover,
                           ),
                         ),

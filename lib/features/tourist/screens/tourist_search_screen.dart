@@ -305,10 +305,17 @@ class _TouristSearchScreenState extends ConsumerState<TouristSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filterState = ref.watch(searchFilterProvider);
-    final filterNotifier = ref.read(searchFilterProvider.notifier);
-    final filteredServices = filterNotifier.filterServices(ref.watch(mockDataProvider).getAllOther());
-
+final filterState = ref.watch(searchFilterProvider);
+final filterNotifier = ref.read(searchFilterProvider.notifier);
+final allServices = <Map<String, dynamic>>[
+  ...ref.watch(mockDataProvider).getAllHotels().cast<Map<String, dynamic>>(),
+  ...ref.watch(mockDataProvider).getAllRestaurants().cast<Map<String, dynamic>>(),
+  ...ref.watch(mockDataProvider).getAllAttractions().cast<Map<String, dynamic>>(),
+  ...ref.watch(mockDataProvider).getAllTourGuides().cast<Map<String, dynamic>>(),
+  ...ref.watch(mockDataProvider).getAllTransportation().cast<Map<String, dynamic>>(),
+  ...ref.watch(mockDataProvider).getAllFeaturedServices().cast<Map<String, dynamic>>(),
+];
+final filteredServices = filterNotifier.filterServices(allServices);
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,
       appBar: AppBar(
@@ -482,7 +489,7 @@ class _TouristSearchScreenState extends ConsumerState<TouristSearchScreen> {
             child: filteredServices.isEmpty
                 ? _buildEmptyState(filterNotifier)
                 : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
                     itemCount: filteredServices.length,
                     itemBuilder: (context, index) {
                       final service = filteredServices[index];
@@ -505,7 +512,9 @@ class _TouristSearchScreenState extends ConsumerState<TouristSearchScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: const TouristBottomNav(currentIndex: 1),
+      bottomNavigationBar: SafeArea(
+      child: const TouristBottomNav(currentIndex: 1),
+    ),
     );
   }
 

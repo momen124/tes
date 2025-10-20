@@ -227,11 +227,18 @@ class _TouristProfileScreenState extends ConsumerState<TouristProfileScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-            ],
+
+              const SizedBox(height: 100), // Bottom spacing for nav bar
+
+              ],
+
+            ),
           ),
         ),
+
+      bottomNavigationBar: SafeArea(
+        child: const TouristBottomNav(currentIndex: 4),
       ),
-      bottomNavigationBar: const TouristBottomNav(currentIndex: 4),
     );
   }
 }

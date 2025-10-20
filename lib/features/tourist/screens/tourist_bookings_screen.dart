@@ -1,4 +1,3 @@
-// lib/features/tourist/screens/tourist_bookings_screen.dart
 import 'package:siwa/providers/mock_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -132,14 +131,15 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
                     ),
                   )
                 : ListView.builder(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 100), // Bottom padding for nav
                     itemCount: bookings.length,
                     itemBuilder: (context, index) {
                       final booking = bookings[index];
                       
-                      // Extract booking details with null safety
-                      final title = booking['title']?.toString() ?? (booking['guest'] ?? 'Unknown Booking').toString();
-                      final imageUrl = (booking['imageUrl'] ?? 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800').toString();
+                      final title = booking['title']?.toString() ?? 
+                                   (booking['guest'] ?? 'Unknown Booking').toString();
+                      final imageUrl = (booking['imageUrl'] ?? 
+                                       'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800').toString();
                       final status = (booking['status'] ?? 'unknown').toString();
                       final date = booking['date'] ?? booking['checkIn'];
                       
@@ -261,7 +261,9 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: const TouristBottomNav(currentIndex: 3),
+      bottomNavigationBar: SafeArea(
+        child: const TouristBottomNav(currentIndex: 3),
+      ),
     );
   }
 }

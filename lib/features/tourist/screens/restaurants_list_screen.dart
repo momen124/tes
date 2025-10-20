@@ -98,7 +98,7 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
           // Restaurants List
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
               itemCount: _filteredRestaurants.length,
               itemBuilder: (context, index) {
                 final restaurant = _filteredRestaurants[index];
@@ -108,7 +108,9 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: const TouristBottomNav(currentIndex: 1),
+      bottomNavigationBar: SafeArea(
+      child: const TouristBottomNav(currentIndex: 1),
+    ),
     );
   }
 

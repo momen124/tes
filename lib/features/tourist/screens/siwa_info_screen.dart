@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
@@ -6,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siwa/providers/mock_data_provider.dart';
+
 class SiwaInfoScreen extends ConsumerStatefulWidget {
   const SiwaInfoScreen({super.key});
 
@@ -223,18 +223,34 @@ class _SiwaInfoScreenState extends ConsumerState<SiwaInfoScreen> {
                       crossAxisSpacing: 16,
                       childAspectRatio: 0.85,
                     ),
-                    itemCount: ref.watch(mockDataProvider).getAllOther().length,
+                    itemCount: ref.watch(mockDataProvider).getAllFeaturedServices().length,
                     itemBuilder: (context, index) {
-                      final service = ref.watch(mockDataProvider).getAllOther()[index];
+                      final service = ref.watch(mockDataProvider).getAllFeaturedServices()[index];
                       // Ensure service is a Map and handle null cases
                       if (service == null || service is! Map<String, dynamic>) {
                         return const SizedBox.shrink(); // Skip invalid items
                       }
-                      final icon = service['image'] is IconData
-                          ? service['image'] as IconData
-                          : Icons.help; // Default icon if invalid
-                      final title = service['title']?.toString() ?? 'Unknown Service';
-                      final subtitle = service['subtitle']?.toString() ?? 'No Description';
+                      
+                      final name = service['name']?.toString() ?? 'Unknown Service';
+                      final description = service['description']?.toString() ?? 'No Description';
+                      final imageUrl = service['imageUrl']?.toString();
+                      final category = service['category']?.toString() ?? '';
+
+                      // Get appropriate icon based on category
+                      IconData icon;
+                      switch (category.toLowerCase()) {
+                        case 'accommodation':
+                          icon = Icons.hotel;
+                          break;
+                        case 'restaurant':
+                          icon = Icons.restaurant;
+                          break;
+                        case 'attraction':
+                          icon = Icons.explore;
+                          break;
+                        default:
+                          icon = Icons.star;
+                      }
 
                       return Card(
                         elevation: 2,
@@ -267,19 +283,23 @@ class _SiwaInfoScreenState extends ConsumerState<SiwaInfoScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    title,
+                                    name,
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    subtitle,
+                                    description,
                                     style: const TextStyle(
                                       fontSize: 14,
                                       color: AppTheme.gray,
                                     ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),

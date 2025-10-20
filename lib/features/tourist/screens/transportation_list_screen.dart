@@ -67,7 +67,7 @@ class _TransportationListScreenState extends ConsumerState<TransportationListScr
           // Transportation List
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
               itemCount: _filteredServices.length,
               itemBuilder: (context, index) {
                 final service = _filteredServices[index];
@@ -77,7 +77,9 @@ class _TransportationListScreenState extends ConsumerState<TransportationListScr
           ),
         ],
       ),
-      bottomNavigationBar: const TouristBottomNav(currentIndex: 1),
+      bottomNavigationBar: SafeArea(
+      child: const TouristBottomNav(currentIndex: 1),
+    ),
     );
   }
 

@@ -71,7 +71,7 @@ class _AttractionsListScreenState extends ConsumerState<AttractionsListScreen> {
           // Attractions Grid
           Expanded(
             child: GridView.builder(
-              padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 16,
@@ -87,7 +87,9 @@ class _AttractionsListScreenState extends ConsumerState<AttractionsListScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: const TouristBottomNav(currentIndex: 1),
+      bottomNavigationBar: SafeArea(
+      child: const TouristBottomNav(currentIndex: 1),
+    ),
     );
   }
 
