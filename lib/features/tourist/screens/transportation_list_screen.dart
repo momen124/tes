@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
@@ -7,6 +6,9 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siwa/providers/mock_data_provider.dart';
+import 'package:siwa/data/mock_data_repository.dart';
+import 'package:siwa/data/mock_data_repository_ar.dart';
+
 class TransportationListScreen extends ConsumerStatefulWidget {
   const TransportationListScreen({super.key});
 
@@ -18,13 +20,18 @@ class TransportationListScreen extends ConsumerStatefulWidget {
 class _TransportationListScreenState extends ConsumerState<TransportationListScreen> {
   String _selectedType = 'all';
 
-  
-
   List<Map<String, dynamic>> get _filteredServices {
+    final locale = Localizations.localeOf(context);
+    final isArabic = locale.languageCode == 'ar';
+    
+    final allTransportation = isArabic 
+        ? MockDataRepositoryAr().getAllTransportation()
+        : MockDataRepository().getAllTransportation();
+    
     if (_selectedType == 'all') {
-      return ref.watch(mockDataProvider).getAllTransportation();
+      return allTransportation;
     }
-    return ref.watch(mockDataProvider).getAllTransportation()
+    return allTransportation
         .where((service) => service['type'] == _selectedType)
         .toList();
   }
@@ -67,7 +74,7 @@ class _TransportationListScreenState extends ConsumerState<TransportationListScr
           // Transportation List
           Expanded(
             child: ListView.builder(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
               itemCount: _filteredServices.length,
               itemBuilder: (context, index) {
                 final service = _filteredServices[index];
@@ -78,8 +85,8 @@ class _TransportationListScreenState extends ConsumerState<TransportationListScr
         ],
       ),
       bottomNavigationBar: SafeArea(
-      child: const TouristBottomNav(currentIndex: 1),
-    ),
+        child: const TouristBottomNav(currentIndex: 1),
+      ),
     );
   }
 

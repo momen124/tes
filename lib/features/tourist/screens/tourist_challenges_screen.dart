@@ -7,6 +7,8 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siwa/providers/mock_data_provider.dart';
+import 'package:siwa/data/mock_data_repository.dart';
+import 'package:siwa/data/mock_data_repository_ar.dart';
 
 class TouristChallengesScreen extends ConsumerStatefulWidget {
   const TouristChallengesScreen({super.key});
@@ -17,14 +19,23 @@ class TouristChallengesScreen extends ConsumerStatefulWidget {
 }
 
 class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScreen> {
+  List<Map<String, dynamic>> get _challenges {
+    final locale = Localizations.localeOf(context);
+    final isArabic = locale.languageCode == 'ar';
+    
+    return isArabic 
+        ? MockDataRepositoryAr().getAllChallenges()
+        : MockDataRepository().getAllChallenges();
+  }
+
   int get _totalPoints {
-    return ref.watch(mockDataProvider).getAllChallenges()
+    return _challenges
         .where((c) => c['completed'] == true)
         .fold(0, (sum, c) => sum + (c['points'] as int? ?? 0));
   }
 
   int get _completedCount {
-    return ref.watch(mockDataProvider).getAllChallenges().where((c) => c['completed'] == true).length;
+    return _challenges.where((c) => c['completed'] == true).length;
   }
 
   Future<void> _uploadPhoto(Map<String, dynamic> challenge) async {
@@ -52,7 +63,7 @@ class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScree
 
   @override
   Widget build(BuildContext context) {
-    final challenges = ref.watch(mockDataProvider).getAllChallenges();
+    final challenges = _challenges;
     
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,
@@ -147,7 +158,7 @@ class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScree
                     ),
                   )
                 : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
                     itemCount: challenges.length,
                     itemBuilder: (context, index) {
                       final challenge = challenges[index];
@@ -267,7 +278,9 @@ class _TouristChallengesScreenState extends ConsumerState<TouristChallengesScree
           ),
         ],
       ),
-      bottomNavigationBar: const TouristBottomNav(currentIndex: 2),
+      bottomNavigationBar: const SafeArea(
+        child: TouristBottomNav(currentIndex: 2),
+      ),
     );
   }
 }

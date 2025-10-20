@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
@@ -7,6 +6,9 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siwa/providers/mock_data_provider.dart';
+import 'package:siwa/data/mock_data_repository.dart';
+import 'package:siwa/data/mock_data_repository_ar.dart';
+
 class AttractionsListScreen extends ConsumerStatefulWidget {
   const AttractionsListScreen({super.key});
 
@@ -17,13 +19,18 @@ class AttractionsListScreen extends ConsumerStatefulWidget {
 class _AttractionsListScreenState extends ConsumerState<AttractionsListScreen> {
   String _selectedCategory = 'all';
 
-  
-
   List<Map<String, dynamic>> get _filteredAttractions {
+    final locale = Localizations.localeOf(context);
+    final isArabic = locale.languageCode == 'ar';
+    
+    final allAttractions = isArabic 
+        ? MockDataRepositoryAr().getAllAttractions()
+        : MockDataRepository().getAllAttractions();
+    
     if (_selectedCategory == 'all') {
-      return ref.watch(mockDataProvider).getAllAttractions();
+      return allAttractions;
     }
-    return ref.watch(mockDataProvider).getAllAttractions()
+    return allAttractions
         .where((attraction) => attraction['category'] == _selectedCategory)
         .toList();
   }
@@ -71,7 +78,7 @@ class _AttractionsListScreenState extends ConsumerState<AttractionsListScreen> {
           // Attractions Grid
           Expanded(
             child: GridView.builder(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 16,
@@ -88,8 +95,8 @@ class _AttractionsListScreenState extends ConsumerState<AttractionsListScreen> {
         ],
       ),
       bottomNavigationBar: SafeArea(
-      child: const TouristBottomNav(currentIndex: 1),
-    ),
+        child: const TouristBottomNav(currentIndex: 1),
+      ),
     );
   }
 

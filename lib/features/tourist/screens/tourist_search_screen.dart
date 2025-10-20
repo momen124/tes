@@ -8,6 +8,8 @@ import 'package:siwa/providers/mock_data_provider.dart';
 import 'package:siwa/features/tourist/widgets/service_card.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:siwa/data/mock_data_repository.dart';
+import 'package:siwa/data/mock_data_repository_ar.dart';
 
 // FIXED: Create a proper Riverpod provider instead of using ChangeNotifierProvider from provider package
 final searchFilterProvider = StateNotifierProvider<SearchFilterNotifier, SearchFilterState>(
@@ -305,17 +307,24 @@ class _TouristSearchScreenState extends ConsumerState<TouristSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-final filterState = ref.watch(searchFilterProvider);
-final filterNotifier = ref.read(searchFilterProvider.notifier);
-final allServices = <Map<String, dynamic>>[
-  ...ref.watch(mockDataProvider).getAllHotels().cast<Map<String, dynamic>>(),
-  ...ref.watch(mockDataProvider).getAllRestaurants().cast<Map<String, dynamic>>(),
-  ...ref.watch(mockDataProvider).getAllAttractions().cast<Map<String, dynamic>>(),
-  ...ref.watch(mockDataProvider).getAllTourGuides().cast<Map<String, dynamic>>(),
-  ...ref.watch(mockDataProvider).getAllTransportation().cast<Map<String, dynamic>>(),
-  ...ref.watch(mockDataProvider).getAllFeaturedServices().cast<Map<String, dynamic>>(),
-];
-final filteredServices = filterNotifier.filterServices(allServices);
+    final locale = Localizations.localeOf(context);
+    final isArabic = locale.languageCode == 'ar';
+    
+    final filterState = ref.watch(searchFilterProvider);
+    final filterNotifier = ref.read(searchFilterProvider.notifier);
+    
+    // Get all services with Arabic support
+    final allServices = <Map<String, dynamic>>[
+      ...(isArabic ? MockDataRepositoryAr().getAllHotels() : MockDataRepository().getAllHotels()),
+      ...(isArabic ? MockDataRepositoryAr().getAllRestaurants() : MockDataRepository().getAllRestaurants()),
+      ...(isArabic ? MockDataRepositoryAr().getAllAttractions() : MockDataRepository().getAllAttractions()),
+      ...(isArabic ? MockDataRepositoryAr().getAllTourGuides() : MockDataRepository().getAllTourGuides()),
+      ...(isArabic ? MockDataRepositoryAr().getAllTransportation() : MockDataRepository().getAllTransportation()),
+      ...(isArabic ? MockDataRepositoryAr().getAllFeaturedServices() : MockDataRepository().getAllFeaturedServices()),
+    ];
+    
+    final filteredServices = filterNotifier.filterServices(allServices);
+
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,
       appBar: AppBar(
@@ -484,28 +493,32 @@ final filteredServices = filterNotifier.filterServices(allServices);
 
           const SizedBox(height: 16),
 
-          // Results List
+          // FIXED: Results Grid using ServiceCard (like tourist_home)
           Expanded(
             child: filteredServices.isEmpty
                 ? _buildEmptyState(filterNotifier)
-                : ListView.builder(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+                : GridView.builder(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.75, // Same as tourist_home
+                    ),
                     itemCount: filteredServices.length,
                     itemBuilder: (context, index) {
                       final service = filteredServices[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: ServiceCard(
-                          id: (service['id'] ?? '').toString(),
-                          name: (service['name'] ?? 'Unknown').toString(),
-                          price: _extractDouble(service['price']),
-                          rating: _extractDouble(service['rating']),
-                          location: service['location']?.toString(),
-                          imageUrl: service['imageUrl']?.toString(),
-                          reviews: _extractInt(service['reviews']),
-                          description: service['description']?.toString(),
-                          serviceType: (service['category'] ?? 'accommodation').toString(),
-                        ),
+                      return ServiceCard(
+                        id: (service['id'] ?? '').toString(),
+                        name: (service['name'] ?? 'Unknown').toString(),
+                        price: _extractDouble(service['price'] ?? service['hourlyRate'] ?? service['pricePerNight']),
+                        rating: _extractDouble(service['rating']),
+                        location: service['location']?.toString(),
+                        imageUrl: service['imageUrl']?.toString(),
+                        reviews: _extractInt(service['reviews']),
+                        description: service['description']?.toString(),
+                        serviceType: (service['category'] ?? 'accommodation').toString(),
+                        onTap: () => context.push('/service_detail', extra: service),
                       );
                     },
                   ),
@@ -513,8 +526,8 @@ final filteredServices = filterNotifier.filterServices(allServices);
         ],
       ),
       bottomNavigationBar: SafeArea(
-      child: const TouristBottomNav(currentIndex: 1),
-    ),
+        child: const TouristBottomNav(currentIndex: 1),
+      ),
     );
   }
 

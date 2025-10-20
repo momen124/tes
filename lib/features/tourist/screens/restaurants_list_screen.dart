@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
@@ -7,6 +6,9 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:siwa/providers/mock_data_provider.dart';
+import 'package:siwa/data/mock_data_repository.dart';
+import 'package:siwa/data/mock_data_repository_ar.dart';
+
 class RestaurantsListScreen extends ConsumerStatefulWidget {
   const RestaurantsListScreen({super.key});
 
@@ -18,10 +20,15 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
   String _selectedCuisine = 'all';
   String _priceRange = 'all';
   
-  
-
   List<Map<String, dynamic>> get _filteredRestaurants {
-    return ref.watch(mockDataProvider).getAllRestaurants().where((restaurant) {
+    final locale = Localizations.localeOf(context);
+    final isArabic = locale.languageCode == 'ar';
+    
+    final allRestaurants = isArabic 
+        ? MockDataRepositoryAr().getAllRestaurants()
+        : MockDataRepository().getAllRestaurants();
+    
+    return allRestaurants.where((restaurant) {
       final cuisineMatch = _selectedCuisine == 'all' || restaurant['cuisine'] == _selectedCuisine;
       final priceMatch = _priceRange == 'all' || restaurant['priceRange'] == _priceRange;
       return cuisineMatch && priceMatch;
@@ -98,7 +105,7 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
           // Restaurants List
           Expanded(
             child: ListView.builder(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
               itemCount: _filteredRestaurants.length,
               itemBuilder: (context, index) {
                 final restaurant = _filteredRestaurants[index];
@@ -109,8 +116,8 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
         ],
       ),
       bottomNavigationBar: SafeArea(
-      child: const TouristBottomNav(currentIndex: 1),
-    ),
+        child: const TouristBottomNav(currentIndex: 1),
+      ),
     );
   }
 

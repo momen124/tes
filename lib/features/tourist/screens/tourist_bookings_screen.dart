@@ -7,6 +7,8 @@ import 'package:siwa/features/tourist/providers/offline_provider.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/intl.dart';
+import 'package:siwa/data/mock_data_repository.dart';
+import 'package:siwa/data/mock_data_repository_ar.dart';
 
 class TouristBookingsScreen extends ConsumerStatefulWidget {
   const TouristBookingsScreen({super.key});
@@ -17,6 +19,15 @@ class TouristBookingsScreen extends ConsumerStatefulWidget {
 }
 
 class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
+  List<Map<String, dynamic>> get _bookings {
+    final locale = Localizations.localeOf(context);
+    final isArabic = locale.languageCode == 'ar';
+    
+    return isArabic 
+        ? MockDataRepositoryAr().getAllBookings()
+        : MockDataRepository().getAllBookings();
+  }
+
   Color _getStatusColor(String status) {
     final statusLower = status.toLowerCase();
     if (statusLower.contains('confirm') || statusLower.contains('approved')) {
@@ -81,8 +92,8 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
   Widget build(BuildContext context) {
     final isOffline = ref.watch(offlineProvider);
     
-    // Get bookings from the provider
-    final bookings = ref.watch(mockDataProvider).getAllBookings();
+    // Get bookings with Arabic support
+    final bookings = _bookings;
 
     return Scaffold(
       backgroundColor: AppTheme.lightBlueGray,
