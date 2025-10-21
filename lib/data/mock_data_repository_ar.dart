@@ -996,56 +996,56 @@ class MockDataRepositoryAr {
       "timeLimit": "3 ساعات"
     }
   ];
-
-  // الخدمات المميزة - جميع الحقول مكتملة
-  static final List<Map<String, dynamic>> featuredServices = [
-    {
-      "id": 1,
-      "name": "منتجع شالي سيوة",
-      "price": 120.0,
-      "rating": 4.5,
-      "location": "سيوة، مصر",
-      "imageUrl": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
-      "eco_friendly": true,
-      "reviews": 125,
-      "category": "accommodation",
-      "description": "منتجع فاخر صديق للبيئة بتصميم معماري تقليدي",
-      "tags": ["فاخر", "بيئي"],
-      "featured": true,
-      "openingHours": "24/7",
-      "contactNumber": "+20 123 456 7890"
-    },
-    {
-      "id": 2,
-      "name": "مغامرة صحراوية",
-      "price": 80.0,
-      "rating": 4.6,
-      "location": "صحراء سيوة",
-      "imageUrl": "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800",
-      "reviews": 128,
-      "category": "attraction",
-      "description": "جولة صحراوية مثيرة بمركبة 4x4",
-      "tags": ["مغامرة", "صحراء"],
-      "hidden_gem": true,
-      "openingHours": "8:00 ص - 6:00 م",
-      "contactNumber": "+20 123 456 7891"
-    },
-    {
-      "id": 3,
-      "name": "مطعم عبدو",
-      "price": 25.0,
-      "rating": 4.8,
-      "location": "ساحة السوق، سيوة",
-      "imageUrl": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800",
-      "reviews": 234,
-      "category": "restaurant",
-      "description": "مأكولات سيوية تقليدية",
-      "tags": ["تقليدي", "محلي"],
-      "hidden_gem": true,
-      "openingHours": "7:00 ص - 10:00 م",
-      "contactNumber": "+20 123 456 7892"
-    }
-  ];
+static final List<Map<String, dynamic>> featuredServices = [
+  {
+    "id": 1,
+    "name": "منتجع شالي سيوة",
+    "price": 120.0,
+    "rating": 4.5,
+    "location": "سيوة، مصر",
+    "imageUrl": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+    "eco_friendly": true,
+    "reviews": 125,
+    "category": "accommodation",
+    "description": "منتجع فاخر صديق للبيئة بتصميم معماري تقليدي",
+    "tags": ["فاخر", "بيئي"],
+    "featured": true,  // موجود
+    "openingHours": "24/7",
+    "contactNumber": "+20 123 456 7890"
+  },
+  {
+    "id": 2,
+    "name": "مغامرة صحراوية",
+    "price": 80.0,
+    "rating": 4.6,
+    "location": "صحراء سيوة",
+    "imageUrl": "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=800",
+    "reviews": 128,
+    "category": "attraction",
+    "description": "جولة صحراوية مثيرة بمركبة 4x4",
+    "tags": ["مغامرة", "صحراء"],
+    "featured": true,  // أضف هذا السطر
+    "hidden_gem": true,
+    "openingHours": "8:00 ص - 6:00 م",
+    "contactNumber": "+20 123 456 7891"
+  },
+  {
+    "id": 3,
+    "name": "مطعم عبدو",
+    "price": 25.0,
+    "rating": 4.8,
+    "location": "ساحة السوق، سيوة",
+    "imageUrl": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800",
+    "reviews": 234,
+    "category": "restaurant",
+    "description": "مأكولات سيوية تقليدية",
+    "tags": ["تقليدي", "محلي"],
+    "featured": true,  // أضف هذا السطر
+    "hidden_gem": true,
+    "openingHours": "7:00 ص - 10:00 م",
+    "contactNumber": "+20 123 456 7892"
+  }
+];
 
   // طرق الوصول
   List<Map<String, dynamic>> getAllHotels() => hotels;

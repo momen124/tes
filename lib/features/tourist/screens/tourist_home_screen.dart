@@ -16,35 +16,57 @@ class TouristHomeScreen extends StatelessWidget {
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode == 'ar';
 
+    // Get data from repositories
+    final hotels = isArabic 
+        ? MockDataRepositoryAr().getAllHotels() 
+        : MockDataRepository().getAllHotels();
+    
+    final restaurants = isArabic 
+        ? MockDataRepositoryAr().getAllRestaurants() 
+        : MockDataRepository().getAllRestaurants();
+    
+    final attractions = isArabic 
+        ? MockDataRepositoryAr().getAllAttractions() 
+        : MockDataRepository().getAllAttractions();
+
     final allServices = isArabic
         ? MockDataRepositoryAr().getAllFeaturedServices()
         : MockDataRepository().getAllFeaturedServices();
 
-    // Featured: Multiple categories
-    final featuredHotels = allServices
-        .where((item) => item['featured'] == true && item['category'] == 'accommodation')
-        .take(3)
-        .toList();
+    // Create featured experiences from all sources
+    final List<Map<String, dynamic>> featuredExperiences = [];
+    
+    // Add featured hotels (all hotels as featured)
+    for (var hotel in hotels.take(3)) {
+      featuredExperiences.add({
+        ...hotel,
+        'category': 'accommodation',
+        'featured': true,
+      });
+    }
+    
+    // Add featured restaurants (top rated)
+    for (var restaurant in restaurants.take(3)) {
+      featuredExperiences.add({
+        ...restaurant,
+        'category': 'restaurant',
+        'featured': true,
+      });
+    }
+    
+    // Add featured attractions (top rated)
+    for (var attraction in attractions.take(3)) {
+      featuredExperiences.add({
+        ...attraction,
+        'category': 'attraction',
+        'featured': true,
+      });
+    }
 
-    final featuredRestaurants = allServices
-        .where((item) => item['featured'] == true && item['category'] == 'restaurant')
-        .take(2)
-        .toList();
-
-    final featuredAttractions = allServices
-        .where((item) => item['featured'] == true && item['category'] == 'attraction')
-        .take(3)
-        .toList();
-
-    final featuredExperiences = [
-      ...featuredHotels,
-      ...featuredRestaurants,
-      ...featuredAttractions,
-    ];
-
-    // Hidden Gems
+    // Hidden Gems - Get from all sources
     final hiddenGems = allServices
         .where((item) => item['hidden_gem'] == true && item['category'] != 'challenge')
+        .take(8)
         .toList();
 
     return Scaffold(
@@ -150,7 +172,7 @@ class TouristHomeScreen extends StatelessWidget {
                     'tourist.categories.accommodations'.tr(),
                     Icons.hotel,
                     false,
-                    '/accommodations',  // Dedicated page
+                    '/accommodations',
                   ),
                   _buildCategoryChip(
                     context,
@@ -183,7 +205,7 @@ class TouristHomeScreen extends StatelessWidget {
                   _buildCategoryChip(
                     context,
                     'tourist.categories.services'.tr(),
-                    Icons.medical_services,  // Updated icon
+                    Icons.medical_services,
                     false,
                     '/services',
                   ),
@@ -215,7 +237,7 @@ class TouristHomeScreen extends StatelessWidget {
             ),
           ),
 
-          // Featured Carousel
+          // Featured Carousel - IMPROVED
           SliverToBoxAdapter(
             child: SizedBox(
               height: 340,
@@ -227,7 +249,7 @@ class TouristHomeScreen extends StatelessWidget {
                         viewportFraction: 0.85,
                         enableInfiniteScroll: featuredExperiences.length > 1,
                         autoPlay: featuredExperiences.length > 1,
-                        autoPlayInterval: const Duration(seconds: 4),
+                        autoPlayInterval: const Duration(seconds: 5),  // Increased from 4 to 5
                         autoPlayAnimationDuration: const Duration(milliseconds: 800),
                         autoPlayCurve: Curves.fastOutSlowIn,
                         enlargeCenterPage: true,
@@ -236,15 +258,15 @@ class TouristHomeScreen extends StatelessWidget {
                       ),
                       items: featuredExperiences.map((service) {
                         return ServiceCard(
-                          id: service['id'].toString(),
-                          name: service['name'] as String,
-                          price: (service['price'] as num).toDouble(),
-                          rating: (service['rating'] as num).toDouble(),
-                          description: service['description'] as String,
-                          imageUrl: service['imageUrl'] as String,
-                          reviews: service['reviews'] as int,
+                          id: service['id']?.toString() ?? '0',
+                          name: service['name'] as String? ?? 'Unknown',
+                          price: (service['price'] as num?)?.toDouble() ?? (service['pricePerNight'] as num?)?.toDouble() ?? 0.0,
+                          rating: (service['rating'] as num?)?.toDouble() ?? 0.0,
+                          description: service['description'] as String? ?? '',
+                          imageUrl: service['imageUrl'] as String? ?? '',
+                          reviews: service['reviews'] as int? ?? 0,
                           isFeatured: true,
-                          serviceType: service['category'] as String,
+                          serviceType: service['category'] as String? ?? 'service',
                           onTap: () => context.push('/service_detail', extra: service),
                         );
                       }).toList(),
@@ -275,7 +297,7 @@ class TouristHomeScreen extends StatelessWidget {
             ),
           ),
 
-          // Hidden Gems Grid
+          // Hidden Gems Grid - SHOW MORE ITEMS
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
             sliver: hiddenGems.isEmpty
@@ -309,7 +331,7 @@ class TouristHomeScreen extends StatelessWidget {
                           onTap: () => context.push('/service_detail', extra: gem),
                         );
                       },
-                      childCount: hiddenGems.length > 4 ? 4 : hiddenGems.length,
+                      childCount: hiddenGems.length > 6 ? 6 : hiddenGems.length,  // Increased from 4 to 6
                     ),
                   ),
           ),
