@@ -236,8 +236,8 @@ class _TouristProfileScreenState extends ConsumerState<TouristProfileScreen> {
           ),
         ),
 
-      bottomNavigationBar: SafeArea(
-        child: const TouristBottomNav(currentIndex: 4),
+      bottomNavigationBar: const SafeArea(
+        child: TouristBottomNav(currentIndex: 4),
       ),
     );
   }

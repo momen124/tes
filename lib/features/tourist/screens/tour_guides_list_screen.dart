@@ -166,8 +166,8 @@ class _TourGuidesListScreenState extends ConsumerState<TourGuidesListScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: const TouristBottomNav(currentIndex: 1),
+      bottomNavigationBar: const SafeArea(
+        child: TouristBottomNav(currentIndex: 1),
       ),
     );
   }

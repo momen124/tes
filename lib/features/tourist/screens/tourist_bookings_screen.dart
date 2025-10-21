@@ -50,10 +50,7 @@ class _TouristBookingsScreenState extends ConsumerState<TouristBookingsScreen> {
         parsedDate = date;
       } else if (date is String) {
         parsedDate = DateTime.tryParse(date);
-        if (parsedDate == null) {
-          // Try alternative formats
-          parsedDate = DateTime.tryParse('${date}T00:00:00');
-        }
+        parsedDate ??= DateTime.tryParse('${date}T00:00:00');
       } else {
         return date.toString();
       }

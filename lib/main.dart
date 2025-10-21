@@ -8,17 +8,20 @@ void main() async {
 
   await EasyLocalization.ensureInitialized();
 
-  // Add this to force locale detection
+  // Enable logging to debug translation issues
   EasyLocalization.logger.enableBuildModes = [];
 
   runApp(
     ProviderScope(
       child: EasyLocalization(
         supportedLocales: const [Locale('en'), Locale('ar')],
-        path: 'translations',
+        // CRITICAL: This path must match the assets folder structure
+        path: 'assets/translations',  // Changed from 'translations' to 'assets/translations'
         fallbackLocale: const Locale('en'),
         saveLocale: true,
         startLocale: const Locale('en'),
+        // Add this to help with debugging
+        useFallbackTranslations: true,
         child: const SiwaAppWrapper(),
       ),
     ),
@@ -41,6 +44,9 @@ class _SiwaAppWrapperState extends ConsumerState<SiwaAppWrapper> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final currentLocale = context.locale;
       ref.read(currentLocaleProvider.notifier).state = currentLocale;
+      
+      // Debug: Print current locale
+      debugPrint('📍 Current locale: ${currentLocale.languageCode}');
     });
   }
 
@@ -50,6 +56,7 @@ class _SiwaAppWrapperState extends ConsumerState<SiwaAppWrapper> {
     ref.listen<Locale>(currentLocaleProvider, (previous, next) {
       // This ensures widgets rebuild when locale changes
       if (previous != next && mounted) {
+        debugPrint('🔄 Locale changed from ${previous?.languageCode} to ${next.languageCode}');
         setState(() {});
       }
     });

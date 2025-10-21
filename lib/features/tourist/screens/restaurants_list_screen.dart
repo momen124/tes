@@ -115,8 +115,8 @@ class _RestaurantsListScreenState extends ConsumerState<RestaurantsListScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: const TouristBottomNav(currentIndex: 1),
+      bottomNavigationBar: const SafeArea(
+        child: TouristBottomNav(currentIndex: 1),
       ),
     );
   }

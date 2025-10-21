@@ -9,11 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # Add flutter_localizations for RTL and localization support
   flutter_localizations:
     sdk: flutter
   
-  # Existing dependencies
   dio: ^5.9.0
   flutter_riverpod: ^2.6.1
   hive: ^2.2.3
@@ -37,8 +35,8 @@ dependencies:
   json_annotation: ^4.9.0
   google_fonts: ^6.3.2
   styled_widget: ^0.4.1
-  cached_network_image: ^3.3.0
-  easy_localization: ^3.0.7  # Already included - perfect!
+  cached_network_image: ^3.3.1  # Fixed: only one version
+  easy_localization: ^3.0.7
   shared_preferences: ^2.3.3
   dotted_border: ^3.1.0
   provider: ^6.1.5+1
@@ -53,20 +51,19 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # Enable code generation for localization
   generate: true
   
   assets:
-    - assets/images/
+    # CRITICAL: Make sure this path matches your actual folder structure
     - assets/translations/
+    - assets/translations/en.json
+    - assets/translations/ar.json
+    - assets/images/
   
   # Optional: Add Arabic font for better text rendering
-  # Download Cairo font from Google Fonts and place in fonts/ folder
   # fonts:
   #   - family: Cairo
   #     fonts:
   #       - asset: fonts/Cairo-Regular.ttf
   #       - asset: fonts/Cairo-Bold.ttf
   #         weight: 700
-  #       - asset: fonts/Cairo-SemiBold.ttf
-  #         weight: 600

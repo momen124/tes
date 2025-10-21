@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "واحة سيوة",
+    "name": "الطريق إلى سيوة",
     "tagline": "اكتشف الجنة المخفية"
   },
   "auth": {
@@ -43,8 +43,8 @@
       "accommodations": "أماكن الإقامة",
       "transportation": "المواصلات",
       "attractions": "معالم الجذب",
-      "tours": "الجولات",
-      "food": "الطعام"
+      "tours": "مرشدين",
+      "food": "مطاعم"
     },
     "booking": {
       "book_now": "احجز الآن",

@@ -6,7 +6,6 @@ import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:siwa/providers/mock_data_provider.dart';
 import 'package:siwa/data/mock_data_repository.dart';
 import 'package:siwa/data/mock_data_repository_ar.dart';
 

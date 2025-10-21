@@ -261,8 +261,8 @@ class TouristHomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: const TouristBottomNav(
+      bottomNavigationBar: const SafeArea(
+        child: TouristBottomNav(
           currentIndex: 0,
         ),
       ),
