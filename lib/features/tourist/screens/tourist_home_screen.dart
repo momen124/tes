@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:siwa/app/theme.dart';
 import 'package:siwa/features/tourist/widgets/service_card.dart';
 import 'package:siwa/features/tourist/widgets/tourist_bottom_nav.dart';
-import 'package:siwa/widgets/unified_bottom_nav.dart';
 import 'package:siwa/data/mock_data_repository.dart';
 import 'package:siwa/data/mock_data_repository_ar.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -16,16 +15,35 @@ class TouristHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode == 'ar';
-    
-    final allOther = isArabic 
+
+    final allServices = isArabic
         ? MockDataRepositoryAr().getAllFeaturedServices()
         : MockDataRepository().getAllFeaturedServices();
-    
-    final featuredServices = allOther
-        .where((item) => item['featured'] == true && item['category'] != 'challenge')
+
+    // Featured: Multiple categories
+    final featuredHotels = allServices
+        .where((item) => item['featured'] == true && item['category'] == 'accommodation')
+        .take(3)
         .toList();
-    
-    final hiddenGems = allOther
+
+    final featuredRestaurants = allServices
+        .where((item) => item['featured'] == true && item['category'] == 'restaurant')
+        .take(2)
+        .toList();
+
+    final featuredAttractions = allServices
+        .where((item) => item['featured'] == true && item['category'] == 'attraction')
+        .take(3)
+        .toList();
+
+    final featuredExperiences = [
+      ...featuredHotels,
+      ...featuredRestaurants,
+      ...featuredAttractions,
+    ];
+
+    // Hidden Gems
+    final hiddenGems = allServices
         .where((item) => item['hidden_gem'] == true && item['category'] != 'challenge')
         .toList();
 
@@ -127,11 +145,48 @@ class TouristHomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 reverse: isArabic,
                 children: [
-                  _buildCategoryChip(context, 'tourist.categories.accommodations'.tr(), Icons.hotel, true, '/tourist_search'),
-                  _buildCategoryChip(context, 'tourist.categories.transportation'.tr(), Icons.directions_car, false, '/transportation'),
-                  _buildCategoryChip(context, 'tourist.categories.attractions'.tr(), Icons.attractions, false, '/attractions'),
-                  _buildCategoryChip(context, 'tourist.categories.tours'.tr(), Icons.tour, false, '/tour_guides'),
-                  _buildCategoryChip(context, 'tourist.categories.food'.tr(), Icons.restaurant, false, '/restaurants'),
+                  _buildCategoryChip(
+                    context,
+                    'tourist.categories.accommodations'.tr(),
+                    Icons.hotel,
+                    false,
+                    '/tourist_search?category=accommodation',
+                  ),
+                  _buildCategoryChip(
+                    context,
+                    'tourist.categories.transportation'.tr(),
+                    Icons.directions_car,
+                    false,
+                    '/transportation',
+                  ),
+                  _buildCategoryChip(
+                    context,
+                    'tourist.categories.attractions'.tr(),
+                    Icons.attractions,
+                    false,
+                    '/attractions',
+                  ),
+                  _buildCategoryChip(
+                    context,
+                    'tourist.categories.tours'.tr(),
+                    Icons.tour,
+                    false,
+                    '/tours',
+                  ),
+                  _buildCategoryChip(
+                    context,
+                    'tourist.categories.food'.tr(),
+                    Icons.restaurant,
+                    false,
+                    '/restaurants',
+                  ),
+                  _buildCategoryChip(
+                    context,
+                    'tourist.categories.services'.tr(),
+                    Icons.local_hospital,
+                    false,
+                    '/services',
+                  ),
                 ],
               ),
             ),
@@ -164,15 +219,14 @@ class TouristHomeScreen extends StatelessWidget {
           SliverToBoxAdapter(
             child: SizedBox(
               height: 340,
-              child: featuredServices.isEmpty
+              child: featuredExperiences.isEmpty
                   ? Center(child: Text('common.loading'.tr()))
                   : CarouselSlider(
                       options: CarouselOptions(
-                        height: 220,
-                        aspectRatio: 16 / 9,
+                        height: 320,
                         viewportFraction: 0.85,
-                        enableInfiniteScroll: featuredServices.length > 1,
-                        autoPlay: featuredServices.length > 1,
+                        enableInfiniteScroll: featuredExperiences.length > 1,
+                        autoPlay: featuredExperiences.length > 1,
                         autoPlayInterval: const Duration(seconds: 4),
                         autoPlayAnimationDuration: const Duration(milliseconds: 800),
                         autoPlayCurve: Curves.fastOutSlowIn,
@@ -180,7 +234,7 @@ class TouristHomeScreen extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         reverse: isArabic,
                       ),
-                      items: featuredServices.take(5).map((service) {
+                      items: featuredExperiences.map((service) {
                         return ServiceCard(
                           id: service['id'].toString(),
                           name: service['name'] as String,
@@ -223,7 +277,7 @@ class TouristHomeScreen extends StatelessWidget {
 
           // Hidden Gems Grid
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 100), // Added bottom padding for nav bar
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
             sliver: hiddenGems.isEmpty
                 ? SliverToBoxAdapter(
                     child: Center(
@@ -262,9 +316,7 @@ class TouristHomeScreen extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: const SafeArea(
-        child: TouristBottomNav(
-          currentIndex: 0,
-        ),
+        child: TouristBottomNav(currentIndex: 0),
       ),
     );
   }

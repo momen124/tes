@@ -19,21 +19,21 @@ class TransportationListScreen extends ConsumerStatefulWidget {
 
 class _TransportationListScreenState extends ConsumerState<TransportationListScreen> {
   String _selectedType = 'all';
+  String _selectedLocation = 'all'; // NEW: Inside or Outside Siwa
 
   List<Map<String, dynamic>> get _filteredServices {
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode == 'ar';
-    
-    final allTransportation = isArabic 
+
+    final allTransportation = isArabic
         ? MockDataRepositoryAr().getAllTransportation()
         : MockDataRepository().getAllTransportation();
-    
-    if (_selectedType == 'all') {
-      return allTransportation;
-    }
-    return allTransportation
-        .where((service) => service['type'] == _selectedType)
-        .toList();
+
+    return allTransportation.where((service) {
+      final typeMatch = _selectedType == 'all' || service['type'] == _selectedType;
+      final locationMatch = _selectedLocation == 'all' || service['location'] == _selectedLocation;
+      return typeMatch && locationMatch;
+    }).toList();
   }
 
   @override
@@ -51,7 +51,31 @@ class _TransportationListScreenState extends ConsumerState<TransportationListScr
       ),
       body: Column(
         children: [
-          // Filter Chips
+          // NEW: Location Filter (Inside/Outside Siwa)
+          Container(
+            color: AppTheme.primaryOrange.withOpacity(0.1),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            child: Row(
+              children: [
+                Icon(Icons.location_on, color: AppTheme.primaryOrange, size: 20),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        _buildLocationChip('All', 'all', Icons.public),
+                        _buildLocationChip('Inside Siwa', 'inside', Icons.location_city),
+                        _buildLocationChip('Outside Siwa', 'outside', Icons.flight_takeoff),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Type Filter
           Container(
             color: AppTheme.white,
             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -60,10 +84,11 @@ class _TransportationListScreenState extends ConsumerState<TransportationListScr
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  _buildFilterChip('All', 'all', Icons.directions),
+                  _buildFilterChip('All Types', 'all', Icons.directions),
                   _buildFilterChip('Bus', 'bus', Icons.directions_bus),
                   _buildFilterChip('Taxi', 'taxi', Icons.local_taxi),
                   _buildFilterChip('Van', 'van', Icons.airport_shuttle),
+                  _buildFilterChip('Car Rental', 'rental', Icons.car_rental),
                 ],
               ),
             ),
@@ -86,6 +111,38 @@ class _TransportationListScreenState extends ConsumerState<TransportationListScr
       ),
       bottomNavigationBar: const SafeArea(
         child: TouristBottomNav(currentIndex: 1),
+      ),
+    );
+  }
+
+  // NEW: Location Filter Chip
+  Widget _buildLocationChip(String label, String value, IconData icon) {
+    final isSelected = _selectedLocation == value;
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: FilterChip(
+        selected: isSelected,
+        label: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: isSelected ? AppTheme.white : AppTheme.primaryOrange,
+            ),
+            const SizedBox(width: 4),
+            Text(label),
+          ],
+        ),
+        onSelected: (selected) {
+          setState(() => _selectedLocation = value);
+        },
+        selectedColor: AppTheme.primaryOrange,
+        backgroundColor: AppTheme.white,
+        labelStyle: TextStyle(
+          color: isSelected ? AppTheme.white : AppTheme.darkGray,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
@@ -371,6 +428,8 @@ class _TransportationListScreenState extends ConsumerState<TransportationListScr
         return Icons.local_taxi;
       case 'van':
         return Icons.airport_shuttle;
+      case 'rental':
+        return Icons.car_rental;
       default:
         return Icons.directions;
     }

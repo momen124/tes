@@ -22,11 +22,11 @@ class _AttractionsListScreenState extends ConsumerState<AttractionsListScreen> {
   List<Map<String, dynamic>> get _filteredAttractions {
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode == 'ar';
-    
-    final allAttractions = isArabic 
+
+    final allAttractions = isArabic
         ? MockDataRepositoryAr().getAllAttractions()
         : MockDataRepository().getAllAttractions();
-    
+
     if (_selectedCategory == 'all') {
       return allAttractions;
     }
@@ -100,36 +100,36 @@ class _AttractionsListScreenState extends ConsumerState<AttractionsListScreen> {
     );
   }
 
-  Widget _buildCategoryChip(String label, String value, IconData icon) {
-    final isSelected = _selectedCategory == value;
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: FilterChip(
-        selected: isSelected,
-        label: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 16,
-              color: isSelected ? AppTheme.white : AppTheme.primaryOrange,
-            ),
-            const SizedBox(width: 4),
-            Text(label),
-          ],
-        ),
-        onSelected: (selected) {
-          setState(() => _selectedCategory = value);
-        },
-        selectedColor: AppTheme.primaryOrange,
-        backgroundColor: AppTheme.white,
-        labelStyle: TextStyle(
-          color: isSelected ? AppTheme.white : AppTheme.darkGray,
-          fontWeight: FontWeight.w600,
-        ),
+Widget _buildCategoryChip(String label, String value, IconData icon) {
+  final isSelected = _selectedCategory == value;
+  return Padding(
+    padding: const EdgeInsets.only(right: 8, bottom: 8),
+    child: FilterChip(
+      selected: isSelected,
+      label: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 16,
+            color: isSelected ? AppTheme.white : AppTheme.primaryOrange,
+          ),
+          const SizedBox(width: 4),
+          Text(label),
+        ],
       ),
-    );
-  }
+      onSelected: (selected) {
+        setState(() => _selectedCategory = value);
+      },
+      selectedColor: AppTheme.primaryOrange,
+      backgroundColor: AppTheme.white,
+      labelStyle: TextStyle(
+        color: isSelected ? AppTheme.white : AppTheme.darkGray,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  );
+}
 
   Widget _buildAttractionCard(Map<String, dynamic> attraction) {
     return Card(
@@ -172,23 +172,23 @@ class _AttractionsListScreenState extends ConsumerState<AttractionsListScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.star,
-                          color: AppTheme.primaryOrange,
-                          size: 12,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.star,
+                              color: AppTheme.primaryOrange,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              (attraction['rating'] ?? 0).toString(),
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 2),
-                        Text(
-                          (attraction['rating'] ?? 0).toString(),
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
                 Positioned(
@@ -301,194 +301,252 @@ class _AttractionsListScreenState extends ConsumerState<AttractionsListScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.9,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        builder: (_, controller) => Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: ListView(
-            controller: controller,
-            padding: EdgeInsets.zero,
-            children: [
-              // Image
-              Stack(
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.9,
+          minChildSize: 0.5,
+          maxChildSize: 0.95,
+          expand: false,
+          builder: (_, controller) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: ListView(
+                controller: controller,
+                padding: EdgeInsets.zero,
                 children: [
-                  Container(
-                    height: 250,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(20),
+                  // Image
+                  Stack(
+                    children: [
+                      Container(
+                        height: 250,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(20),
+                          ),
+                          image: DecorationImage(
+                            image: NetworkImage(attraction['imageUrl']),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                      image: DecorationImage(
-                        image: NetworkImage(attraction['imageUrl']),
-                        fit: BoxFit.cover,
+                      Positioned(
+                        top: 16,
+                        right: 16,
+                        child: IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
+                          style: IconButton.styleFrom(
+                            backgroundColor: Colors.black45,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                  Positioned(
-                    top: 16,
-                    right: 16,
-                    child: IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.black45,
-                      ),
+
+                  // Content
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          attraction['name'],
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.star,
+                              color: AppTheme.primaryOrange,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${attraction['rating'] ?? ''} (${attraction['reviews'] ?? ''} reviews)',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: AppTheme.gray,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+
+                        // ADDED: Before You Book Information Card
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          margin: const EdgeInsets.only(bottom: 24),
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryOrange.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: AppTheme.primaryOrange.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.info_outline,
+                                    color: AppTheme.primaryOrange,
+                                    size: 24,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Before You Book',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppTheme.primaryOrange,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              _buildInfoPoint(
+                                Icons.check_circle_outline,
+                                'Comfortable walking shoes recommended',
+                              ),
+                              _buildInfoPoint(
+                                Icons.water_drop_outlined,
+                                'Bring water and sun protection',
+                              ),
+                              _buildInfoPoint(
+                                Icons.camera_alt_outlined,
+                                'Photography allowed in designated areas',
+                              ),
+                              _buildInfoPoint(
+                                Icons.access_time_outlined,
+                                'Arrive 15 minutes before tour starts',
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Description
+                        Text(
+                          attraction['description'],
+                          style: const TextStyle(fontSize: 16, height: 1.5),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Info Cards
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildInfoCard(
+                                Icons.access_time,
+                                'Duration',
+                                attraction['duration'],
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _buildInfoCard(
+                                Icons.fitness_center,
+                                'Difficulty',
+                                attraction['difficulty'],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildInfoCard(
+                                Icons.location_on,
+                                'Location',
+                                attraction['location'],
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _buildInfoCard(
+                                Icons.schedule,
+                                'Hours',
+                                attraction['openingHours'],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Highlights
+                        const Text(
+                          'Highlights',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        ...((attraction['highlights'] as List?)?.cast<String>() ?? <String>[]).map(
+                          (highlight) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.check_circle,
+                                  color: AppTheme.successGreen,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  highlight,
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Book Button
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              context.push(
+                                '/booking_form?type=attraction',
+                                extra: {'serviceData': attraction},
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.primaryOrange,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                            ),
+                            child: Text(
+                              'Book for EGP ${(attraction['price'] ?? 0).toStringAsFixed(0)}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-
-              // Content
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      attraction['name'],
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.star,
-                          color: AppTheme.primaryOrange,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${attraction['rating'] ?? ''} (${attraction['reviews'] ?? ''} reviews)',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: AppTheme.gray,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    Text(
-                      attraction['description'],
-                      style: const TextStyle(fontSize: 16, height: 1.5),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Info Cards
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildInfoCard(
-                            Icons.access_time,
-                            'Duration',
-                            attraction['duration'],
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildInfoCard(
-                            Icons.fitness_center,
-                            'Difficulty',
-                            attraction['difficulty'],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildInfoCard(
-                            Icons.location_on,
-                            'Location',
-                            attraction['location'],
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildInfoCard(
-                            Icons.schedule,
-                            'Hours',
-                            attraction['openingHours'],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Highlights
-                    const Text(
-                      'Highlights',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    ...((attraction['highlights'] as List?)?.cast<String>() ?? <String>[]).map(
-                      (highlight) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.check_circle,
-                              color: AppTheme.successGreen,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              highlight,
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Book Button
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          context.push(
-                            '/booking_form?type=attraction',
-                            extra: {'serviceData': attraction},
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.primaryOrange,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                        ),
-                        child: Text(
-                          'Book for EGP ${(attraction['price'] ?? 0).toStringAsFixed(0)}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+            );
+          },
+        );
+      },
     );
   }
-
   Widget _buildInfoCard(IconData icon, String label, String value) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -511,6 +569,29 @@ class _AttractionsListScreenState extends ConsumerState<AttractionsListScreen> {
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // NEW: Helper for info points in "Before You Book"
+  Widget _buildInfoPoint(IconData icon, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 18,
+            color: AppTheme.primaryOrange,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 14),
+            ),
           ),
         ],
       ),
