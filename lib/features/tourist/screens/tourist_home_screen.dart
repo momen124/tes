@@ -150,7 +150,7 @@ class TouristHomeScreen extends StatelessWidget {
                     'tourist.categories.accommodations'.tr(),
                     Icons.hotel,
                     false,
-                    '/tourist_search?category=accommodation',
+                    '/accommodations',  // Dedicated page
                   ),
                   _buildCategoryChip(
                     context,
@@ -183,7 +183,7 @@ class TouristHomeScreen extends StatelessWidget {
                   _buildCategoryChip(
                     context,
                     'tourist.categories.services'.tr(),
-                    Icons.local_hospital,
+                    Icons.medical_services,  // Updated icon
                     false,
                     '/services',
                   ),
