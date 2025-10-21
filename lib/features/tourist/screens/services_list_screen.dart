@@ -121,7 +121,7 @@ class _ServicesListScreenState extends ConsumerState<ServicesListScreen> {
     // Communication
     {
       'id': '4',
-      ''name': 'Siwa Internet Café',
+      'name': 'Siwa Internet Café',
       'nameAr': 'مقهى إنترنت سيوة',
       'category': 'communication',
       'subcategory': 'internet_cafes',

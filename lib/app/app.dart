@@ -22,6 +22,12 @@ import '../features/tourist/screens/transportation_list_screen.dart';
 import '../features/tourist/screens/attractions_list_screen.dart';
 import '../features/tourist/screens/restaurants_list_screen.dart';
 import '../features/tourist/screens/tour_guides_list_screen.dart';
+import '../features/tourist/screens/tours_list_screen.dart';           // NEW
+import '../features/tourist/screens/accommodations_list_screen.dart';   // NEW
+import '../features/tourist/screens/services_list_screen.dart';        // NEW
+import '../features/tourist/screens/payment_screen.dart';               // NEW
+import '../features/tourist/screens/booking_confirmation_screen.dart';  // NEW
+
 import '../features/business/screens/business_app_main.dart';
 import '../features/business/models/business_type.dart';
 import '../features/admin/screens/admin_dashboard_screen.dart';
@@ -41,7 +47,7 @@ final GoRouter _router = GoRouter(
     ),
   ),
   routes: [
-    // Auth & Core Routes
+    // Core & Auth
     GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(
@@ -51,15 +57,15 @@ final GoRouter _router = GoRouter(
         return RegisterScreen(userType: userType);
       },
     ),
-    
-    // Tourist Routes
+
+    // Tourist Core
     GoRoute(path: '/tourist_home', builder: (context, state) => const TouristHomeScreen()),
     GoRoute(path: '/tourist_bookings', builder: (context, state) => const TouristBookingsScreen()),
     GoRoute(path: '/tourist_challenges', builder: (context, state) => const TouristChallengesScreen()),
     GoRoute(path: '/tourist_profile', builder: (context, state) => const TouristProfileScreen()),
     GoRoute(path: '/tourist_search', builder: (context, state) => const TouristSearchScreen()),
-    
-    // Booking Routes
+
+    // Booking Flow
     GoRoute(
       path: '/booking_form',
       builder: (context, state) {
@@ -73,45 +79,67 @@ final GoRouter _router = GoRouter(
         );
       },
     ),
-    
-    // Detail Pages - FIXED TO ACCEPT EXTRA PARAMETER
+
+    // Service Detail
     GoRoute(
       path: '/service_detail',
       builder: (context, state) {
-        // Extract service data from extra parameter
         final serviceData = state.extra as Map<String, dynamic>?;
-        
-        // Debug logging (can be removed in production)
-        debugPrint('🔍 Service Detail Route - Received data: ${serviceData?.keys}');
-        
-        return ServiceDetailScreen(
-          serviceData: serviceData,
-        );
+        debugPrint('Service Detail Route - Received data: ${serviceData?.keys}');
+        return ServiceDetailScreen(serviceData: serviceData);
       },
     ),
-    
-    // ALTERNATIVE: If you want to use /product_detail route as well
     GoRoute(
       path: '/product_detail',
       builder: (context, state) {
         final serviceData = state.extra as Map<String, dynamic>?;
-        debugPrint('🔍 Product Detail Route - Received data: ${serviceData?.keys}');
-        
-        return ServiceDetailScreen(
-          serviceData: serviceData,
-        );
+        return ServiceDetailScreen(serviceData: serviceData);
       },
     ),
-    
+
+    // Info
     GoRoute(path: '/siwa_info', builder: (context, state) => const SiwaInfoScreen()),
-    
-    // List Pages
+
+    // List Screens
     GoRoute(path: '/transportation', builder: (context, state) => const TransportationListScreen()),
     GoRoute(path: '/attractions', builder: (context, state) => const AttractionsListScreen()),
     GoRoute(path: '/restaurants', builder: (context, state) => const RestaurantsListScreen()),
     GoRoute(path: '/tour_guides', builder: (context, state) => const TourGuidesListScreen()),
     
-    // Business Routes - Main Dashboard
+    // NEW: Dedicated Category Screens
+    GoRoute(path: '/tours', builder: (context, state) => const ToursListScreen()),
+    GoRoute(path: '/accommodations', builder: (context, state) => const AccommodationsListScreen()),
+    GoRoute(path: '/services', builder: (context, state) => const ServicesListScreen()),
+
+    // Booking Completion Flow
+    GoRoute(
+      path: '/payment',
+      builder: (context, state) {
+        final booking = state.extra as Booking;
+        return PaymentScreen(booking: booking);
+      },
+    ),
+    GoRoute(
+      path: '/booking_confirmation',
+      builder: (context, state) {
+        final booking = state.extra as Booking;
+        return BookingConfirmationScreen(booking: booking);
+      },
+    ),
+    GoRoute(
+      path: '/booking_detail',
+      builder: (context, state) {
+        final bookingData = state.extra as Map<String, dynamic>?;
+        return Scaffold(
+          appBar: AppBar(title: Text('Booking Details'.tr())),
+          body: Center(
+            child: Text('Booking Details Screen - Implement UI'),
+          ),
+        );
+      },
+    ),
+
+    // Business Dashboard & Type-Specific
     GoRoute(
       path: '/business_dashboard',
       builder: (context, state) {
@@ -120,14 +148,9 @@ final GoRouter _router = GoRouter(
           (e) => e.name == businessType,
           orElse: () => BusinessType.hotel,
         );
-        return BusinessAppMain(
-          businessType: type,
-          onBack: () => context.go('/login'),
-        );
+        return BusinessAppMain(businessType: type, onBack: () => context.go('/login'));
       },
     ),
-    
-    // Business Routes - Listings
     GoRoute(
       path: '/business_listings',
       builder: (context, state) {
@@ -136,14 +159,9 @@ final GoRouter _router = GoRouter(
           (e) => e.name == businessType,
           orElse: () => BusinessType.hotel,
         );
-        return BusinessAppMain(
-          businessType: type,
-          onBack: () => context.go('/login'),
-        );
+        return BusinessAppMain(businessType: type, onBack: () => context.go('/login'));
       },
     ),
-    
-    // Business Routes - Profile
     GoRoute(
       path: '/business_profile',
       builder: (context, state) {
@@ -152,14 +170,11 @@ final GoRouter _router = GoRouter(
           (e) => e.name == businessType,
           orElse: () => BusinessType.hotel,
         );
-        return BusinessAppMain(
-          businessType: type,
-          onBack: () => context.go('/login'),
-        );
+        return BusinessAppMain(businessType: type, onBack: () => context.go('/login'));
       },
     ),
-    
-    // Business Type Specific Routes
+
+    // Business Type-Specific Routes
     GoRoute(
       path: '/hotel_management',
       builder: (context, state) => BusinessAppMain(
@@ -209,13 +224,13 @@ final GoRouter _router = GoRouter(
         onBack: () => context.go('/business_dashboard?type=tourGuide'),
       ),
     ),
-    
-    // Admin Routes
+
+    // Admin
     GoRoute(path: '/admin_dashboard', builder: (context, state) => const AdminDashboardScreen()),
     GoRoute(path: '/admin_logs', builder: (context, state) => const AdminLogsScreen()),
     GoRoute(path: '/admin_moderation', builder: (context, state) => const AdminModerationScreen()),
-    
-    // Debug Route
+
+    // Debug
     GoRoute(path: '/debug_navigator', builder: (context, state) => const DebugNavigatorScreen()),
   ],
 );
