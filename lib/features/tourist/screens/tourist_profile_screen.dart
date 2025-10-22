@@ -17,7 +17,7 @@ class TouristProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _TouristProfileScreenState extends ConsumerState<TouristProfileScreen> {
-  final _nameController = TextEditingController(text: 'tourist.profile.default_name'.tr());
+  final _nameController = TextEditingController(text: 'amani'.tr());
   final _emailController = TextEditingController(text: 'amani.hassan@example.com');
   String _ageRange = '25-34';
   bool _adventure = true;
@@ -43,7 +43,7 @@ class _TouristProfileScreenState extends ConsumerState<TouristProfileScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/tourist_home'),
         ),
-        title: Text('tourist.profile.title'.tr()),
+        title: Text('title'.tr()),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -87,23 +87,23 @@ class _TouristProfileScreenState extends ConsumerState<TouristProfileScreen> {
               ),
               Center(
                 child: Text(
-                  'tourist.profile.user_type_tourist'.tr(),
+                  'user_type_tourist'.tr(),
                   style: const TextStyle(fontSize: 16, color: AppTheme.gray),
                 ),
               ),
               Center(
                 child: Text(
-                  'tourist.profile.joined_year'.tr(namedArgs: {'year': '2022'}),
+                  'joined_year'.tr(namedArgs: {'year': '2022'}),
                   style: const TextStyle(fontSize: 14, color: AppTheme.secondaryGray),
                 ),
               ),
               const SizedBox(height: 32),
-              Text('tourist.profile.personal_info'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text('personal_info'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               TextField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  labelText: 'tourist.profile.name'.tr(),
+                  labelText: 'name'.tr(),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
@@ -119,40 +119,40 @@ class _TouristProfileScreenState extends ConsumerState<TouristProfileScreen> {
               DropdownButtonFormField<String>(
                 initialValue: _ageRange,
                 decoration: InputDecoration(
-                  labelText: 'tourist.profile.age_range'.tr(),
+                  labelText: 'age_range'.tr(),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 items: [
-                  DropdownMenuItem(value: '18-24', child: Text('tourist.profile.age_ranges.18_24'.tr())),
-                  DropdownMenuItem(value: '25-34', child: Text('tourist.profile.age_ranges.25_34'.tr())),
-                  DropdownMenuItem(value: '35-44', child: Text('tourist.profile.age_ranges.35_44'.tr())),
-                  DropdownMenuItem(value: '45+', child: Text('tourist.profile.age_ranges.45_plus'.tr())),
+                  DropdownMenuItem(value: '18-24', child: Text('age_ranges.18_24'.tr())),
+                  DropdownMenuItem(value: '25-34', child: Text('age_ranges.25_34'.tr())),
+                  DropdownMenuItem(value: '35-44', child: Text('age_ranges.35_44'.tr())),
+                  DropdownMenuItem(value: '45+', child: Text('age_ranges.45_plus'.tr())),
                 ],
                 onChanged: (value) => setState(() => _ageRange = value!),
               ),
               const SizedBox(height: 32),
-              Text('tourist.profile.preferences'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text('preferences'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               CheckboxListTile(
-                title: Text('tourist.profile.adventure'.tr()),
+                title: Text('adventure'.tr()),
                 value: _adventure,
                 onChanged: (val) => setState(() => _adventure = val!),
                 activeColor: AppTheme.primaryOrange,
               ),
               CheckboxListTile(
-                title: Text('tourist.profile.relaxation'.tr()),
+                title: Text('relaxation'.tr()),
                 value: _relaxation,
                 onChanged: (val) => setState(() => _relaxation = val!),
                 activeColor: AppTheme.primaryOrange,
               ),
               CheckboxListTile(
-                title: Text('tourist.profile.cultural_immersion'.tr()),
+                title: Text('cultural_immersion'.tr()),
                 value: _cultural,
                 onChanged: (val) => setState(() => _cultural = val!),
                 activeColor: AppTheme.primaryOrange,
               ),
               const SizedBox(height: 32),
-              Text('tourist.profile.referral_code'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text('referral_code'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -168,28 +168,28 @@ class _TouristProfileScreenState extends ConsumerState<TouristProfileScreen> {
                   ElevatedButton(
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: _referralCode));
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('tourist.profile.copied'.tr())));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('copied'.tr())));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryOrange,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: Text('tourist.profile.copy'.tr()),
+                    child: Text('copy'.tr()),
                   ),
                 ],
               ),
               const SizedBox(height: 32),
-              Text('tourist.profile.gps_consent'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text('gps_consent'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               SwitchListTile(
                 title: Text('auth.enable_gps'.tr()),
-                subtitle: Text('tourist.profile.allow_location'.tr()),
+                subtitle: Text('allow_location'.tr()),
                 value: _gpsConsent,
                 onChanged: (val) => setState(() => _gpsConsent = val),
                 activeThumbColor: AppTheme.primaryOrange,
               ),
               const SizedBox(height: 32),
-              Text('tourist.profile.badges'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text('badges'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               SizedBox(
                 height: 100,
