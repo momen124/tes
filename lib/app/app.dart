@@ -22,11 +22,11 @@ import '../features/tourist/screens/transportation_list_screen.dart';
 import '../features/tourist/screens/attractions_list_screen.dart';
 import '../features/tourist/screens/restaurants_list_screen.dart';
 import '../features/tourist/screens/tour_guides_list_screen.dart';
-import '../features/tourist/screens/tours_list_screen.dart';           // NEW
-import '../features/tourist/screens/accommodations_list_screen.dart';   // NEW
-import '../features/tourist/screens/services_list_screen.dart';        // NEW
-import '../features/tourist/screens/payment_screen.dart';               // NEW
-import '../features/tourist/screens/booking_confirmation_screen.dart';  // NEW
+import '../features/tourist/screens/accommodations_list_screen.dart';  
+import '../features/tourist/screens/services_list_screen.dart';       
+import '../features/tourist/screens/payment_screen.dart';              
+import '../features/tourist/screens/booking_confirmation_screen.dart'; 
+// import '../models/booking.dart';                                       
 
 import '../features/business/screens/business_app_main.dart';
 import '../features/business/models/business_type.dart';
@@ -43,11 +43,13 @@ final GoRouter _router = GoRouter(
   initialLocation: '/',
   errorBuilder: (context, state) => Scaffold(
     body: Center(
-      child: Text('errors.route_not_found'.tr(namedArgs: {'route': state.uri.toString()})),
+      child: Text(
+        'errors.route_not_found'.tr(namedArgs: {'route': state.uri.toString()}),
+      ),
     ),
   ),
   routes: [
-    // Core & Auth
+    // ==================== Core & Auth ====================
     GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(
@@ -58,14 +60,14 @@ final GoRouter _router = GoRouter(
       },
     ),
 
-    // Tourist Core
+    // ==================== Tourist Core ====================
     GoRoute(path: '/tourist_home', builder: (context, state) => const TouristHomeScreen()),
     GoRoute(path: '/tourist_bookings', builder: (context, state) => const TouristBookingsScreen()),
     GoRoute(path: '/tourist_challenges', builder: (context, state) => const TouristChallengesScreen()),
     GoRoute(path: '/tourist_profile', builder: (context, state) => const TouristProfileScreen()),
     GoRoute(path: '/tourist_search', builder: (context, state) => const TouristSearchScreen()),
 
-    // Booking Flow
+    // ==================== Booking Flow ====================
     GoRoute(
       path: '/booking_form',
       builder: (context, state) {
@@ -100,18 +102,18 @@ final GoRouter _router = GoRouter(
     // Info
     GoRoute(path: '/siwa_info', builder: (context, state) => const SiwaInfoScreen()),
 
-    // List Screens
+    // ==================== List Screens ====================
     GoRoute(path: '/transportation', builder: (context, state) => const TransportationListScreen()),
     GoRoute(path: '/attractions', builder: (context, state) => const AttractionsListScreen()),
     GoRoute(path: '/restaurants', builder: (context, state) => const RestaurantsListScreen()),
     GoRoute(path: '/tour_guides', builder: (context, state) => const TourGuidesListScreen()),
-    
+
     // NEW: Dedicated Category Screens
-    GoRoute(path: '/tours', builder: (context, state) => const ToursListScreen()),
+    GoRoute(path: '/tours', builder: (context, state) => const TourGuidesListScreen()),
     GoRoute(path: '/accommodations', builder: (context, state) => const AccommodationsListScreen()),
     GoRoute(path: '/services', builder: (context, state) => const ServicesListScreen()),
 
-    // Booking Completion Flow
+    // ==================== Booking Completion Flow ====================
     GoRoute(
       path: '/payment',
       builder: (context, state) {
@@ -131,15 +133,15 @@ final GoRouter _router = GoRouter(
       builder: (context, state) {
         final bookingData = state.extra as Map<String, dynamic>?;
         return Scaffold(
-          appBar: AppBar(title: Text('Booking Details'.tr())),
+          appBar: AppBar(title: Text('booking.details.title'.tr())),
           body: Center(
-            child: Text('Booking Details Screen - Implement UI'),
+            child: Text('booking.details.implement_ui'.tr()),
           ),
         );
       },
     ),
 
-    // Business Dashboard & Type-Specific
+    // ==================== Business Dashboard & Type-Specific ====================
     GoRoute(
       path: '/business_dashboard',
       builder: (context, state) {
@@ -225,12 +227,12 @@ final GoRouter _router = GoRouter(
       ),
     ),
 
-    // Admin
+    // ==================== Admin ====================
     GoRoute(path: '/admin_dashboard', builder: (context, state) => const AdminDashboardScreen()),
     GoRoute(path: '/admin_logs', builder: (context, state) => const AdminLogsScreen()),
     GoRoute(path: '/admin_moderation', builder: (context, state) => const AdminModerationScreen()),
 
-    // Debug
+    // ==================== Debug ====================
     GoRoute(path: '/debug_navigator', builder: (context, state) => const DebugNavigatorScreen()),
   ],
 );
@@ -247,8 +249,6 @@ class SiwaApp extends ConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(currentLocaleProvider.notifier).state = currentLocale;
     });
-
-    final mockData = ref.watch(mockDataProvider);
 
     return MaterialApp.router(
       routerConfig: _router,
