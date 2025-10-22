@@ -26,7 +26,6 @@ import '../features/tourist/screens/accommodations_list_screen.dart';
 import '../features/tourist/screens/services_list_screen.dart';       
 import '../features/tourist/screens/payment_screen.dart';              
 import '../features/tourist/screens/booking_confirmation_screen.dart'; 
-// import '../models/booking.dart';                                       
 
 import '../features/business/screens/business_app_main.dart';
 import '../features/business/models/business_type.dart';
@@ -117,6 +116,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/payment',
       builder: (context, state) {
+        // Receive Booking object directly
         final booking = state.extra as Booking;
         return PaymentScreen(booking: booking);
       },
@@ -124,6 +124,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/booking_confirmation',
       builder: (context, state) {
+        // Receive Booking object directly
         final booking = state.extra as Booking;
         return BookingConfirmationScreen(booking: booking);
       },
@@ -132,10 +133,251 @@ final GoRouter _router = GoRouter(
       path: '/booking_detail',
       builder: (context, state) {
         final bookingData = state.extra as Map<String, dynamic>?;
+        
+        if (bookingData == null) {
+          return Scaffold(
+            appBar: AppBar(title: Text('booking.details.title'.tr())),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 64, color: AppTheme.gray),
+                  const SizedBox(height: 16),
+                  Text('booking.details.data_missing'.tr()),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => context.go('/tourist_bookings'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryOrange,
+                    ),
+                    child: Text('navigation.bookings'.tr()),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Extract booking data safely
+        final title = bookingData['title']?.toString() ?? 
+                     bookingData['serviceName']?.toString() ?? 
+                     bookingData['guest']?.toString() ?? 
+                     'common.unknown'.tr();
+        
+        final imageUrl = bookingData['imageUrl']?.toString() ?? 
+                        bookingData['serviceImage']?.toString() ?? 
+                        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800';
+        
+        final status = bookingData['status']?.toString() ?? 'unknown';
+        final date = bookingData['date'] ?? bookingData['checkIn'] ?? bookingData['bookingDate'];
+        final checkOutDate = bookingData['checkOut'] ?? bookingData['checkOutDate'];
+        final amount = bookingData['amount']?.toString() ?? 
+                      bookingData['totalPrice']?.toString() ?? 
+                      bookingData['price']?.toString() ?? 
+                      'N/A';
+        
+        final category = bookingData['category']?.toString() ?? 'general';
+        final location = bookingData['location']?.toString() ?? 'N/A';
+        final guest = bookingData['guest']?.toString();
+        final room = bookingData['room']?.toString();
+
         return Scaffold(
-          appBar: AppBar(title: Text('booking.details.title'.tr())),
-          body: Center(
-            child: Text('booking.details.implement_ui'.tr()),
+          backgroundColor: AppTheme.lightBlueGray,
+          appBar: AppBar(
+            title: Text('booking.details.title'.tr()),
+            elevation: 0,
+            backgroundColor: AppTheme.white,
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Image Card
+                Container(
+                  height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: AppTheme.lightBlueGray,
+                          child: const Icon(
+                            Icons.image,
+                            size: 64,
+                            color: AppTheme.gray,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Title and Status
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryOrange.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: AppTheme.primaryOrange.withOpacity(0.3),
+                        ),
+                      ),
+                      child: Text(
+                        status.tr(),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.primaryOrange,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 24),
+
+                // Details Card
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppTheme.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      if (guest != null)
+                        _buildDetailRow(Icons.person, 'Guest', guest),
+                      if (room != null && room != 'N/A') ...[
+                        const Divider(height: 24),
+                        _buildDetailRow(Icons.hotel, 'Room', room),
+                      ],
+                      const Divider(height: 24),
+                      _buildDetailRow(Icons.location_on, 'Location', location),
+                      const Divider(height: 24),
+                      _buildDetailRow(Icons.category, 'Category', category.tr()),
+                      const Divider(height: 24),
+                      _buildDetailRow(
+                        Icons.calendar_today,
+                        'Check-in',
+                        date != null
+                            ? DateFormat('MMM dd, yyyy').format(
+                                date is DateTime ? date : DateTime.parse(date.toString()))
+                            : 'N/A',
+                      ),
+                      if (checkOutDate != null) ...[
+                        const Divider(height: 24),
+                        _buildDetailRow(
+                          Icons.event,
+                          'Check-out',
+                          DateFormat('MMM dd, yyyy').format(
+                            checkOutDate is DateTime
+                                ? checkOutDate
+                                : DateTime.parse(checkOutDate.toString()),
+                          ),
+                        ),
+                      ],
+                      const Divider(height: 24),
+                      _buildDetailRow(
+                        Icons.payments,
+                        'tourist.booking.total_cost'.tr(),
+                        amount,
+                        isHighlighted: true,
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Action Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          // TODO: Implement contact support
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Contact support feature coming soon'.tr()),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.support_agent),
+                        label: const Text('Contact Support'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppTheme.primaryOrange,
+                          side: const BorderSide(color: AppTheme.primaryOrange),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          // TODO: Implement modify booking
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Modify booking feature coming soon'.tr()),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.edit),
+                        label: const Text('Modify'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryOrange,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -236,6 +478,54 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/debug_navigator', builder: (context, state) => const DebugNavigatorScreen()),
   ],
 );
+
+// Helper method for booking detail rows
+Widget _buildDetailRow(IconData icon, String label, String value, {bool isHighlighted = false}) {
+  return Row(
+    children: [
+      Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: isHighlighted
+              ? AppTheme.primaryOrange.withOpacity(0.1)
+              : AppTheme.lightBlueGray,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(
+          icon,
+          color: isHighlighted ? AppTheme.primaryOrange : AppTheme.gray,
+          size: 20,
+        ),
+      ),
+      const SizedBox(width: 16),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                color: AppTheme.gray,
+                fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: isHighlighted ? FontWeight.bold : FontWeight.w600,
+                color: isHighlighted ? AppTheme.primaryOrange : AppTheme.darkGray,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
 
 /// Main application widget
 class SiwaApp extends ConsumerWidget {
